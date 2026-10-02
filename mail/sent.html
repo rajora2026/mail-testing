@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sent · BetterGrowth</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a; color: #e2e8f0; margin: 0;
+    padding: 2rem 1rem;
+  }
+  .wrap { max-width: 1000px; margin: auto; }
+  a.back { color: #60a5fa; text-decoration: none; font-size: .9rem; }
+  a.back:hover { text-decoration: underline; }
+  .head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: .75rem 0 1rem;
+  }
+  h1 { margin: 0; font-size: 1.3rem; }
+  .refresh {
+    background: #334155; border: none; color: #e2e8f0;
+    padding: .5rem .9rem; border-radius: 8px; cursor: pointer;
+    font-size: .85rem; transition: background .15s;
+  }
+  .refresh:hover { background: #475569; }
+  table {
+    width: 100%; border-collapse: collapse;
+    background: #1e293b; border-radius: 12px; overflow: hidden;
+    font-size: .88rem; box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  }
+  th, td {
+    padding: .75rem .9rem; text-align: left;
+    border-bottom: 1px solid #334155; vertical-align: top;
+  }
+  th {
+    color: #94a3b8; font-weight: 600; font-size: .8rem;
+    text-transform: uppercase; letter-spacing: .03em;
+    background: #172033;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #223049; }
+  .ok { color: #4ade80; font-weight: 600; }
+  .fail { color: #f87171; font-weight: 600; }
+  .subj { max-width: 260px; }
+  .cc { display: block; color: #64748b; font-size: .76rem; margin-top: .2rem; }
+  .empty {
+    text-align: center; padding: 2.5rem 1rem;
+    color: #64748b; font-size: .9rem;
+  }
+  .err-row {
+    text-align: center; padding: 2rem; color: #fecaca;
+    background: #7f1d1d; border-radius: 12px;
+  }
+  .att { color: #60a5fa; font-size: .82rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Back</a>
+  <div class="head">
+    <h1>Sent Emails</h1>
+    <button class="refresh" onclick="load()">🔄 Refresh</button>
+  </div>
+
+  <table id="table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>To</th>
+        <th>Subject</th>
+        <th>Attachment</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="rows">
+      <tr><td colspan="5" class="empty">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
+  const $ = id => document.getElementById(id);
+
+  if (!localStorage.getItem("token")) {
+    location.href = "index.html";
+  }
+
+  function escapeHtml(s = "") {
+    return String(s).replace(/[&<>"']/g, c =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+    );
+  }
+
+  async function load() {
+    const tbody = $("rows");
+    tbody.innerHTML = `<tr><td colspan="5" class="empty">Loading…</td></tr>`;
+
+    try {
+      const r = await fetch(FN + "?action=sent", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+
+      if (r.status === 401) {
+        localStorage.clear();
+        location.href = "index.html";
+        return;
+      }
+
+      const list = await r.json();
+
+      if (!Array.isArray(list) || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty">No emails sent yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(e => `
+        <tr>
+          <td>${new Date(e.created_at).toLocaleString()}</td>
+          <td>
+            ${escapeHtml(e.to_email || "")}
+            ${e.cc_email ? `<span class="cc">CC: ${escapeHtml(e.cc_email)}</span>` : ""}
+          </td>
+          <td class="subj">${escapeHtml(e.subject || "")}</td>
+          <td>${e.attachment_name
+            ? `<span class="att">📎 ${escapeHtml(e.attachment_name)}</span>`
+            : "—"}</td>
+          <td class="${e.status === "sent" ? "ok" : "fail"}">${escapeHtml(e.status || "")}</td>
+        </tr>
+      `).join("");
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="5" class="err-row">Error: ${escapeHtml(err.message)}</td></tr>`;
+    }
+  }
+
+  load();
+</script>
+</body>
+</html>
