@@ -15,7 +15,7 @@
 
   .topbar {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.25rem; gap: .75rem; flex-wrap: wrap;
   }
   a.back { color: #60a5fa; text-decoration: none; font-size: .9rem; }
   a.back:hover { text-decoration: underline; }
@@ -42,12 +42,12 @@
     gap: 1rem; margin-bottom: 1.5rem;
     border-bottom: 1px solid #334155; padding-bottom: 1rem;
   }
-  .head h1 { margin: 0 0 .3rem; font-size: 1.25rem; color: #f1f5f9; }
+  .head h1 { margin: 0 0 .3rem; font-size: 1.25rem; color: #f1f5f9; word-break: break-word; }
   .head .time { color: #94a3b8; font-size: .85rem; }
   .pill {
     display: inline-block; padding: .28rem .7rem; border-radius: 999px;
     font-size: .78rem; font-weight: 700; letter-spacing: .02em;
-    text-transform: uppercase;
+    text-transform: uppercase; white-space: nowrap;
   }
   .pill.sent   { background: #14532d; color: #bbf7d0; }
   .pill.failed { background: #7f1d1d; color: #fecaca; }
@@ -68,8 +68,6 @@
     font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: .82rem; color: #cbd5e1;
   }
-  .value a { color: #60a5fa; text-decoration: none; }
-  .value a:hover { text-decoration: underline; }
 
   h2.section {
     margin: 1.5rem 0 .8rem; font-size: 1rem; color: #f1f5f9;
@@ -103,6 +101,7 @@
   .filename {
     color: #cbd5e1; font-size: .9rem;
     display: flex; align-items: center; gap: .4rem;
+    word-break: break-all;
   }
   .preview-img {
     max-width: 100%; border-radius: 8px; display: block;
@@ -118,15 +117,18 @@
     background: #0f172a; border-radius: 8px;
   }
 
-  .loading, .error {
-    text-align: center; padding: 3rem 1rem;
-    color: #94a3b8; font-size: .95rem;
+  .loading { text-align: center; padding: 3rem 1rem; color: #94a3b8; font-size: .95rem; }
+  .error {
+    text-align: center; padding: 2rem 1rem;
+    color: #fecaca; background: #7f1d1d; border-radius: 12px;
+    font-size: .95rem;
   }
-  .error { color: #fecaca; background: #7f1d1d; border-radius: 12px; }
+  .error a { color: #fecaca; text-decoration: underline; }
 
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; row-gap: .3rem; }
     .label { padding-top: .6rem; }
+    .card { padding: 1.25rem; }
   }
 </style>
 </head>
@@ -154,31 +156,29 @@
     location.href = "index.html";
   }
 
-  const params = new URLSearchParams(location.search);
+  const params  = new URLSearchParams(location.search);
   const EMAIL_ID = params.get("id");
-
-  if (!EMAIL_ID) {
-    $("content").innerHTML = `<div class="error">Missing email id.</div>`;
-    throw new Error("no id");
-  }
 
   let EMAIL = null;
 
-  /* ---------------- HTML escape ---------------- */
   function esc(s = "") {
     return String(s).replace(/[&<>"']/g, c =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
-    );
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
-  /* ---------------- Load ---------------- */
   async function load() {
+    if (!EMAIL_ID) {
+      $("content").innerHTML = `<div class="error">Missing email ID. <a href="sent.html">Go back</a></div>`;
+      return;
+    }
+
     try {
       const r = await fetch(`${FN}?action=get&id=${encodeURIComponent(EMAIL_ID)}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       });
 
       if (r.status === 401) { localStorage.clear(); location.href = "index.html"; return; }
+
       if (!r.ok) {
         const err = await r.json().catch(() => ({}));
         throw new Error(err.error || `HTTP ${r.status}`);
@@ -187,11 +187,11 @@
       EMAIL = await r.json();
       render(EMAIL);
     } catch (err) {
-      $("content").innerHTML = `<div class="error">❌ ${esc(err.message)}</div>`;
+      $("content").innerHTML =
+        `<div class="error">❌ ${esc(err.message)} — <a href="sent.html">Back to Sent</a></div>`;
     }
   }
 
-  /* ---------------- Render ---------------- */
   function render(e) {
     const statusClass = e.status === "sent" ? "sent" : "failed";
     const time = new Date(e.created_at).toLocaleString();
@@ -205,24 +205,25 @@
 
       let preview = "";
       if (!url) {
-        preview = `<div class="no-preview">File was not stored for this email (older send).</div>`;
+        preview = `<div class="no-preview">File not stored for this email (sent before storage was enabled).</div>`;
       } else if (/\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(lower)) {
         preview = `<img class="preview-img" src="${url}" alt="${name}" />`;
       } else if (/\.pdf$/i.test(lower)) {
         preview = `<iframe class="preview-pdf" src="${url}"></iframe>`;
       } else {
-        preview = `<div class="no-preview">Preview not available for this file type.<br>
-          Use the download button above.</div>`;
+        preview = `<div class="no-preview">Preview not available for this file type.<br>Use the download button above.</div>`;
       }
 
       attachmentHTML = `
-        <h2 class="section">Attachment</h2>
-        <div class="attachment-box">
-          <div class="attachment-head">
-            <div class="filename">📎 ${name}</div>
-            ${url ? `<a class="btn" href="${url}" target="_blank" download>⬇ Download</a>` : ""}
+        <div class="card">
+          <h2 class="section" style="margin-top:0">Attachment</h2>
+          <div class="attachment-box">
+            <div class="attachment-head">
+              <div class="filename">📎 ${name}</div>
+              ${url ? `<a class="btn" href="${url}" target="_blank" download>⬇ Download</a>` : ""}
+            </div>
+            ${preview}
           </div>
-          ${preview}
         </div>
       `;
     }
@@ -276,7 +277,6 @@
     `;
   }
 
-  /* ---------------- Delete ---------------- */
   async function del() {
     if (!confirm("Delete this email record and its attachment?")) return;
 
@@ -297,12 +297,10 @@
     }
   }
 
-  /* ---------------- Resend ---------------- */
   async function resend() {
     if (!EMAIL) return;
     if (!confirm(`Resend this email to ${EMAIL.to_email}?`)) return;
 
-    // Build attachment payload if file exists
     let attachment = null;
     if (EMAIL.attachment_url && EMAIL.attachment_name) {
       try {
