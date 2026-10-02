@@ -1,85 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Email Details · BetterGrowth</title>
-<style>
-  *{box-sizing:border-box}
-  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-       background:#0f172a;color:#e2e8f0;margin:0;padding:2rem 1rem}
-  .wrap{max-width:900px;margin:auto}
-  .topbar{display:flex;justify-content:space-between;align-items:center;
-          margin-bottom:1.25rem;gap:.75rem;flex-wrap:wrap}
-  a.back{color:#60a5fa;text-decoration:none;font-size:.9rem}
-  a.back:hover{text-decoration:underline}
-  .actions{display:flex;gap:.5rem}
-  .btn{background:#334155;border:none;color:#e2e8f0;padding:.5rem .9rem;
-       border-radius:8px;cursor:pointer;font-size:.85rem;text-decoration:none;
-       display:inline-flex;align-items:center;gap:.4rem}
-  .btn:hover{background:#475569}
-  .btn.red{background:#7f1d1d}.btn.red:hover{background:#991b1b}
-  .btn.blue{background:#2563eb}.btn.blue:hover{background:#1d4ed8}
-  .card{background:#1e293b;border-radius:14px;padding:1.75rem;
-        box-shadow:0 10px 30px rgba(0,0,0,.35);margin-bottom:1.25rem}
-  .head{display:flex;justify-content:space-between;align-items:flex-start;
-        gap:1rem;margin-bottom:1.5rem;border-bottom:1px solid #334155;padding-bottom:1rem}
-  .head h1{margin:0 0 .3rem;font-size:1.25rem;color:#f1f5f9;word-break:break-word}
-  .head .time{color:#94a3b8;font-size:.85rem}
-  .pill{display:inline-block;padding:.28rem .7rem;border-radius:999px;
-        font-size:.78rem;font-weight:700;letter-spacing:.02em;
-        text-transform:uppercase;white-space:nowrap}
-  .pill.sent{background:#14532d;color:#bbf7d0}
-  .pill.failed{background:#7f1d1d;color:#fecaca}
-  .grid{display:grid;grid-template-columns:110px 1fr;row-gap:.9rem;
-        column-gap:1rem;font-size:.92rem;align-items:start}
-  .label{color:#94a3b8;font-size:.78rem;text-transform:uppercase;
-         letter-spacing:.05em;padding-top:.2rem}
-  .value{color:#e2e8f0;word-break:break-word}
-  .value.mono{font-family:ui-monospace,Menlo,Consolas,monospace;
-              font-size:.82rem;color:#cbd5e1}
-  h2.section{margin:1.5rem 0 .8rem;font-size:1rem;color:#f1f5f9;
-             border-left:3px solid #3b82f6;padding-left:.6rem}
-  .body-render{background:#fff;color:#111;padding:1.25rem;border-radius:10px;
-               line-height:1.55;font-size:.95rem;overflow-x:auto}
-  .body-render img{max-width:100%;height:auto}
-  .body-source{background:#0f172a;padding:1rem;border-radius:10px;
-               font-family:ui-monospace,Menlo,Consolas,monospace;
-               font-size:.8rem;color:#cbd5e1;white-space:pre-wrap;
-               max-height:300px;overflow-y:auto;border:1px solid #334155}
-  .attachment-box{background:#0f172a;padding:1rem;border-radius:10px;
-                  border:1px solid #334155}
-  .attachment-head{display:flex;justify-content:space-between;align-items:center;
-                   flex-wrap:wrap;gap:.6rem;margin-bottom:.8rem}
-  .filename{color:#cbd5e1;font-size:.9rem;display:flex;align-items:center;
-            gap:.4rem;word-break:break-all}
-  .preview-img{max-width:100%;border-radius:8px;display:block;border:1px solid #334155}
-  .preview-pdf{width:100%;height:600px;border:1px solid #334155;
-               border-radius:8px;background:#fff}
-  .no-preview{color:#94a3b8;font-size:.88rem;padding:1.5rem;
-              text-align:center;background:#0f172a;border-radius:8px}
-  .loading{text-align:center;padding:3rem 1rem;color:#94a3b8;font-size:.95rem}
-  .error{text-align:center;padding:2rem 1rem;color:#fecaca;
-         background:#7f1d1d;border-radius:12px;font-size:.95rem}
-  .error a{color:#fecaca;text-decoration:underline}
-  @media(max-width:600px){
-    .grid{grid-template-columns:1fr;row-gap:.3rem}
-    .label{padding-top:.6rem}
-    .card{padding:1.25rem}
-  }
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#07162b"/>
+  <title>Email Details · BetterGrowth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+      --gold:#d9a62e; --gold-deep:#b8841a;
+      --paper:#f5f6f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f; --line:#dde2ea;
+      --ok-bg:#e3f4ea; --ok-ink:#17653a;
+      --info-bg:#e6eefb; --info-ink:#1d3f7a;
+      --bad-bg:#fde4e4; --bad-ink:#9b1c1c;
+      --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+      --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      --shadow-sm:0 2px 6px rgba(0,0,0,.04);
+      --shadow-md:0 6px 18px rgba(0,0,0,.06);
+      --shadow-lg:0 14px 38px rgba(0,0,0,.08);
+      --radius-lg:20px;
+      --radius-md:14px;
+      --radius-sm:10px;
+      --transition:all .18s cubic-bezier(.4,0,.2,1);
+    }
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);
+      line-height:1.5;-webkit-font-smoothing:antialiased;
+      min-height:100svh;display:flex;flex-direction:column;
+      padding:clamp(16px,4vw,36px) clamp(16px,4vw,24px);
+    }
+    a{color:inherit}
+    :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+    [hidden]{display:none!important}
+
+    .wrap{
+      max-width:960px;width:100%;margin:0 auto;
+      flex:1;display:flex;flex-direction:column;
+    }
+
+    /* Top bar */
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;
+      gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;
+    }
+    .topbar .back{
+      display:inline-flex;align-items:center;gap:.4rem;
+      color:var(--muted);text-decoration:none;font-size:.95rem;font-weight:500;
+      padding:.5rem .9rem;border-radius:var(--radius-sm);
+      transition:var(--transition);background:transparent;
+    }
+    .topbar .back:hover{background:rgba(11,27,48,.05);color:var(--ink)}
+    .topbar .back svg{flex:none}
+
+    .actions{display:flex;gap:.6rem;flex-wrap:wrap}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+      font:inherit;font-size:.88rem;font-weight:600;
+      padding:.6rem 1.2rem;border-radius:var(--radius-sm);
+      border:1.5px solid transparent;cursor:pointer;
+      transition:var(--transition);text-decoration:none;white-space:nowrap;
+      background:var(--white);color:var(--ink);border-color:var(--line);
+      box-shadow:var(--shadow-sm);
+    }
+    .btn:hover{background:#f8f9fb;border-color:#c3cbd7}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:var(--gold);color:var(--navy-900);border-color:var(--gold);
+    }
+    .btn.primary:hover{background:#e4b343;border-color:#e4b343}
+    .btn.red{
+      background:var(--bad-bg);color:var(--bad-ink);border-color:#f5c6c6;
+    }
+    .btn.red:hover{background:#fbd0d0;border-color:#f0b0b0}
+    .btn.blue{
+      background:var(--info-bg);color:var(--info-ink);border-color:#ccdbf5;
+    }
+    .btn.blue:hover{background:#d6e2fb;border-color:#b8ccf0}
+    .btn svg{flex:none;width:16px;height:16px}
+
+    /* Card */
+    .card{
+      background:var(--white);border:1.5px solid var(--line);
+      border-radius:var(--radius-lg);padding:clamp(20px,3vw,32px);
+      box-shadow:var(--shadow-md);margin-bottom:1.5rem;
+      transition:var(--transition);
+    }
+    .card:hover{box-shadow:var(--shadow-lg)}
+
+    /* Head */
+    .head{
+      display:flex;justify-content:space-between;align-items:flex-start;
+      gap:1.25rem;margin-bottom:1.75rem;
+      padding-bottom:1.25rem;border-bottom:1.5px solid var(--line);
+      flex-wrap:wrap;
+    }
+    .head h1{
+      margin:0 0 .35rem;font-family:var(--serif);font-weight:700;
+      font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.15;
+      color:var(--ink);letter-spacing:-.01em;word-break:break-word;
+    }
+    .head .time{
+      color:var(--muted);font-size:.88rem;font-weight:400;
+      display:flex;align-items:center;gap:.35rem;
+    }
+    .head .time svg{flex:none;opacity:.6}
+
+    .pill{
+      display:inline-block;padding:.35rem .9rem;border-radius:999px;
+      font-size:.75rem;font-weight:700;letter-spacing:.04em;
+      text-transform:uppercase;white-space:nowrap;
+      transition:var(--transition);
+    }
+    .pill.sent{background:var(--ok-bg);color:var(--ok-ink)}
+    .pill.failed{background:var(--bad-bg);color:var(--bad-ink)}
+
+    /* Grid */
+    .grid{
+      display:grid;grid-template-columns:110px 1fr;
+      row-gap:.9rem;column-gap:1.25rem;
+      font-size:.93rem;align-items:start;
+    }
+    .grid .label{
+      color:var(--muted);font-size:.75rem;font-weight:600;
+      text-transform:uppercase;letter-spacing:.06em;
+      padding-top:.2rem;
+    }
+    .grid .value{
+      color:var(--ink);word-break:break-word;
+      font-weight:400;
+    }
+    .grid .value.mono{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.82rem;color:var(--muted);
+      background:#f1f4f8;padding:.25rem .6rem;border-radius:6px;
+      display:inline-block;word-break:break-all;
+    }
+
+    /* Section */
+    h2.section{
+      margin:1.75rem 0 1rem;font-family:var(--serif);
+      font-size:1.15rem;font-weight:600;color:var(--ink);
+      display:flex;align-items:center;gap:.6rem;
+    }
+    h2.section::before{
+      content:'';display:inline-block;width:4px;height:1.1em;
+      background:var(--gold);border-radius:2px;flex:none;
+    }
+
+    /* Body render */
+    .body-render{
+      background:var(--white);color:var(--ink);
+      padding:1.5rem;border-radius:var(--radius-md);
+      line-height:1.65;font-size:.95rem;overflow-x:auto;
+      border:1.5px solid var(--line);
+      box-shadow:inset 0 1px 4px rgba(0,0,0,.02);
+    }
+    .body-render img{max-width:100%;height:auto;border-radius:8px}
+    .body-render a{color:var(--info-ink);text-underline-offset:3px}
+
+    .body-source{
+      background:var(--navy-900);padding:1.25rem;border-radius:var(--radius-md);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.8rem;color:#cbd5e1;white-space:pre-wrap;
+      max-height:320px;overflow-y:auto;
+      border:1.5px solid var(--navy-700);
+      line-height:1.6;
+    }
+
+    /* Attachment */
+    .attachment-box{
+      background:#fafbfc;padding:1.25rem;
+      border-radius:var(--radius-md);border:1.5px solid var(--line);
+    }
+    .attachment-head{
+      display:flex;justify-content:space-between;align-items:center;
+      flex-wrap:wrap;gap:.75rem;margin-bottom:1rem;
+    }
+    .filename{
+      color:var(--ink);font-size:.9rem;font-weight:500;
+      display:flex;align-items:center;gap:.45rem;
+      word-break:break-all;
+    }
+    .filename svg{flex:none;color:var(--gold-deep)}
+
+    .preview-img{
+      max-width:100%;border-radius:var(--radius-sm);
+      display:block;border:1.5px solid var(--line);
+    }
+    .preview-pdf{
+      width:100%;height:600px;border:1.5px solid var(--line);
+      border-radius:var(--radius-sm);background:var(--white);
+    }
+    .no-preview{
+      color:var(--muted);font-size:.9rem;padding:2rem 1.5rem;
+      text-align:center;background:#f1f4f8;border-radius:var(--radius-sm);
+      border:1.5px dashed var(--line);
+    }
+
+    /* Loading & Error */
+    .loading{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:1rem;padding:4rem 1rem;color:var(--muted);font-size:.95rem;
+    }
+    .spinner{
+      width:36px;height:36px;border-radius:50%;
+      border:3px solid var(--line);
+      border-top-color:var(--gold);
+      animation:spin .8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .error{
+      text-align:center;padding:2.5rem 1.5rem;
+      color:var(--bad-ink);background:var(--bad-bg);
+      border-radius:var(--radius-lg);font-size:.95rem;
+      border:1.5px solid #f5c6c6;
+    }
+    .error a{color:var(--bad-ink);font-weight:600;text-underline-offset:3px}
+
+    /* Footer */
+    .credit{
+      text-align:center;color:var(--muted);font-size:.88rem;
+      padding:1.5rem 1rem;margin-top:auto;
+      padding-bottom:max(1.5rem,env(safe-area-inset-bottom));
+    }
+    .credit a{
+      color:var(--ink);font-weight:600;text-decoration:none;
+      border-bottom:2px solid var(--gold);padding-bottom:1px;
+    }
+    .credit a:hover{color:var(--gold-deep)}
+
+    /* Responsive */
+    @media (max-width:640px){
+      .grid{grid-template-columns:1fr;row-gap:.3rem}
+      .grid .label{padding-top:.7rem}
+      .card{padding:1.25rem}
+      .head{flex-direction:column;gap:.75rem}
+      .head h1{font-size:1.3rem}
+      .actions{width:100%}
+      .actions .btn{flex:1;justify-content:center}
+      .topbar{flex-direction:column;align-items:flex-start}
+    }
+    @media (prefers-reduced-motion:reduce){
+      .spinner{animation:none}
+      .btn,.card,.topbar .back{transition:none}
+    }
+  </style>
 </head>
 <body>
+
 <div class="wrap">
   <div class="topbar">
-    <a class="back" href="sent">← Back to Sent</a>
+    <a class="back" href="sent">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to Sent
+    </a>
     <div class="actions">
-      <button class="btn blue" onclick="resend()">↻ Resend</button>
-      <button class="btn red"  onclick="del()">🗑 Delete</button>
+      <button class="btn blue" onclick="resend()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        Resend
+      </button>
+      <button class="btn red" onclick="del()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete
+      </button>
     </div>
   </div>
-  <div id="content"><div class="loading">Loading email details…</div></div>
+  <div id="content">
+    <div class="loading">
+      <div class="spinner"></div>
+      Loading email details…
+    </div>
+  </div>
 </div>
+
+<footer class="credit">
+  Made by <a href="https://rajvardhansingh.in/" target="_blank" rel="noopener noreferrer">Rajvardhan Singh</a>
+</footer>
 
 <script>
 const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
@@ -134,13 +337,13 @@ function render(e) {
 
     let preview = "";
     if (!url) {
-      preview = `<div class="no-preview">File not stored for this email (sent before storage was enabled).</div>`;
+      preview = `<div class="no-preview">📁 File not stored for this email (sent before storage was enabled).</div>`;
     } else if (/\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(lower)) {
       preview = `<img class="preview-img" src="${url}" alt="${name}" />`;
     } else if (/\.pdf$/i.test(lower)) {
       preview = `<iframe class="preview-pdf" src="${url}"></iframe>`;
     } else {
-      preview = `<div class="no-preview">Preview not available for this file type.<br>Use the Download button above.</div>`;
+      preview = `<div class="no-preview">📄 Preview not available for this file type.<br>Use the Download button above.</div>`;
     }
 
     attachmentHTML = `
@@ -148,8 +351,14 @@ function render(e) {
         <h2 class="section" style="margin-top:0">Attachment</h2>
         <div class="attachment-box">
           <div class="attachment-head">
-            <div class="filename">📎 ${name}</div>
-            ${url ? `<a class="btn" href="${url}" target="_blank" download>⬇ Download</a>` : ""}
+            <div class="filename">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg>
+              ${name}
+            </div>
+            ${url ? `<a class="btn" href="${url}" target="_blank" download>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>` : ""}
           </div>
           ${preview}
         </div>
@@ -162,7 +371,10 @@ function render(e) {
       <div class="head">
         <div>
           <h1>${esc(e.subject || "(no subject)")}</h1>
-          <div class="time">${esc(time)}</div>
+          <div class="time">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${esc(time)}
+          </div>
         </div>
         <span class="pill ${statusClass}">${esc(e.status || "")}</span>
       </div>
