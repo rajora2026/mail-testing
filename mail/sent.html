@@ -1,307 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Send Email · BetterGrowth</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sent · BetterGrowth</title>
 <style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: #0f172a; color: #e2e8f0; margin: 0;
-    padding: 2rem 1rem;
-  }
-  .wrap {
-    max-width: 680px; margin: auto;
-    background: #1e293b; padding: 2rem; border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.4);
-  }
-  a.back { color: #60a5fa; text-decoration: none; font-size: .9rem; }
-  a.back:hover { text-decoration: underline; }
-  h1 { margin: .75rem 0 1.25rem; font-size: 1.3rem; }
-  label { display: block; font-size: .82rem; color: #94a3b8; margin-top: .9rem; }
-  input, textarea, button {
-    width: 100%; padding: .75rem; margin-top: .3rem;
-    border-radius: 8px; border: 1px solid #334155;
-    background: #0f172a; color: #e2e8f0; font-size: .95rem;
-    font-family: inherit;
-  }
-  input:focus, textarea:focus { outline: none; border-color: #3b82f6; }
-  textarea { min-height: 200px; resize: vertical; font-family: monospace; font-size: .9rem; }
-  button {
-    background: #3b82f6; border: none; cursor: pointer;
-    font-weight: 600; margin-top: 1.25rem; transition: background .15s;
-  }
-  button:hover { background: #2563eb; }
-  button:disabled { background: #475569; cursor: not-allowed; }
-  .row2 { display: flex; gap: 1rem; }
-  .row2 > div { flex: 1; }
-  .msg {
-    margin-top: 1rem; padding: .8rem 1rem; border-radius: 8px;
-    font-size: .9rem; display: none;
-  }
-  .msg.ok  { background: #14532d; color: #bbf7d0; display: block; }
-  .msg.err { background: #7f1d1d; color: #fecaca; display: block; }
-  .msg.info{ background: #1e3a8a; color: #bfdbfe; display: block; }
-  .file-note { font-size: .78rem; color: #64748b; margin-top: .3rem; }
-  .file-note b { color: #60a5fa; }
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       background:#0f172a;color:#e2e8f0;margin:0;padding:2rem 1rem}
+  .wrap{max-width:1000px;margin:auto}
+  a.back{color:#60a5fa;text-decoration:none;font-size:.9rem}
+  .head{display:flex;justify-content:space-between;align-items:center;margin:.75rem 0 1rem}
+  h1{margin:0;font-size:1.3rem}
+  .refresh{background:#334155;border:none;color:#e2e8f0;padding:.5rem .9rem;
+           border-radius:8px;cursor:pointer;font-size:.85rem}
+  .refresh:hover{background:#475569}
+  table{width:100%;border-collapse:collapse;background:#1e293b;
+        border-radius:12px;overflow:hidden;font-size:.88rem;
+        box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  th,td{padding:.75rem .9rem;text-align:left;border-bottom:1px solid #334155;vertical-align:top}
+  th{color:#94a3b8;font-weight:600;font-size:.8rem;text-transform:uppercase;
+     letter-spacing:.03em;background:#172033}
+  tbody tr{cursor:pointer;transition:background .12s}
+  tbody tr:hover td{background:#223049}
+  tr:last-child td{border-bottom:none}
+  .ok{color:#4ade80;font-weight:600}
+  .fail{color:#f87171;font-weight:600}
+  .cc{display:block;color:#64748b;font-size:.76rem;margin-top:.2rem}
+  .empty{text-align:center;padding:2.5rem 1rem;color:#64748b;font-size:.9rem}
+  .err-row{text-align:center;padding:2rem;color:#fecaca;background:#7f1d1d;border-radius:12px}
+  .att{color:#60a5fa;font-size:.82rem}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="index.html">← Back</a>
-  <h1>Send Email</h1>
-
-  <label>To *</label>
-  <input id="to" placeholder="candidate@example.com" />
-
-  <div class="row2">
-    <div>
-      <label>CC (comma-separated)</label>
-      <input id="cc" placeholder="manager@example.com" />
-    </div>
-    <div>
-      <label>BCC (comma-separated)</label>
-      <input id="bcc" placeholder="records@example.com" />
-    </div>
+  <a class="back" href="/">← Back</a>
+  <div class="head">
+    <h1>Sent Emails</h1>
+    <button class="refresh" onclick="load()">🔄 Refresh</button>
   </div>
 
-  <label>Subject *</label>
-  <input id="subject" placeholder="Interview Invitation – BetterGrowth Solutions" />
-
-  <label>Body (HTML allowed) *</label>
-  <textarea id="body" placeholder="<p>Hi Candidate,</p>
-<p>We'd like to invite you for an interview…</p>"></textarea>
-
-  <label>Attachment (optional · images auto-compressed)</label>
-  <input id="attachment" type="file" />
-  <div class="file-note" id="fileNote"></div>
-
-  <button id="sendBtn" onclick="send()">Send Email</button>
-  <div id="msg" class="msg"></div>
+  <table>
+    <thead>
+      <tr><th>Time</th><th>To</th><th>Subject</th><th>Attachment</th><th>Status</th></tr>
+    </thead>
+    <tbody id="rows">
+      <tr><td colspan="5" class="empty">Loading…</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <script>
-/* ============================================================
-   CONFIG
-   ============================================================ */
 const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
-
-// Compression knobs — tune if you want smaller/larger files
-const MAX_DIMENSION = 1600;   // longest side, in pixels
-const IMAGE_QUALITY  = 0.8;   // 0–1 (WebP)
-const IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/bmp"];
-
-/* ============================================================
-   GUARDS
-   ============================================================ */
 const $ = id => document.getElementById(id);
 
-if (!localStorage.getItem("token")) {
-  location.href = "index.html";
+if (!localStorage.getItem("token")) location.href = "/";
+
+function esc(s = "") {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-/* ============================================================
-   FILE INPUT — live preview of compression result
-   ============================================================ */
-$("attachment").addEventListener("change", async () => {
-  const f = $("attachment").files[0];
-  const note = $("fileNote");
-
-  if (!f) { note.textContent = ""; return; }
-
-  note.innerHTML = `${f.name} · ${(f.size / 1024).toFixed(1)} KB`;
-
-  if (!IMAGE_TYPES.includes(f.type)) return;
-
-  note.innerHTML += ` <span style="color:#64748b;">(preparing…)</span>`;
-
+async function load() {
+  const tbody = $("rows");
+  tbody.innerHTML = `<tr><td colspan="5" class="empty">Loading…</td></tr>`;
   try {
-    const prepared = await prepareAttachment(f);
-    if (prepared.compressed) {
-      const saved = (100 - (prepared.blob.size / f.size) * 100).toFixed(0);
-      note.innerHTML = `${f.name} · <s style="color:#64748b">${(f.size/1024).toFixed(0)} KB</s>
-        → <b>${(prepared.blob.size/1024).toFixed(0)} KB</b>
-        <span style="color:#4ade80;">(saved ${saved}%)</span>`;
-    } else {
-      note.innerHTML = `${f.name} · ${(f.size / 1024).toFixed(1)} KB
-        <span style="color:#64748b;">(kept as-is)</span>`;
-    }
-  } catch {
-    note.innerHTML = `${f.name} · ${(f.size / 1024).toFixed(1)} KB`;
-  }
-});
-
-/* ============================================================
-   COMPRESSION HELPERS
-   ============================================================ */
-async function prepareAttachment(file) {
-  // GIF stays animated — pass through
-  if (file.type === "image/gif") {
-    return { blob: file, filename: file.name, type: file.type, compressed: false };
-  }
-  // Non-image — pass through
-  if (!IMAGE_TYPES.includes(file.type)) {
-    return { blob: file, filename: file.name, type: file.type, compressed: false };
-  }
-
-  try {
-    const blob = await compressImage(file);
-    // Guard: if compression made it larger, keep original
-    if (blob.size >= file.size) {
-      return { blob: file, filename: file.name, type: file.type, compressed: false };
-    }
-    const newName = file.name.replace(/\.[^.]+$/, "") + ".webp";
-    return { blob, filename: newName, type: "image/webp", compressed: true };
-  } catch (err) {
-    console.warn("Compression failed, sending original:", err);
-    return { blob: file, filename: file.name, type: file.type, compressed: false };
-  }
-}
-
-async function compressImage(file) {
-  const bitmap = await loadBitmap(file);
-
-  let { width, height } = bitmap;
-  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-    const ratio = Math.min(MAX_DIMENSION / width, MAX_DIMENSION / height);
-    width  = Math.round(width  * ratio);
-    height = Math.round(height * ratio);
-  }
-
-  const canvas = document.createElement("canvas");
-  canvas.width  = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(bitmap, 0, 0, width, height);
-
-  if (bitmap.close) bitmap.close();
-
-  return await new Promise((resolve, reject) => {
-    canvas.toBlob(
-      b => (b ? resolve(b) : reject(new Error("toBlob failed"))),
-      "image/webp",
-      IMAGE_QUALITY
-    );
-  });
-}
-
-async function loadBitmap(file) {
-  if (typeof createImageBitmap === "function") {
-    try { return await createImageBitmap(file); } catch { /* fall through */ }
-  }
-  return await new Promise((resolve, reject) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Image load failed")); };
-    img.src = url;
-  });
-}
-
-/* ============================================================
-   BASE64 (chunked — safe for large files)
-   ============================================================ */
-function toBase64(uint8) {
-  let binary = "";
-  const chunk = 0x8000;
-  for (let i = 0; i < uint8.length; i += chunk) {
-    binary += String.fromCharCode.apply(null, uint8.subarray(i, i + chunk));
-  }
-  return btoa(binary);
-}
-
-/* ============================================================
-   SEND
-   ============================================================ */
-async function send() {
-  const msg = $("msg");
-  const btn = $("sendBtn");
-  msg.className = "msg";
-  msg.textContent = "";
-
-  const to      = $("to").value.trim();
-  const cc      = $("cc").value.trim();
-  const bcc     = $("bcc").value.trim();
-  const subject = $("subject").value.trim();
-  const body    = $("body").value;
-
-  if (!to || !subject || !body) {
-    msg.className = "msg err";
-    msg.textContent = "❌ To, Subject, and Body are required.";
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = "Preparing…";
-
-  try {
-    // ---- Attachment prep (compress first) ----
-    let attachment = null;
-    const file = $("attachment").files[0];
-
-    if (file) {
-      msg.className = "msg info";
-      msg.textContent = "Compressing attachment…";
-
-      const prepared = await prepareAttachment(file);
-      const buf = await prepared.blob.arrayBuffer();
-      const b64 = toBase64(new Uint8Array(buf));
-
-      attachment = {
-        filename: prepared.filename,
-        content: b64,
-        contentType: prepared.type,
-      };
-
-      if (prepared.compressed) {
-        const saved = (100 - (prepared.blob.size / file.size) * 100).toFixed(0);
-        msg.textContent = `Attachment compressed (saved ${saved}%). Sending…`;
-      } else {
-        msg.textContent = "Sending…";
-      }
-    }
-
-    btn.textContent = "Sending…";
-
-    // ---- API call ----
-    const r = await fetch(FN + "?action=send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({ to, cc, bcc, subject, html: body, attachment }),
+    const r = await fetch(FN + "?action=sent", {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     });
+    if (r.status === 401) { localStorage.clear(); location.href = "/"; return; }
 
-    if (r.status === 401) {
-      localStorage.clear();
-      location.href = "index.html";
+    const list = await r.json();
+    if (!Array.isArray(list) || list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="empty">No emails sent yet.</td></tr>`;
       return;
     }
 
-    const data = await r.json();
-
-    if (r.ok && data.ok) {
-      msg.className = "msg ok";
-      msg.textContent = "✅ Email sent successfully!";
-
-      // Reset form
-      ["to", "cc", "bcc", "subject", "body"].forEach(id => ($(id).value = ""));
-      $("attachment").value = "";
-      $("fileNote").textContent = "";
-    } else {
-      msg.className = "msg err";
-      msg.textContent = "❌ Failed: " + (data.error || JSON.stringify(data));
-    }
+    tbody.innerHTML = list.map(e => `
+      <tr onclick="location.href='view?id=${encodeURIComponent(e.id)}'">
+        <td>${new Date(e.created_at).toLocaleString()}</td>
+        <td>${esc(e.to_email || "")}${e.cc_email ? `<span class="cc">CC: ${esc(e.cc_email)}</span>` : ""}</td>
+        <td>${esc(e.subject || "")}</td>
+        <td>${e.attachment_name ? `<span class="att">📎 ${esc(e.attachment_name)}</span>` : "—"}</td>
+        <td class="${e.status === "sent" ? "ok" : "fail"}">${esc(e.status || "")}</td>
+      </tr>
+    `).join("");
   } catch (err) {
-    msg.className = "msg err";
-    msg.textContent = "❌ " + err.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Send Email";
+    tbody.innerHTML = `<tr><td colspan="5" class="err-row">Error: ${esc(err.message)}</td></tr>`;
   }
 }
+load();
 </script>
 </body>
 </html>
