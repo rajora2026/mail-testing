@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#07162b"/>
+<title>Message · BetterGrowth Mail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+    --gold:#d9a62e; --gold-deep:#a97a14;
+    --paper:#f3f4f7; --white:#fff; --ink:#0b1b30; --muted:#5f6e83;
+    --line:#e2e6ed; --bad:#9b1c1c; --bad-bg:#fde4e4;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --side:248px; --bar:68px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100svh;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+  [hidden]{display:none!important}
+  button{font:inherit;color:inherit}
+
+  /* ---------- Shell ---------- */
+  .app{display:grid;grid-template-columns:var(--side) 1fr;min-height:100svh}
+  .side{background:var(--navy-900);color:#dbe4f0;position:sticky;top:0;height:100svh;display:flex;flex-direction:column;padding:1.5rem 1rem 1rem}
+  .brand{font-family:var(--serif);font-weight:700;font-size:1.45rem;color:var(--gold);padding:0 .6rem 1.5rem;line-height:1.1}
+  .brand small{display:block;font-family:var(--sans);font-weight:400;font-size:.78rem;color:#8fa2bb;margin-top:.25rem}
+  .nav{display:flex;flex-direction:column;gap:.15rem}
+  .nav a{display:flex;align-items:center;gap:.75rem;padding:.7rem .75rem;border-radius:10px;color:#b9c6d8;text-decoration:none;font-weight:500;font-size:.95rem;position:relative}
+  .nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+  .nav a.active{background:rgba(217,166,46,.14);color:#fff}
+  .nav a.active::before{content:"";position:absolute;left:-1rem;top:.5rem;bottom:.5rem;width:4px;border-radius:0 4px 4px 0;background:var(--gold)}
+  .side-spacer{flex:1}
+  .acct{display:flex;align-items:center;gap:.7rem;padding:.75rem;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+  .acct .who{min-width:0;flex:1}
+  .acct .who b{display:block;font-size:.85rem;font-weight:500;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .acct .who span{font-size:.75rem;color:#8fa2bb}
+  .icon-btn{background:transparent;border:0;width:44px;height:44px;border-radius:12px;cursor:pointer;display:inline-grid;place-items:center;color:inherit;flex:none;text-decoration:none}
+  .acct .icon-btn{width:40px;height:40px}
+  .acct .icon-btn:hover{background:rgba(255,255,255,.1)}
+  .av{width:48px;height:48px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:600;font-size:1.15rem;text-transform:uppercase}
+  .av.sm{width:36px;height:36px;font-size:.9rem}
+
+  .main{min-width:0}
+
+  /* ---------- Toolbar ---------- */
+  .bar{
+    position:sticky;top:0;z-index:30;background:rgba(243,244,247,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:calc(.5rem + env(safe-area-inset-top,0px)) 1rem .5rem;
+  }
+  .bar-in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:.25rem}
+  .back{display:inline-flex;align-items:center;gap:.4rem;color:var(--navy-700);text-decoration:none;font-weight:500;padding:.5rem .6rem .5rem .25rem;border-radius:10px;min-height:44px}
+  .back:hover{background:#e6e9f0}
+  .bar .sp{flex:1}
+  .bar .icon-btn{color:var(--navy-700)}
+  .bar .icon-btn:hover:not(:disabled){background:#e6e9f0}
+  .bar .icon-btn:disabled{opacity:.3;cursor:default}
+  .pos{font-size:.8rem;color:var(--muted);margin:0 .25rem}
+  .btn{
+    display:inline-flex;align-items:center;gap:.5rem;background:var(--white);border:1.5px solid var(--line);
+    padding:.55rem 1rem;border-radius:10px;font-weight:500;font-size:.9rem;cursor:pointer;min-height:44px;text-decoration:none;color:var(--ink);justify-content:center
+  }
+  .btn:hover{border-color:#c3cbd7;background:#fbfcfd}
+  .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy-900);font-weight:600}
+  .btn.gold:hover{background:#e4b343}
+  .btn.danger{color:var(--bad)}
+  .btn.danger:hover{background:var(--bad-bg);border-color:#f0b9b9}
+  .btn.solid-danger{background:var(--bad);border-color:var(--bad);color:#fff;font-weight:600}
+  .btn.solid-danger:hover{background:#7c1515}
+
+  /* ---------- Reader ---------- */
+  .wrap{max-width:820px;margin:0 auto;padding:1.75rem 1.5rem 3rem}
+  .paper{background:var(--white);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .hd{padding:1.75rem 1.75rem 1.25rem;border-bottom:1px solid var(--line)}
+  .hd h1{font-family:var(--serif);font-weight:700;font-size:2.1rem;line-height:1.12;margin:0 0 1.25rem;overflow-wrap:anywhere}
+  .sender{display:flex;align-items:center;gap:.9rem}
+  .sender .info{min-width:0;flex:1}
+  .sender .name{font-weight:600;font-size:1.02rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sender .sub{font-size:.85rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sender time{font-size:.82rem;color:var(--muted);flex:none;text-align:right}
+  .pill{display:inline-block;padding:.15rem .55rem;border-radius:99px;font-size:.72rem;font-weight:600;margin-top:.3rem}
+  .pill.unread{background:rgba(217,166,46,.2);color:var(--gold-deep)}
+  .pill.read{background:#e9edf3;color:var(--muted)}
+
+  details.more{margin-top:1rem;font-size:.85rem;color:var(--muted)}
+  details.more summary{cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;min-height:32px;list-style:none;font-weight:500}
+  details.more summary::-webkit-details-marker{display:none}
+  details.more summary::after{content:"▾";font-size:.7rem;transition:transform .15s}
+  details.more[open] summary::after{transform:rotate(180deg)}
+  .kv{display:grid;grid-template-columns:80px 1fr;gap:.35rem .9rem;margin-top:.5rem}
+  .kv dt{font-weight:500}
+  .kv dd{margin:0;overflow-wrap:anywhere;color:var(--ink)}
+  .kv dd.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem}
+
+  .msg{
+    padding:1.75rem;font-size:1.02rem;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;
+    max-width:72ch;
+  }
+  .msg a{color:var(--navy-700);text-decoration-color:var(--gold);text-underline-offset:3px;text-decoration-thickness:2px}
+  .msg a:hover{color:var(--gold-deep)}
+  .msg.empty{color:var(--muted);font-style:italic}
+  .ft{padding:1rem 1.75rem 1.5rem;display:flex;gap:.6rem;flex-wrap:wrap;border-top:1px solid var(--line);background:#fafbfd}
+
+  /* ---------- States ---------- */
+  .skel{padding:1.75rem}
+  .sk{background:linear-gradient(90deg,#eef0f4 25%,#f7f8fa 50%,#eef0f4 75%);background-size:200% 100%;animation:sh 1.3s infinite;border-radius:6px;height:14px;margin-bottom:12px}
+  @keyframes sh{to{background-position:-200% 0}}
+  .state{text-align:center;padding:3rem 1.25rem;background:var(--white);border:1.5px dashed var(--line);border-radius:18px;color:var(--muted)}
+  .state b{display:block;color:var(--bad);font-size:1.1rem;margin-bottom:.3rem}
+  .state p{margin:0 auto 1.1rem;max-width:340px;line-height:1.5}
+
+  /* ---------- Dialog ---------- */
+  dialog{border:0;border-radius:18px;padding:1.5rem;max-width:min(400px,calc(100vw - 2rem));width:100%;box-shadow:0 24px 60px rgba(7,22,43,.35);color:var(--ink)}
+  dialog::backdrop{background:rgba(7,22,43,.55)}
+  dialog h2{font-family:var(--serif);font-size:1.6rem;margin:0 0 .4rem}
+  dialog p{margin:0 0 1.25rem;color:var(--muted);line-height:1.5;font-size:.95rem}
+  dialog .acts{display:flex;gap:.6rem;justify-content:flex-end}
+
+  .toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));z-index:99;width:max-content;max-width:92vw;display:flex;flex-direction:column;gap:.5rem;align-items:center}
+  .toast{background:var(--navy-900);color:#fff;padding:.7rem 1.1rem;border-radius:12px;font-size:.9rem;border-left:4px solid var(--gold);box-shadow:0 10px 30px rgba(0,0,0,.3);animation:up .2s ease-out}
+  @keyframes up{from{transform:translateY(10px);opacity:0}}
+
+  /* Mobile action bar */
+  .dock{display:none}
+  @media (max-width:860px){
+    .app{display:block}
+    .side{display:none}
+    .bar{background:var(--navy-900);border-bottom:1px solid rgba(217,166,46,.25);backdrop-filter:none}
+    .back,.bar .icon-btn{color:#e9eef6}
+    .back:hover,.bar .icon-btn:hover:not(:disabled){background:rgba(255,255,255,.1)}
+    .pos{color:#93a5bd}
+    .wrap{padding:0 0 calc(var(--bar) + 1.5rem + env(safe-area-inset-bottom,0px))}
+    .paper{border-radius:0;border-left:0;border-right:0}
+    .hd{padding:1.25rem 1rem 1rem}
+    .hd h1{font-size:1.75rem;margin-bottom:1rem}
+    .msg{padding:1.25rem 1rem;font-size:1rem}
+    .ft{display:none}
+    .dock{
+      display:grid;grid-template-columns:1fr 1fr;gap:.6rem;position:fixed;left:0;right:0;bottom:0;z-index:40;
+      background:var(--white);border-top:1px solid var(--line);
+      padding:.6rem 1rem calc(.6rem + env(safe-area-inset-bottom,0px));
+    }
+    .toasts{bottom:calc(var(--bar) + 1rem + env(safe-area-inset-bottom,0px))}
+    .sender time{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">BetterGrowth<br/>Mail<small>Business email</small></div>
+    <nav class="nav" id="navSide" aria-label="Main"></nav>
+    <div class="side-spacer"></div>
+    <div class="acct">
+      <span class="av sm" id="sideAv">?</span>
+      <div class="who"><b id="sideUser">—</b><span id="sideRole"></span></div>
+      <button class="icon-btn" onclick="logout()" title="Sign out" aria-label="Sign out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="bar">
+      <div class="bar-in">
+        <a class="back" href="inbox">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Inbox
+        </a>
+        <span class="sp"></span>
+        <span class="pos" id="pos" hidden></span>
+        <button class="icon-btn" id="prevBtn" aria-label="Previous message" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+        </button>
+        <button class="icon-btn" id="nextBtn" aria-label="Next message" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <main class="wrap">
+      <div id="content" aria-live="polite">
+        <div class="paper"><div class="skel">
+          <div class="sk" style="height:26px;width:70%;margin-bottom:22px"></div>
+          <div class="sk" style="width:40%"></div><div class="sk" style="width:25%;margin-bottom:28px"></div>
+          <div class="sk"></div><div class="sk" style="width:92%"></div><div class="sk" style="width:60%"></div>
+        </div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="dock" id="dock" hidden>
+  <a class="btn gold" id="replyM" href="send">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 17-5-5 5-5"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+    Reply
+  </a>
+  <button class="btn danger" onclick="askDelete()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/></svg>
+    Delete
+  </button>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgT">
+  <h2 id="dlgT">Delete this message?</h2>
+  <p>This removes it from the inbox for good. You can't undo it.</p>
+  <div class="acts">
+    <button class="btn" onclick="$('dlg').close()">Keep message</button>
+    <button class="btn solid-danger" id="confirmDel">Delete message</button>
+  </div>
+</dialog>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
+const $ = id => document.getElementById(id);
+
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+const ss = {
+  get(k){ try { return sessionStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { sessionStorage.setItem(k,v); } catch {} }
+};
+
+const USER = (store.get("user") || "").toLowerCase();
+const IS_ADMIN = USER === "admin@bettergrowthsolutions.com";
+const auth = () => ({ Authorization: "Bearer " + store.get("token") });
+
+function esc(s = ""){
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+const PALETTE = ["#143252","#a97a14","#2f6b5b","#7a3b5e","#3d4f9a","#8a4a2b"];
+function colorFor(s = ""){
+  let h = 0; for (const ch of s.toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return PALETTE[h % PALETTE.length];
+}
+const local = e => (e || "").split("@")[0];
+function toast(msg){
+  const el = document.createElement("div");
+  el.className = "toast"; el.textContent = msg;
+  $("toasts").appendChild(el);
+  setTimeout(() => el.remove(), 2600);
+}
+function fmtFull(iso){
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString(undefined, { dateStyle:"full", timeStyle:"short" });
+}
+function fmtShort(iso){
+  if (!iso) return "";
+  const d = new Date(iso);
+  const same = d.toDateString() === new Date().toDateString();
+  return same
+    ? d.toLocaleTimeString(undefined, { hour:"numeric", minute:"2-digit" })
+    : d.toLocaleDateString(undefined, { month:"short", day:"numeric", year:"numeric" });
+}
+// escape first, then turn plain URLs into safe links
+function linkify(text){
+  return esc(text).replace(/(https?:\/\/[^\s<]+?)([.,;:!?)]*)(?=\s|$)/g,
+    (_, url, tail) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>${tail}`);
+}
+
+/* ---------- navigation (sidebar) ---------- */
+const I = {
+  home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  send:'<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/>',
+  sent:'<path d="M3 6h18M3 12h18M3 18h12"/>',
+  inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>'
+};
+const NAV = [
+  { href: IS_ADMIN ? "admin" : "dashboard", label:"Dashboard", icon:I.home },
+  { href:"send",  label:"Send",  icon:I.send },
+  { href:"sent",  label:"Sent",  icon:I.sent },
+  { href:"inbox", label:"Inbox", icon:I.inbox, active:true }
+];
+$("navSide").innerHTML = NAV.map(n => `
+  <a href="${n.href}" ${n.active ? 'class="active"' : ""}>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${n.icon}</svg>
+    <span>${n.label}</span>
+  </a>`).join("");
+
+/* ---------- data ---------- */
+const id = new URLSearchParams(location.search).get("id");
+let EMAIL = null;
+
+async function load(){
+  if (!id) return fail("This link is missing a message ID. Go back to the inbox and open the message again.");
+  try{
+    const r = await fetch(FN + "?action=inbound_get&id=" + encodeURIComponent(id), { headers: auth() });
+    if (r.status === 401) { location.href = "/"; return; }
+    if (!r.ok){
+      const e = await r.json().catch(() => ({}));
+      throw new Error(e.error || "The server answered with error " + r.status + ".");
+    }
+    EMAIL = await r.json();
+    render();
+    setupPager();
+    if (EMAIL.status === "unread") autoRead();
+  }catch(err){ fail(err.message); }
+}
+
+function fail(msg){
+  $("content").innerHTML = `<div class="state"><b>Couldn't open this message</b>
+    <p>${esc(msg)}</p>
+    <a class="btn gold" href="inbox">Back to inbox</a></div>`;
+}
+
+function render(){
+  const e = EMAIL;
+  document.title = (e.subject || "(no subject)") + " · BetterGrowth Mail";
+  const from = e.from_email || "Unknown sender";
+  const body = (e.body || "").trim();
+
+  $("content").innerHTML = `
+    <article class="paper">
+      <header class="hd">
+        <h1>${esc(e.subject || "(no subject)")}</h1>
+        <div class="sender">
+          <span class="av" style="background:${colorFor(from)}" aria-hidden="true">${esc((local(from) || "?")[0])}</span>
+          <div class="info">
+            <div class="name">${esc(from)}</div>
+            <div class="sub">to ${esc(e.recipient_email || "—")}</div>
+          </div>
+          <div style="text-align:right">
+            <time datetime="${esc(e.created_at || "")}">${esc(fmtShort(e.created_at))}</time><br/>
+            <span class="pill ${e.status === "unread" ? "unread" : "read"}" id="pill">${e.status === "unread" ? "Unread" : "Read"}</span>
+          </div>
+        </div>
+        <details class="more">
+          <summary>Details</summary>
+          <dl class="kv">
+            <dt>From</dt><dd>${esc(from)}</dd>
+            <dt>To</dt><dd>${esc(e.recipient_email || "—")}</dd>
+            <dt>Received</dt><dd>${esc(fmtFull(e.created_at))}</dd>
+            <dt>ID</dt><dd class="mono">${esc(e.id)}</dd>
+          </dl>
+        </details>
+      </header>
+      <div class="msg ${body ? "" : "empty"}">${body ? linkify(e.body) : "This message has no text."}</div>
+      <footer class="ft">
+        <a class="btn gold" id="replyD" href="#">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 17-5-5 5-5"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+          Reply
+        </a>
+        <button class="btn" onclick="copyBody()">Copy text</button>
+        <button class="btn danger" onclick="askDelete()">Delete</button>
+      </footer>
+    </article>`;
+
+  // Reply: opens the Send page with the sender and subject filled in
+  const subj = /^re:/i.test(e.subject || "") ? e.subject : "Re: " + (e.subject || "");
+  const href = "send?to=" + encodeURIComponent(e.from_email || "") + "&subject=" + encodeURIComponent(subj);
+  $("replyD").href = href; $("replyM").href = href;
+  $("dock").hidden = false;
+}
+
+/* ---------- actions ---------- */
+async function autoRead(){
+  try{
+    const r = await fetch(FN + "?action=inbound_mark_read", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", ...auth() },
+      body: JSON.stringify({ id: EMAIL.id })
+    });
+    if (r.ok){
+      EMAIL.status = "read";
+      const p = $("pill");
+      if (p){ p.textContent = "Read"; p.className = "pill read"; }
+    }
+  }catch{}
+}
+
+function copyBody(){
+  const text = EMAIL ? (EMAIL.body || "") : "";
+  const done = () => toast("Message text copied");
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => toast("Couldn't copy the text"));
+  else toast("Couldn't copy the text");
+}
+
+function askDelete(){ $("dlg").showModal(); }
+$("confirmDel").addEventListener("click", async () => {
+  const b = $("confirmDel"); b.disabled = true; b.textContent = "Deleting…";
+  try{
+    const r = await fetch(FN + "?action=inbound_delete", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", ...auth() },
+      body: JSON.stringify({ id: EMAIL.id })
+    });
+    if (!r.ok) throw new Error();
+    location.href = "inbox";
+  }catch{
+    b.disabled = false; b.textContent = "Delete message";
+    $("dlg").close();
+    toast("Couldn't delete the message. Try again.");
+  }
+});
+$("dlg").addEventListener("click", ev => { if (ev.target === $("dlg")) $("dlg").close(); });
+
+/* ---------- previous / next (order comes from the inbox list) ---------- */
+function setupPager(){
+  let ids = [];
+  try { ids = JSON.parse(ss.get("inboxIds") || "[]"); } catch {}
+  const i = ids.indexOf(id);
+  if (i === -1) return;
+  const go = n => { location.href = "inbox-view?id=" + encodeURIComponent(ids[n]); };
+  $("pos").hidden = false; $("pos").textContent = (i + 1) + " of " + ids.length;
+  if (i > 0){ $("prevBtn").disabled = false; $("prevBtn").onclick = () => go(i - 1); }
+  if (i < ids.length - 1){ $("nextBtn").disabled = false; $("nextBtn").onclick = () => go(i + 1); }
+  document.addEventListener("keydown", ev => {
+    if (ev.target.closest("input,textarea") || $("dlg").open) return;
+    if (ev.key === "ArrowLeft" && i > 0) go(i - 1);
+    if (ev.key === "ArrowRight" && i < ids.length - 1) go(i + 1);
+  });
+}
+
+function logout(){
+  store.del("token"); store.del("user");
+  location.href = "/";
+}
+
+/* ---------- boot ---------- */
+if (!store.get("token")) { location.href = "/"; }
+else {
+  $("sideAv").textContent = (USER || "?")[0];
+  $("sideAv").style.background = colorFor(USER);
+  $("sideUser").textContent = USER || "Signed in";
+  $("sideRole").textContent = IS_ADMIN ? "Administrator · all accounts" : "Your mailbox";
+  load();
+}
+</script>
+</body>
+</html>
