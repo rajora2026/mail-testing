@@ -6,234 +6,400 @@
 <meta name="theme-color" content="#07162b"/>
 <title>Email · BetterGrowth Mail</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
-    --gold:#d9a62e; --gold-deep:#b8841a;
-    --paper:#f5f6f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f;
-    --line:#dde2ea; --bad:#9b1c1c; --bad-bg:#fde4e4;
+    --navy-950:#050f1f; --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+    --gold:#d9a62e; --gold-deep:#b8841a; --gold-soft:#f1d899;
+    --paper:#f4f5f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f;
+    --line:#dde2ea; --ok:#17653a; --ok-bg:#e3f4ea; --bad:#9b1c1c; --bad-bg:#fde4e4;
     --serif:"Cormorant Garamond",Georgia,serif;
     --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   }
-  *{box-sizing:border-box}
-  body{font-family:var(--sans);color:var(--ink);background:var(--paper);margin:0;padding:1.25rem;-webkit-font-smoothing:antialiased}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100svh;
+       -webkit-font-smoothing:antialiased;line-height:1.5}
   :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  [hidden]{display:none!important}
+  button{font-family:inherit}
+  svg{flex:none}
 
-  .wrap{max-width:900px; margin:auto}
-  .topbar{
-    display:flex; justify-content:space-between; align-items:center;
-    gap:.75rem; margin-bottom:1rem; flex-wrap:wrap;
-  }
-  a.back{
-    color:var(--navy-700); text-decoration:none; font-size:.9rem;
-    display:inline-flex; align-items:center; gap:.35rem; font-weight:500;
-  }
-  a.back:hover{color:var(--gold-deep)}
-  .actions{display:flex; gap:.5rem; flex-wrap:wrap}
-  .btn{
-    background:var(--gold); color:var(--navy-900); border:0;
-    padding:.5rem .9rem; border-radius:8px; font:inherit;
-    font-weight:600; cursor:pointer; font-size:.85rem;
-    display:inline-flex; align-items:center; gap:.4rem;
-  }
-  .btn:hover{background:#e4b343}
-  .btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line)}
-  .btn.ghost:hover{background:#fbfcfd}
-  .btn.red{background:#9b1c1c; color:#fff}
-  .btn.red:hover{background:#7c1515}
+  /* Top bar */
+  .topbar{background:linear-gradient(90deg,var(--navy-950) 0%,var(--navy-700) 100%);color:#e9eef6;
+    padding:.6rem 1.25rem;padding-top:max(.6rem,env(safe-area-inset-top));
+    display:flex;align-items:center;gap:.9rem;position:sticky;top:0;z-index:40;
+    border-bottom:2px solid var(--gold);box-shadow:0 6px 24px rgba(0,0,0,.25)}
+  .back{color:#e9eef6;text-decoration:none;font-size:.9rem;font-weight:500;min-height:40px;padding:0 .85rem 0 .6rem;
+    border:1px solid rgba(255,255,255,.22);border-radius:10px;display:inline-flex;align-items:center;gap:.35rem;transition:background .15s}
+  .back:hover{background:rgba(255,255,255,.09)}
+  .brandmark{font-family:var(--serif);font-weight:700;font-size:1.25rem;color:var(--gold);display:flex;align-items:center;gap:.55rem;white-space:nowrap}
+  .brandmark .mark{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+    background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-size:.95rem;color:#fff}
+  .spacer{flex:1}
 
-  .card{
-    background:var(--white); border-radius:14px;
-    padding:1.75rem; margin-bottom:1.25rem;
-    box-shadow:0 4px 16px rgba(11,27,48,.05);
-    border:1.5px solid var(--line);
-  }
-  .head{
-    padding-bottom:1rem; border-bottom:1px solid var(--line); margin-bottom:1.25rem;
-  }
-  .head h1{
-    font-family:var(--serif); font-weight:700; font-size:1.5rem;
-    margin:0 0 .6rem; color:var(--ink); line-height:1.25;
-  }
-  .meta-grid{
-    display:grid; grid-template-columns:90px 1fr;
-    row-gap:.5rem; column-gap:1rem;
-    font-size:.9rem;
-  }
-  .meta-grid .label{
-    color:var(--muted); font-size:.75rem;
-    text-transform:uppercase; letter-spacing:.05em;
-    font-weight:600; padding-top:.15rem;
-  }
-  .meta-grid .value{word-break:break-word}
-  .meta-grid .value.mono{
-    font-family:ui-monospace,Menlo,Consolas,monospace;
-    font-size:.82rem; color:#475569;
-  }
-  .status-pill{
-    display:inline-block;
-    padding:.2rem .6rem; border-radius:99px;
-    font-size:.72rem; font-weight:700; text-transform:uppercase;
-    letter-spacing:.04em;
-  }
-  .status-pill.unread{background:rgba(217,166,46,.18); color:var(--gold-deep)}
-  .status-pill.read{background:#e9edf3; color:var(--muted)}
+  .wrap{max-width:860px;margin:auto;padding:1.25rem}
 
-  h2.section{
-    font-family:var(--serif); font-weight:700; font-size:1.1rem;
-    margin:1.5rem 0 .6rem; color:var(--ink);
+  /* Buttons */
+  .btn{background:var(--gold);color:var(--navy-900);border:0;min-height:44px;padding:0 1.1rem;border-radius:11px;
+    font-weight:600;cursor:pointer;font-size:.92rem;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    text-decoration:none;transition:background .15s,transform .08s}
+  .btn:hover:not(:disabled){background:#e4b343}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn.ghost:hover:not(:disabled){background:var(--paper)}
+  .btn.red{background:var(--bad);color:#fff}
+  .btn.red:hover:not(:disabled){background:#7c1515}
+  .actions{display:flex;gap:.5rem}
+  .topbar .btn{min-height:40px;font-size:.85rem}
+  .topbar .btn.ghost{color:#e9eef6;border-color:rgba(255,255,255,.22)}
+  .topbar .btn.ghost:hover:not(:disabled){background:rgba(255,255,255,.09)}
+
+  /* Card */
+  .card{background:var(--white);border:1.5px solid var(--line);border-radius:18px;padding:1.6rem;
+    box-shadow:0 6px 20px -8px rgba(11,27,48,.08)}
+  .subject-row{display:flex;gap:.8rem;align-items:flex-start;justify-content:space-between;margin-bottom:1.1rem}
+  .subject-row h1{font-family:var(--serif);font-weight:700;font-size:1.9rem;line-height:1.12;margin:0;overflow-wrap:anywhere}
+  .pill{padding:.28rem .7rem;border-radius:99px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;margin-top:.35rem;flex:none}
+  .pill.unread{background:rgba(217,166,46,.2);color:var(--gold-deep)}
+  .pill.read{background:#e9edf3;color:var(--muted)}
+
+  .sender{display:flex;gap:.85rem;align-items:center;padding:.9rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--navy-900);
+    display:grid;place-items:center;flex:none;font-family:var(--serif);font-weight:700;font-size:1.35rem}
+  .sender .who{min-width:0;flex:1}
+  .sender .who b{display:block;font-size:1rem;overflow-wrap:anywhere}
+  .sender .who span{display:block;color:var(--muted);font-size:.82rem;overflow-wrap:anywhere}
+  .sender .when{text-align:right;font-size:.8rem;color:var(--muted);flex:none}
+  .sender .when b{display:block;color:var(--ink);font-weight:600;font-size:.84rem}
+
+  .meta{display:grid;grid-template-columns:84px 1fr;gap:.45rem 1rem;padding:.9rem 0;font-size:.9rem}
+  .meta .label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600;padding-top:.15rem}
+  .meta .value{overflow-wrap:anywhere}
+
+  .section-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin:.4rem 0 .6rem}
+  .section-head h2{font-family:var(--serif);font-weight:700;font-size:1.2rem;margin:0}
+  .copy{background:transparent;border:1.5px solid var(--line);color:var(--muted);min-height:38px;padding:0 .8rem;border-radius:10px;
+    font-size:.8rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .copy:hover{background:var(--paper);color:var(--ink)}
+  .body-content{background:var(--paper);padding:1.2rem 1.25rem;border-radius:13px;font-size:1rem;line-height:1.7;
+    white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #e8ebf1}
+  .body-content.empty{color:var(--muted);font-style:italic}
+
+  details.tech{margin-top:1rem}
+  details.tech summary{cursor:pointer;color:var(--muted);font-size:.8rem;font-weight:600;list-style:none;display:inline-flex;align-items:center;gap:.4rem;min-height:36px}
+  details.tech summary::-webkit-details-marker{display:none}
+  details.tech summary svg{transition:transform .2s}
+  details.tech[open] summary svg{transform:rotate(90deg)}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;color:#475569;overflow-wrap:anywhere;padding:.2rem 0}
+
+  /* States */
+  .skel{border-radius:12px;background:linear-gradient(90deg,#eceff4 25%,#f6f7fa 50%,#eceff4 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+  @keyframes sh{to{background-position:-200% 0}}
+  .err-card{text-align:center;padding:2.4rem 1.2rem}
+  .err-card svg{color:var(--bad);margin-bottom:.6rem}
+  .err-card p{color:var(--bad);margin:0 0 1rem;font-weight:500}
+
+  /* Confirm dialog */
+  .overlay{position:fixed;inset:0;background:rgba(7,22,43,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:1rem;z-index:100}
+  .overlay.show{display:flex}
+  .dialog{background:#fff;border-radius:18px;padding:1.5rem;max-width:400px;width:100%;box-shadow:0 25px 60px rgba(0,0,0,.5);animation:pop .2s ease-out}
+  @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+  @keyframes sheet{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .dialog .ico{width:46px;height:46px;border-radius:50%;background:var(--bad-bg);color:var(--bad);display:grid;place-items:center;margin-bottom:.8rem}
+  .dialog h3{font-family:var(--serif);font-size:1.5rem;margin:0 0 .3rem}
+  .dialog p{margin:0 0 1.2rem;color:var(--muted);font-size:.93rem;overflow-wrap:anywhere}
+  .dialog .row{display:flex;gap:.6rem}
+  .dialog .row .btn{flex:1}
+
+  /* Toast */
+  .toast-wrap{position:fixed;top:1rem;right:1rem;z-index:300;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+  .toast{background:var(--navy-800);color:#e9eef6;padding:.75rem 1rem;border-radius:11px;font-size:.88rem;border-left:4px solid var(--gold);
+    box-shadow:0 10px 28px rgba(0,0,0,.3);animation:slidein .25s ease-out;max-width:320px;transition:opacity .3s}
+  .toast.ok{border-left-color:#4ade80} .toast.err{border-left-color:#f87171}
+  @keyframes slidein{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+
+  .credit{text-align:center;color:var(--muted);font-size:.85rem;padding:.5rem 1rem 1.5rem}
+  .credit a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:2px solid var(--gold);padding-bottom:1px}
+  .credit a:hover{color:var(--gold-deep)}
+
+  /* Mobile */
+  @media (max-width:700px){
+    .topbar{padding:.55rem .9rem;padding-top:max(.55rem,env(safe-area-inset-top))}
+    .brandmark span.name{display:none}
+    .wrap{padding:.85rem}
+    .card{padding:1.1rem;border-radius:16px}
+    .subject-row{flex-direction:column-reverse;gap:.4rem}
+    .subject-row h1{font-size:1.6rem}
+    .pill{margin-top:0}
+    .sender .when{display:none}
+    .meta{grid-template-columns:1fr;gap:0}
+    .meta .label{padding-top:.55rem}
+    .body-content{padding:1rem;font-size:1rem}
+
+    /* thumb-friendly action bar */
+    .actions{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:.6rem .85rem;padding-bottom:max(.6rem,env(safe-area-inset-bottom));
+      background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+    .actions .btn{flex:1;min-height:48px;font-size:.95rem}
+    .topbar .btn.ghost{color:var(--ink);border-color:var(--line)}
+    .topbar .btn.ghost:hover:not(:disabled){background:var(--paper)}
+    body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+
+    .overlay{align-items:flex-end;padding:0}
+    .dialog{border-radius:22px 22px 0 0;padding:1.3rem 1.1rem calc(1.2rem + env(safe-area-inset-bottom));animation:sheet .25s ease-out;max-width:none}
+    .toast-wrap{top:auto;bottom:calc(88px + env(safe-area-inset-bottom));left:1rem;right:1rem;align-items:center}
+    .toast{max-width:none;width:100%}
   }
-  .body-content{
-    background:var(--paper); padding:1.25rem;
-    border-radius:10px; font-size:.95rem; line-height:1.65;
-    white-space:pre-wrap; word-break:break-word;
-    font-family:ui-monospace,Menlo,Consolas,monospace;
-    max-height:600px; overflow-y:auto;
-  }
-  .loading{text-align:center; padding:3rem; color:var(--muted)}
-  .error{
-    background:var(--bad-bg); color:var(--bad);
-    padding:1rem 1.25rem; border-radius:10px;
-    text-align:center;
-  }
-  @media (max-width:600px){
-    .meta-grid{grid-template-columns:1fr; row-gap:.15rem}
-    .label{padding-top:.5rem}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}
   }
 </style>
 </head>
 <body>
+
+<header class="topbar">
+  <a class="back" href="inbox">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+    Inbox
+  </a>
+  <div class="brandmark"><span class="mark">bg</span><span class="name">BetterGrowth Mail</span></div>
+  <div class="spacer"></div>
+
+  <div class="actions" id="actions" hidden>
+    <button class="btn ghost" id="markBtn" onclick="markRead()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+      Mark as read
+    </button>
+    <button class="btn red" onclick="askDelete()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
+      Delete
+    </button>
+  </div>
+</header>
+
 <div class="wrap">
-  <div class="topbar">
-    <a class="back" href="inbox">← Back to Inbox</a>
-    <div class="actions">
-      <button class="btn ghost" onclick="markRead()" id="markBtn">✓ Mark as read</button>
-      <button class="btn red" onclick="del()">🗑 Delete</button>
+  <div id="content" aria-live="polite">
+    <div class="card">
+      <div class="skel" style="height:34px;width:70%;margin-bottom:1.2rem"></div>
+      <div class="skel" style="height:56px;margin-bottom:1rem"></div>
+      <div class="skel" style="height:140px"></div>
     </div>
   </div>
+</div>
 
-  <div id="content">
-    <div class="loading">Loading email…</div>
+<footer class="credit">
+  Made by <a href="https://rajvardhansingh.in/" target="_blank" rel="noopener noreferrer">Rajvardhan Singh</a>
+</footer>
+
+<!-- Delete confirmation -->
+<div class="overlay" id="confirmOverlay" onclick="closeConfirm(event)">
+  <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitle" onclick="event.stopPropagation()">
+    <div class="ico">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
+    </div>
+    <h3 id="dlgTitle">Delete this email?</h3>
+    <p id="dlgText">This can't be undone.</p>
+    <div class="row">
+      <button class="btn ghost" id="dlgCancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn red" id="dlgDelete" onclick="doDelete()">Delete</button>
+    </div>
   </div>
 </div>
+
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
 
 <script>
 const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
 const $ = id => document.getElementById(id);
 
 const store = {
-  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
-  del(k){ try { localStorage.removeItem(k); } catch {} }
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } }
 };
+const authHeaders = () => ({ Authorization: "Bearer " + store.get("token") });
 
 function esc(s = "") {
   return String(s).replace(/[&<>"']/g, c =>
     ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function fmtTime(iso) {
+function fmtFull(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" });
+}
+function fmtShort(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+}
+function fmtRel(iso) {
+  if (!iso) return "";
+  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + "m ago";
+  const h = Math.floor(mins / 60);
+  if (h < 24) return h + "h ago";
+  const d = Math.floor(h / 24);
+  return d < 30 ? d + "d ago" : "";
+}
+function toast(msg, kind = "") {
+  const el = document.createElement("div");
+  el.className = "toast" + (kind ? " " + kind : "");
+  el.textContent = msg;
+  $("toastWrap").appendChild(el);
+  setTimeout(() => el.style.opacity = "0", 2400);
+  setTimeout(() => el.remove(), 2800);
 }
 
 const id = new URLSearchParams(location.search).get("id");
 let EMAIL = null;
 
+function showError(msg, canRetry) {
+  $("actions").hidden = true;
+  $("content").innerHTML = `
+    <div class="card err-card">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <p>${esc(msg)}</p>
+      <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
+        ${canRetry ? `<button class="btn" onclick="load()">Try again</button>` : ""}
+        <a class="btn ghost" href="inbox">Back to Inbox</a>
+      </div>
+    </div>`;
+}
+
 async function load() {
-  if (!id) {
-    $("content").innerHTML = `<div class="error">Missing email ID.</div>`;
-    return;
-  }
+  if (!id) { showError("This link is missing an email ID.", false); return; }
   try {
-    const r = await fetch(FN + "?action=inbound_get&id=" + encodeURIComponent(id), {
-      headers: { Authorization: "Bearer " + store.get("token") }
-    });
+    const r = await fetch(FN + "?action=inbound_get&id=" + encodeURIComponent(id), { headers: authHeaders() });
     if (r.status === 401) { location.href = "/"; return; }
     if (!r.ok) {
-      const e = await r.json().catch(()=>({}));
-      throw new Error(e.error || "HTTP " + r.status);
+      const e = await r.json().catch(() => ({}));
+      throw new Error(e.error || "Could not load this email (HTTP " + r.status + ").");
     }
     EMAIL = await r.json();
     render(EMAIL);
   } catch (err) {
-    $("content").innerHTML = `<div class="error">❌ ${esc(err.message)}</div>`;
+    showError(err.message === "Failed to fetch" ? "Can't reach the server. Check your connection." : err.message, true);
   }
 }
 
 function render(e) {
-  const statusCls = e.status === "unread" ? "unread" : "read";
+  const unread = e.status === "unread";
+  const fromName = (e.from_email || "?").split("@")[0];
+  const initialLetter = esc(((fromName || "?")[0] || "?").toUpperCase());
+  const hasBody = !!(e.body && String(e.body).trim());
+  document.title = (e.subject || "(no subject)") + " · BetterGrowth Mail";
 
   $("content").innerHTML = `
-    <div class="card">
-      <div class="head">
+    <article class="card">
+      <div class="subject-row">
         <h1>${esc(e.subject || "(no subject)")}</h1>
-        <div class="meta-grid">
-          <div class="label">Status</div>
-          <div class="value"><span class="status-pill ${statusCls}">${esc(e.status)}</span></div>
-
-          <div class="label">From</div>
-          <div class="value">${esc(e.from_email || "—")}</div>
-
-          <div class="label">To</div>
-          <div class="value">${esc(e.recipient_email || "—")}</div>
-
-          <div class="label">Received</div>
-          <div class="value">${esc(fmtTime(e.created_at))}</div>
-
-          <div class="label">ID</div>
-          <div class="value mono">${esc(e.id)}</div>
-        </div>
+        <span class="pill ${unread ? "unread" : "read"}">${unread ? "Unread" : "Read"}</span>
       </div>
 
-      <h2 class="section" style="margin-top:0">Message</h2>
-      <div class="body-content">${esc(e.body || "(empty)")}</div>
-    </div>
-  `;
+      <div class="sender">
+        <div class="avatar" aria-hidden="true">${initialLetter}</div>
+        <div class="who">
+          <b>${esc(fromName)}</b>
+          <span>${esc(e.from_email || "—")}</span>
+        </div>
+        <div class="when"><b>${esc(fmtShort(e.created_at))}</b>${esc(fmtRel(e.created_at))}</div>
+      </div>
 
-  // Update "Mark as read" button visibility
-  if (e.status === "read") {
-    $("markBtn").style.display = "none";
+      <div class="meta">
+        <div class="label">To</div><div class="value">${esc(e.recipient_email || "—")}</div>
+        <div class="label">Received</div><div class="value">${esc(fmtFull(e.created_at))}</div>
+      </div>
+
+      <div class="section-head">
+        <h2>Message</h2>
+        ${hasBody ? `<button class="copy" onclick="copyBody()" aria-label="Copy message">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>Copy</button>` : ""}
+      </div>
+      <div class="body-content ${hasBody ? "" : "empty"}">${hasBody ? esc(e.body) : "This email has no message."}</div>
+
+      <details class="tech">
+        <summary><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>Technical details</summary>
+        <div class="mono">ID: ${esc(e.id)}</div>
+      </details>
+    </article>`;
+
+  $("actions").hidden = false;
+  $("markBtn").hidden = !unread;
+}
+
+async function copyBody() {
+  if (!EMAIL) return;
+  try {
+    await navigator.clipboard.writeText(EMAIL.body || "");
+    toast("Message copied", "ok");
+  } catch {
+    toast("Couldn't copy. Select the text and copy it manually.", "err");
   }
 }
 
 async function markRead() {
   if (!EMAIL) return;
+  const btn = $("markBtn");
+  btn.disabled = true;
   try {
     const r = await fetch(FN + "?action=inbound_mark_read", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + store.get("token")
-      },
+      headers: { "Content-Type": "application/json", ...authHeaders() },
       body: JSON.stringify({ id: EMAIL.id })
     });
+    if (r.status === 401) { location.href = "/"; return; }
     if (r.ok) {
       EMAIL.status = "read";
       render(EMAIL);
+      toast("Marked as read", "ok");
+    } else {
+      toast("Couldn't mark as read. Try again.", "err");
     }
-  } catch {}
+  } catch {
+    toast("Network error. Try again.", "err");
+  } finally {
+    btn.disabled = false;
+  }
 }
 
-async function del() {
+/* Delete (with in-page confirmation) */
+function askDelete() {
   if (!EMAIL) return;
-  if (!confirm("Delete this email?")) return;
+  $("dlgText").textContent = `"${EMAIL.subject || "(no subject)"}" will be removed permanently. This can't be undone.`;
+  $("confirmOverlay").classList.add("show");
+  $("dlgCancel").focus();
+}
+function closeConfirm(e) {
+  if (e && e.target !== $("confirmOverlay")) return;
+  $("confirmOverlay").classList.remove("show");
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("confirmOverlay").classList.remove("show"); });
+
+async function doDelete() {
+  if (!EMAIL) return;
+  const btn = $("dlgDelete");
+  btn.disabled = true;
+  btn.textContent = "Deleting…";
   try {
     const r = await fetch(FN + "?action=inbound_delete", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + store.get("token")
-      },
+      headers: { "Content-Type": "application/json", ...authHeaders() },
       body: JSON.stringify({ id: EMAIL.id })
     });
+    if (r.status === 401) { location.href = "/"; return; }
     if (r.ok) {
       location.href = "inbox";
-    } else {
-      alert("Delete failed");
+      return;
     }
+    toast("Delete failed. Try again.", "err");
   } catch {
-    alert("Delete failed");
+    toast("Delete failed. Check your connection.", "err");
   }
+  btn.disabled = false;
+  btn.textContent = "Delete";
+  $("confirmOverlay").classList.remove("show");
 }
 
 if (!store.get("token")) { location.href = "/"; }
