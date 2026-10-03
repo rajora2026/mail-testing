@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#07162b"/>
+<title>Activity Logs · Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+    --gold:#d9a62e; --gold-deep:#b8841a; --gold-soft:#f1d899;
+    --paper:#f5f6f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f;
+    --line:#dde2ea; --ok:#17653a; --ok-bg:#e3f4ea;
+    --warn:#7a5410; --warn-bg:#fdf1d6; --bad:#9b1c1c; --bad-bg:#fde4e4;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);margin:0;padding:0;-webkit-font-smoothing:antialiased}
+  [hidden]{display:none!important}
+
+  /* Topbar */
+  .topbar{
+    background:linear-gradient(90deg,var(--navy-900),var(--navy-700));
+    color:#e9eef6; padding:.65rem 1.25rem;
+    display:flex; align-items:center; gap:.75rem; flex-wrap:wrap;
+    position:sticky; top:0; z-index:40;
+    border-bottom:2px solid var(--gold);
+  }
+  .brandmark{font-family:var(--serif); font-weight:700; font-size:1.2rem; color:var(--gold); display:flex; align-items:center; gap:.6rem}
+  .admin-badge{background:var(--gold); color:var(--navy-900); padding:.15rem .5rem; border-radius:5px; font-size:.62rem; font-weight:700; letter-spacing:.08em}
+  .nav-links{display:flex; gap:.3rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:.25rem}
+  .nav-links a{color:#cbd5e1; text-decoration:none; padding:.4rem .8rem; border-radius:7px; font-size:.82rem; font-weight:500; display:inline-flex; align-items:center; gap:.35rem}
+  .nav-links a:hover{background:rgba(255,255,255,.1); color:#fff}
+  .nav-links a.active{background:var(--gold); color:var(--navy-900); font-weight:600}
+  .topbar-spacer{flex:1}
+  .tbtn{background:var(--gold); color:var(--navy-900); border:0; padding:.45rem .9rem; border-radius:8px; font:inherit; font-weight:600; cursor:pointer; font-size:.85rem}
+  .tbtn.ghost{background:transparent; color:#e9eef6; border:1px solid rgba(255,255,255,.2)}
+
+  /* Layout */
+  .wrap{max-width:1500px; margin:auto; padding:1.25rem}
+  .head{margin-bottom:1rem}
+  .head h1{font-family:var(--serif); font-weight:700; font-size:1.6rem; margin:0}
+  .head p{color:var(--muted); margin:.25rem 0 0; font-size:.9rem}
+
+  .tabs{display:flex; gap:.4rem; margin-bottom:1.25rem; background:var(--white); padding:.35rem; border-radius:11px; border:1.5px solid var(--line); overflow-x:auto}
+  .tab{background:transparent; border:0; font:inherit; font-size:.9rem; font-weight:500; color:var(--muted); cursor:pointer; padding:.6rem 1rem; border-radius:8px; white-space:nowrap}
+  .tab:hover{background:var(--paper); color:var(--ink)}
+  .tab.active{background:var(--navy-800); color:#fff}
+
+  .card{background:var(--white); border:1.5px solid var(--line); border-radius:14px; padding:1.25rem; box-shadow:0 4px 16px rgba(11,27,48,.04); margin-bottom:1.25rem}
+  .card h3{font-family:var(--serif); font-weight:700; font-size:1.3rem; margin:0 0 1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem}
+  .card h3 small{font-family:var(--sans); font-weight:400; font-size:.8rem; color:var(--muted)}
+
+  /* Filter row */
+  .filter-row{display:flex; gap:.6rem; margin-bottom:1rem; flex-wrap:wrap}
+  .filter-row select, .filter-row input{
+    padding:.55rem .8rem; font:inherit; font-size:.9rem;
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:9px; color:var(--ink); min-width:160px;
+  }
+  .filter-row select:focus, .filter-row input:focus{outline:none; border-color:var(--navy-700); box-shadow:0 0 0 4px rgba(217,166,46,.22)}
+
+  /* Log rows */
+  .log-row{
+    display:flex; align-items:flex-start; gap:.9rem;
+    padding:.75rem .9rem; border-radius:9px;
+    background:var(--paper); margin-bottom:.5rem;
+    font-size:.88rem;
+  }
+  .log-row .icon{
+    width:34px; height:34px; border-radius:50%;
+    display:grid; place-items:center; flex:none;
+    font-size:.9rem; font-weight:700;
+  }
+  .log-row .icon.login  {background:var(--ok-bg); color:var(--ok)}
+  .log-row .icon.logout {background:#e9edf3; color:var(--muted)}
+  .log-row .icon.send   {background:rgba(217,166,46,.2); color:var(--gold-deep)}
+  .log-row .icon.receive{background:#ede9fe; color:#5b21b6}
+  .log-row .icon.delete {background:var(--bad-bg); color:var(--bad)}
+  .log-row .icon.error  {background:var(--bad-bg); color:var(--bad)}
+  .log-row .content{flex:1; min-width:0}
+  .log-row .content .user{font-weight:600; font-size:.9rem}
+  .log-row .content .details{color:var(--muted); font-size:.82rem; margin-top:.15rem; word-break:break-word}
+  .log-row .content .meta{color:#94a3b8; font-size:.72rem; margin-top:.2rem}
+  .log-row .when{font-size:.75rem; color:var(--muted); flex:none; text-align:right; min-width:100px}
+
+  /* Session rows */
+  .session-row{
+    padding:1rem; border-radius:10px;
+    background:var(--paper); margin-bottom:.6rem;
+    border-left:4px solid var(--gold);
+  }
+  .session-row .head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:.6rem; margin-bottom:.5rem;
+  }
+  .session-row .user{font-weight:600; font-size:.95rem}
+  .session-row .meta{
+    display:grid; grid-template-columns:auto 1fr; gap:.35rem .8rem;
+    font-size:.82rem; color:var(--muted);
+  }
+  .session-row .meta b{color:var(--ink); font-weight:500}
+  .duration-pill{
+    background:var(--gold); color:var(--navy-900);
+    padding:.2rem .6rem; border-radius:99px;
+    font-size:.75rem; font-weight:600;
+  }
+
+  .empty{text-align:center; padding:2rem; color:var(--muted); font-size:.9rem}
+
+  @media (max-width:700px){
+    .topbar{padding:.55rem .8rem; gap:.5rem}
+    .nav-links a{padding:.35rem .6rem; font-size:.75rem}
+    .nav-links a span{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brandmark">BetterGrowth <span class="admin-badge">ADMIN</span></div>
+
+  <nav class="nav-links">
+    <a href="admin">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span>Admin</span>
+    </a>
+    <a href="send">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+      <span>Send</span>
+    </a>
+    <a href="sent">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>
+      <span>Sent</span>
+    </a>
+    <a href="inbox">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/></svg>
+      <span>Inbox</span>
+    </a>
+    <a href="admin_logs" class="active">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+      <span>Logs</span>
+    </a>
+  </nav>
+
+  <div class="topbar-spacer"></div>
+  <button class="tbtn ghost" onclick="refreshAll()">↻ Refresh</button>
+  <button class="tbtn" onclick="logout()">Sign out</button>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <h1>Activity Logs</h1>
+    <p>Every action taken by every user — logins, logouts, sends, receives, deletes</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="activity">📋 Activity</button>
+    <button class="tab" data-tab="sessions">⏱ Sessions</button>
+  </div>
+
+  <!-- Activity tab -->
+  <section class="card" id="tab-activity">
+    <h3>All activity <small id="activityCount">0 events</small></h3>
+
+    <div class="filter-row">
+      <select id="filterUser">
+        <option value="">All users</option>
+      </select>
+      <select id="filterAction">
+        <option value="">All actions</option>
+        <option value="login">Login</option>
+        <option value="logout">Logout</option>
+        <option value="send">Send</option>
+        <option value="receive">Receive</option>
+        <option value="delete">Delete</option>
+      </select>
+      <button class="tbtn ghost" onclick="clearFilters()">Clear filters</button>
+    </div>
+
+    <div id="activityList"><p class="empty">Loading…</p></div>
+  </section>
+
+  <!-- Sessions tab -->
+  <section class="card" id="tab-sessions" hidden>
+    <h3>Sessions <small>Login → logout with duration</small></h3>
+
+    <div class="filter-row">
+      <select id="filterSessionUser">
+        <option value="">All users</option>
+      </select>
+      <button class="tbtn ghost" onclick="clearSessionFilters()">Clear</button>
+    </div>
+
+    <div id="sessionList"><p class="empty">Loading…</p></div>
+  </section>
+
+</div>
+
+<script>
+const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
+const $ = id => document.getElementById(id);
+
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+
+function esc(s = "") {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function fmtTime(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+}
+function fmtDuration(sec) {
+  if (!sec && sec !== 0) return "—";
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
+/* Tabs */
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    ["activity", "sessions"].forEach(name => {
+      $("tab-" + name).hidden = (name !== t.dataset.tab);
+    });
+  });
+});
+
+/* Data */
+let ALL_LOGS = [];
+let ALL_SESSIONS = [];
+
+async function loadActivity() {
+  const box = $("activityList");
+  box.innerHTML = `<p class="empty">Loading…</p>`;
+
+  try {
+    const user = $("filterUser").value;
+    const actionFilter = $("filterAction").value;
+    let url = FN + "?action=admin_logs";
+    if (user) url += "&user=" + encodeURIComponent(user);
+    if (actionFilter) url += "&log_action=" + encodeURIComponent(actionFilter);
+
+    const r = await fetch(url, { headers: { Authorization: "Bearer " + store.get("token") } });
+    if (r.status === 401) return logout();
+    if (!r.ok) { box.innerHTML = `<p class="empty">Could not load.</p>`; return; }
+
+    ALL_LOGS = await r.json();
+    $("activityCount").textContent = ALL_LOGS.length + " events";
+
+    renderActivity();
+    buildUserDropdowns();
+  } catch {
+    box.innerHTML = `<p class="empty">Could not load.</p>`;
+  }
+}
+
+function buildUserDropdowns() {
+  const users = [...new Set(ALL_LOGS.map(l => l.user_email).filter(Boolean))];
+
+  const build = (selectEl, currentVal) => {
+    const prev = selectEl.value;
+    selectEl.innerHTML = `<option value="">All users</option>` +
+      users.map(u => `<option value="${esc(u)}" ${(prev || currentVal) === u ? "selected" : ""}>${esc(u)}</option>`).join("");
+  };
+
+  build($("filterUser"));
+  build($("filterSessionUser"));
+}
+
+function renderActivity() {
+  const box = $("activityList");
+  if (!ALL_LOGS.length) {
+    box.innerHTML = `<p class="empty">No activity yet.</p>`;
+    return;
+  }
+
+  const icons = {
+    login:  { label: "🔓", cls: "login" },
+    logout: { label: "🔒", cls: "logout" },
+    send:   { label: "📤", cls: "send" },
+    receive:{ label: "📥", cls: "receive" },
+    delete: { label: "🗑", cls: "delete" },
+    error:  { label: "⚠️", cls: "error" },
+  };
+
+  box.innerHTML = ALL_LOGS.map(l => {
+    const ic = icons[l.action] || { label: "•", cls: "" };
+    const device = (l.device || "").split(")")[0].split("(").pop() || "Browser";
+    return `
+      <div class="log-row">
+        <div class="icon ${ic.cls}">${ic.label}</div>
+        <div class="content">
+          <div class="user">${esc(l.user_email || "unknown")} <span style="color:var(--muted); font-weight:400; font-size:.8rem">· ${esc(l.action)}</span></div>
+          ${l.details ? `<div class="details">${esc(l.details)}</div>` : ""}
+          <div class="meta">IP: ${esc(l.ip || "—")} · ${esc(device)}</div>
+        </div>
+        <div class="when">${esc(fmtTime(l.created_at))}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function loadSessions() {
+  const box = $("sessionList");
+  box.innerHTML = `<p class="empty">Loading…</p>`;
+
+  try {
+    const user = $("filterSessionUser").value;
+    let url = FN + "?action=admin_sessions";
+    if (user) url += "&user=" + encodeURIComponent(user);
+
+    const r = await fetch(url, { headers: { Authorization: "Bearer " + store.get("token") } });
+    if (r.status === 401) return logout();
+    if (!r.ok) { box.innerHTML = `<p class="empty">Could not load.</p>`; return; }
+
+    ALL_SESSIONS = await r.json();
+    renderSessions();
+  } catch {
+    box.innerHTML = `<p class="empty">Could not load.</p>`;
+  }
+}
+
+function renderSessions() {
+  const box = $("sessionList");
+  if (!ALL_SESSIONS.length) {
+    box.innerHTML = `<p class="empty">No sessions logged yet.</p>`;
+    return;
+  }
+
+  box.innerHTML = ALL_SESSIONS.map(s => {
+    const isActive = s.login_at && !s.logout_at;
+    const duration = s.duration_sec
+      ? fmtDuration(s.duration_sec)
+      : (isActive ? "Active now" : "—");
+
+    return `
+      <div class="session-row">
+        <div class="head">
+          <div class="user">${esc(s.user_email || "unknown")}</div>
+          <span class="duration-pill">${esc(duration)}</span>
+        </div>
+        <div class="meta">
+          <span>Login:</span><b>${esc(fmtTime(s.login_at))}</b>
+          <span>Logout:</span><b>${s.logout_at ? esc(fmtTime(s.logout_at)) : (isActive ? "Still active" : "—")}</b>
+          <span>IP:</span><b>${esc(s.ip || "—")}</b>
+          <span>Device:</span><b>${esc((s.device || "").substring(0, 60))}${(s.device || "").length > 60 ? "…" : ""}</b>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* Filters */
+$("filterUser").addEventListener("change", loadActivity);
+$("filterAction").addEventListener("change", loadActivity);
+$("filterSessionUser").addEventListener("change", loadSessions);
+
+function clearFilters() {
+  $("filterUser").value = "";
+  $("filterAction").value = "";
+  loadActivity();
+}
+function clearSessionFilters() {
+  $("filterSessionUser").value = "";
+  loadSessions();
+}
+
+function refreshAll() {
+  loadActivity();
+  loadSessions();
+}
+
+async function logout() {
+  const token = localStorage.getItem("token");
+  const sessionId = localStorage.getItem("bg_session_id");
+  const loginAt = Number(localStorage.getItem("bg_login_at") || 0);
+  const duration = loginAt ? Math.round((Date.now() - loginAt) / 1000) : null;
+
+  try {
+    if (token && sessionId) {
+      await fetch(FN + "?action=log_logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+        body: JSON.stringify({ session_id: sessionId, duration_sec: duration })
+      });
+    }
+  } catch {}
+
+  localStorage.clear();
+  location.href = "/";
+}
+
+/* Boot */
+(function boot() {
+  if (!store.get("token")) { location.href = "/"; return; }
+  const user = (localStorage.getItem("user") || "").toLowerCase();
+  if (user !== "admin@bettergrowthsolutions.com") { location.href = "dashboard"; return; }
+
+  loadActivity();
+  loadSessions();
+})();
+</script>
+</body>
+</html>
