@@ -846,6 +846,14 @@ function buildComposers() {
           <input class="c-to" type="email" inputmode="email" autocapitalize="none" placeholder="candidate@example.com" value="${esc(d.to || "")}"/>
         </div>
         <div class="field">
+          <label>CC</label>
+          <input class="c-cc" type="email" inputmode="email" autocapitalize="none" placeholder="cc@example.com (comma-separated)" value="${esc(d.cc || "")}"/>
+        </div>
+        <div class="field">
+          <label>BCC</label>
+          <input class="c-bcc" type="email" inputmode="email" autocapitalize="none" placeholder="bcc@example.com (comma-separated)" value="${esc(d.bcc || "")}"/>
+        </div>
+        <div class="field">
           <label>Subject</label>
           <input class="c-subject" type="text" placeholder="Interview Invitation" value="${esc(d.subject || "")}"/>
         </div>
@@ -865,7 +873,7 @@ function buildComposers() {
 
   $("composers").querySelectorAll(".composer").forEach(el => {
     const i = Number(el.dataset.i);
-    ["to","subject","body","from"].forEach(field => {
+    ["to","cc","bcc","subject","body","from"].forEach(field => {
       const input = el.querySelector(`.c-${field}`);
       const save = e => {
         saveDraft(i, { [field]: e.target.value });
@@ -883,6 +891,8 @@ async function sendComposer(i) {
   const wrap = $("composers").querySelector(`.composer[data-i="${i}"]`);
   const from    = wrap.querySelector(".c-from").value;
   const to      = wrap.querySelector(".c-to").value.trim();
+  const cc      = wrap.querySelector(".c-cc").value.trim();
+  const bcc     = wrap.querySelector(".c-bcc").value.trim();
   const subject = wrap.querySelector(".c-subject").value.trim();
   const body    = wrap.querySelector(".c-body").value;
   const msgEl   = wrap.querySelector(".cmsg");
@@ -899,17 +909,23 @@ async function sendComposer(i) {
   msgEl.textContent = "Sending…";
 
   try {
+    const payload = { from, to, subject, html: toHtml(body) };
+    if (cc) payload.cc = cc;
+    if (bcc) payload.bcc = bcc;
+
     const r = await fetch(FN + "?action=send", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeaders() },
-      body: JSON.stringify({ from, to, subject, html: toHtml(body) })
+      body: JSON.stringify(payload)
     });
     const data = await r.json();
     if (r.ok && data.ok) {
       msgEl.className = "cmsg msg ok";
       msgEl.textContent = `✓ Sent as ${from.split("@")[0]}`;
-      saveDraft(i, { to: "", subject: "", body: "" });
+      saveDraft(i, { to: "", cc: "", bcc: "", subject: "", body: "" });
       wrap.querySelector(".c-to").value = "";
+      wrap.querySelector(".c-cc").value = "";
+      wrap.querySelector(".c-bcc").value = "";
       wrap.querySelector(".c-subject").value = "";
       wrap.querySelector(".c-body").value = "";
       wrap.querySelector(".sum").textContent = "Empty draft";
@@ -930,10 +946,12 @@ async function sendComposer(i) {
 function clearComposer(i) {
   const wrap = $("composers").querySelector(`.composer[data-i="${i}"]`);
   wrap.querySelector(".c-to").value = "";
+  wrap.querySelector(".c-cc").value = "";
+  wrap.querySelector(".c-bcc").value = "";
   wrap.querySelector(".c-subject").value = "";
   wrap.querySelector(".c-body").value = "";
   wrap.querySelector(".sum").textContent = "Empty draft";
-  saveDraft(i, { to: "", subject: "", body: "" });
+  saveDraft(i, { to: "", cc: "", bcc: "", subject: "", body: "" });
   wrap.querySelector(".cmsg").textContent = "";
   wrap.querySelector(".cmsg").className = "cmsg msg";
 }
