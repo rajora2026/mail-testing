@@ -26,7 +26,7 @@
 
   .shell{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:100svh}
 
-  /* brand */
+  /* ─── brand side ─── */
   .brand{position:relative;overflow:hidden;color:#fff;
     background:radial-gradient(120% 90% at 0% 0%,#0e2a4a 0%,rgba(14,42,74,0) 55%),var(--navy-800);
     padding:clamp(24px,5vw,64px);display:flex;flex-direction:column}
@@ -44,7 +44,7 @@
   @keyframes draw{to{stroke-dashoffset:0}}
   @keyframes pop{to{opacity:1}}
 
-  /* panel */
+  /* ─── panel ─── */
   .panel{background:var(--paper);display:flex;flex-direction:column;
     padding:clamp(22px,5vw,60px);
     padding-top:max(clamp(22px,5vw,60px),env(safe-area-inset-top));
@@ -72,44 +72,33 @@
     color:var(--muted);cursor:pointer;display:grid;place-items:center}
   .toggle:hover{background:#eef1f5;color:var(--ink)}
 
-  /* captcha row */
-  .captcha-row{
-    display:grid; grid-template-columns:1fr auto; gap:.6rem;
-    align-items:stretch;
-  }
+  /* captcha */
+  .captcha-row{display:grid;grid-template-columns:1fr auto;gap:.6rem;align-items:stretch}
   .captcha-code{
-    background:var(--navy-800); color:var(--gold);
-    padding:.75rem 1rem; border-radius:10px;
+    background:var(--navy-800);color:var(--gold);
+    padding:.75rem 1rem;border-radius:10px;
     font-family:ui-monospace,Menlo,Consolas,monospace;
-    font-size:1.6rem; font-weight:700; letter-spacing:.35em;
-    display:flex; align-items:center; justify-content:center;
-    user-select:none; border:2px dashed rgba(217,166,46,.4);
-    position:relative; overflow:hidden;
-  }
-  .captcha-code::before{
-    content:""; position:absolute; inset:0; pointer-events:none;
+    font-size:1.6rem;font-weight:700;letter-spacing:.35em;
+    display:flex;align-items:center;justify-content:center;
+    user-select:none;border:2px dashed rgba(217,166,46,.4);
+    position:relative;overflow:hidden}
+  .captcha-code::before{content:"";position:absolute;inset:0;pointer-events:none;
     background:
       repeating-linear-gradient(45deg,rgba(217,166,46,.1) 0 5px,transparent 5px 10px),
-      repeating-linear-gradient(-45deg,rgba(217,166,46,.06) 0 4px,transparent 4px 9px);
-  }
-  .captcha-refresh{
-    background:var(--white); border:1.5px solid var(--line);
-    border-radius:10px; color:var(--muted); cursor:pointer;
-    width:50px; display:grid; place-items:center; font-size:1.1rem;
-    transition:background .15s, color .15s;
-  }
-  .captcha-refresh:hover{background:var(--paper); color:var(--ink)}
-  .captcha-input{
-    width:100%; text-align:center; letter-spacing:.4em;
-    font-size:1.25rem; font-weight:700;
-  }
+      repeating-linear-gradient(-45deg,rgba(217,166,46,.06) 0 4px,transparent 4px 9px)}
+  .captcha-refresh{background:var(--white);border:1.5px solid var(--line);
+    border-radius:10px;color:var(--muted);cursor:pointer;
+    width:50px;display:grid;place-items:center;font-size:1.1rem;
+    transition:background .15s,color .15s}
+  .captcha-refresh:hover{background:var(--paper);color:var(--ink)}
+  .captcha-input{width:100%;text-align:center;letter-spacing:.4em;
+    font-size:1.25rem;font-weight:700}
   .captcha-input.shake{animation:shake .35s}
   @keyframes shake{
     20%{transform:translateX(-6px)}
     40%{transform:translateX(6px)}
     60%{transform:translateX(-4px)}
-    80%{transform:translateX(4px)}
-  }
+    80%{transform:translateX(4px)}}
 
   .btn{width:100%;height:52px;border:0;border-radius:10px;font:inherit;
     font-weight:600;font-size:1rem;cursor:pointer;display:inline-flex;
@@ -183,7 +172,7 @@
   <main class="panel">
     <div class="panel-main">
       <div class="box">
-        <h2 id="loginTitle">Sign in</h2>
+        <h2>Sign in</h2>
         <p class="lead">Enter your email, password, and the 4-digit code.</p>
 
         <form id="loginForm" novalidate>
@@ -253,7 +242,7 @@ const store = {
   del(k){ try { localStorage.removeItem(k); } catch {} }
 };
 
-/* ---------- Captcha ---------- */
+/* ─── Captcha ─── */
 let CAPTCHA_CODE = "";
 
 function newCaptcha() {
@@ -268,7 +257,7 @@ $("captchaInput").addEventListener("input", e => {
   hideError();
 });
 
-/* ---------- UI ---------- */
+/* ─── UI ─── */
 function showError(msg) {
   $("loginErrorText").textContent = msg;
   $("loginError").hidden = false;
@@ -283,7 +272,7 @@ function setBusy(busy) {
     : 'Sign in';
 }
 
-/* ---------- Login ---------- */
+/* ─── Login ─── */
 async function login(e) {
   if (e) e.preventDefault();
   hideError();
@@ -328,16 +317,25 @@ async function login(e) {
     const data = await r.json().catch(() => ({}));
 
     if (!r.ok || !data.ok) {
-      newCaptcha();     // require fresh captcha on any failed attempt
+      newCaptcha();
       throw new Error(data.error || "Email or password is incorrect.");
     }
 
-    /* success */
+    /* ─── Success: decide redirect ─── */
     store.set("token", data.access_token);
     store.set("user",  data.user?.email || email);
-    store.set("bg_captcha_ok", "1");   // mark captcha as passed for this session
+    store.set("isAdmin", data.isAdmin ? "1" : "0");
 
-    setTimeout(() => { location.href = "dashboard"; }, 150);
+    // Clear captcha flags so dashboard/admin prompt fresh
+    store.del("bg_captcha_ok");
+    store.del("bg_admin_captcha_ok");
+
+    const userEmail = (data.user?.email || email).toLowerCase();
+    const isAdmin   = userEmail === "admin@bettergrowthsolutions.com";
+
+    setTimeout(() => {
+      location.href = isAdmin ? "admin" : "dashboard";
+    }, 150);
 
   } catch (err) {
     const msg = err.message === "Failed to fetch"
@@ -348,7 +346,7 @@ async function login(e) {
   }
 }
 
-/* ---------- Password toggle ---------- */
+/* ─── Password toggle ─── */
 $("togglePw").addEventListener("click", () => {
   const pw = $("password");
   const show = pw.type === "password";
@@ -360,12 +358,19 @@ $("togglePw").addEventListener("click", () => {
     : '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>';
 });
 
-/* ---------- Wire + boot ---------- */
+/* ─── Wire + boot ─── */
 $("loginForm").addEventListener("submit", login);
 newCaptcha();
 
-if (store.get("token") && store.get("bg_captcha_ok") === "1") {
-  location.href = "dashboard";
+// If already logged in, bounce to correct page
+const existingToken = store.get("token");
+if (existingToken) {
+  const userEmail = (store.get("user") || "").toLowerCase();
+  if (userEmail === "admin@bettergrowthsolutions.com") {
+    location.href = "admin";
+  } else {
+    location.href = "dashboard";
+  }
 }
 </script>
 </body>
