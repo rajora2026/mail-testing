@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#07162b"/>
+<title>Dashboard · BetterGrowth Mail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+    --gold:#d9a62e; --gold-deep:#b8841a; --gold-soft:#f1d899;
+    --paper:#f5f6f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f;
+    --line:#dde2ea; --ok:#17653a; --ok-bg:#e3f4ea;
+    --warn:#7a5410; --warn-bg:#fdf1d6; --bad:#9b1c1c; --bad-bg:#fde4e4;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100svh;-webkit-font-smoothing:antialiased}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  [hidden]{display:none!important}
+
+  /* ───── Top bar ───── */
+  .topbar{
+    background:var(--navy-800); color:#e9eef6; padding:.65rem 1.25rem;
+    display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    position:sticky; top:0; z-index:40;
+    border-bottom:1px solid rgba(217,166,46,.25);
+    box-shadow:0 4px 20px rgba(0,0,0,.18);
+  }
+  .topbar .brandmark{
+    font-family:var(--serif); font-weight:700; font-size:1.25rem;
+    color:var(--gold); letter-spacing:.01em;
+  }
+  .topbar .dot{
+    width:8px; height:8px; border-radius:50%; background:#4ade80;
+    box-shadow:0 0 0 0 rgba(74,222,128,.5); animation:pulse 2s infinite;
+    display:inline-block; margin-right:.35rem; vertical-align:middle;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(74,222,128,.6)}
+    70%{box-shadow:0 0 0 10px rgba(74,222,128,0)}
+    100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}
+  }
+  .topbar-spacer{flex:1}
+  .chip-bar{
+    display:flex; gap:.5rem; align-items:center; flex-wrap:wrap;
+  }
+  .tchip{
+    background:rgba(217,166,46,.12); border:1px solid rgba(217,166,46,.35);
+    color:var(--gold-soft); border-radius:999px; padding:.3rem .75rem;
+    font-size:.82rem; font-weight:500; display:inline-flex; align-items:center; gap:.4rem;
+  }
+  .tchip.green{background:rgba(74,222,128,.12); border-color:rgba(74,222,128,.4); color:#bbf7d0}
+  .tchip button{
+    background:transparent; border:0; color:inherit; cursor:pointer;
+    font:inherit; padding:0 0 0 .35rem; opacity:.7;
+  }
+  .tchip button:hover{opacity:1}
+  .tbtn{
+    background:var(--gold); color:var(--navy-900); border:0;
+    padding:.45rem .9rem; border-radius:8px; font:inherit;
+    font-weight:600; cursor:pointer; font-size:.85rem;
+  }
+  .tbtn:hover{background:#e4b343}
+  .tbtn.ghost{background:transparent; color:#e9eef6; border:1px solid rgba(255,255,255,.2)}
+  .tbtn.ghost:hover{background:rgba(255,255,255,.08)}
+
+  /* ───── Main layout ───── */
+  .layout{
+    display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr);
+    gap:1.25rem; padding:1.25rem; max-width:1500px; margin:auto;
+  }
+  @media (max-width:1000px){ .layout{grid-template-columns:1fr} }
+
+  .card{
+    background:var(--white); border:1.5px solid var(--line);
+    border-radius:14px; padding:1.25rem; box-shadow:0 4px 16px rgba(11,27,48,.04);
+  }
+  .card h3{
+    font-family:var(--serif); font-weight:700; font-size:1.35rem;
+    margin:0 0 1rem; color:var(--ink);
+  }
+  .card h3 small{
+    display:block; font-family:var(--sans); font-weight:400;
+    font-size:.82rem; color:var(--muted); margin-top:.15rem;
+    letter-spacing:0;
+  }
+
+  /* ───── Profile ───── */
+  .profile{
+    display:flex; gap:1rem; align-items:center; margin-bottom:1rem;
+  }
+  .avatar-wrap{position:relative; flex:none}
+  .avatar-lg{
+    width:82px; height:82px; border-radius:50%;
+    background:var(--navy-800); color:var(--gold);
+    display:grid; place-items:center; overflow:hidden;
+    font-family:var(--serif); font-weight:700; font-size:2rem;
+    border:3px solid var(--gold); cursor:pointer;
+  }
+  .avatar-lg img{width:100%;height:100%;object-fit:cover;display:block}
+  .avatar-edit{
+    position:absolute; bottom:-2px; right:-2px;
+    background:var(--gold); color:var(--navy-900);
+    width:28px; height:28px; border-radius:50%; border:2px solid #fff;
+    display:grid; place-items:center; cursor:pointer; font-size:.85rem;
+    font-weight:700;
+  }
+  .avatar-edit input{display:none}
+  .profile-info{min-width:0}
+  .profile-info .name{
+    font-family:var(--serif); font-size:1.4rem; font-weight:700;
+    margin:0 0 .15rem; overflow-wrap:anywhere;
+  }
+  .profile-info .email{
+    color:var(--muted); font-size:.9rem; overflow-wrap:anywhere;
+  }
+
+  .field{margin-bottom:.8rem}
+  .field label{
+    display:block; font-size:.78rem; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.05em;
+    font-weight:600; margin-bottom:.3rem;
+  }
+  .field input, .field textarea, .field select{
+    width:100%; padding:.6rem .8rem; font:inherit; font-size:.95rem;
+    background:var(--paper); border:1.5px solid var(--line); border-radius:9px;
+    color:var(--ink); transition:border-color .15s, box-shadow .15s;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none; border-color:var(--navy-700);
+    box-shadow:0 0 0 4px rgba(217,166,46,.22);
+  }
+  .field textarea{min-height:80px; resize:vertical; font-family:var(--sans)}
+
+  .btn{
+    background:var(--gold); color:var(--navy-900); border:0;
+    padding:.65rem 1.1rem; border-radius:9px; font:inherit;
+    font-weight:600; cursor:pointer; font-size:.92rem;
+    transition:background .15s;
+  }
+  .btn:hover{background:#e4b343}
+  .btn:disabled{background:#e6dcc3; color:#7d7358; cursor:not-allowed}
+  .btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line)}
+  .btn.ghost:hover{background:var(--paper)}
+  .btn.sm{padding:.4rem .8rem; font-size:.82rem}
+  .btn-row{display:flex; gap:.5rem; margin-top:.5rem; flex-wrap:wrap}
+
+  .saved-msg{
+    display:inline-block; margin-left:.6rem; color:var(--ok);
+    font-size:.85rem; opacity:0; transition:opacity .25s;
+  }
+  .saved-msg.show{opacity:1}
+
+  /* ───── Session list ───── */
+  .session{
+    display:flex; align-items:center; gap:.7rem;
+    padding:.7rem .8rem; border-radius:9px;
+    background:var(--paper); margin-bottom:.5rem;
+  }
+  .session .icon{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--navy-800); color:var(--gold);
+    display:grid; place-items:center; flex:none;
+  }
+  .session .meta{flex:1; min-width:0}
+  .session .meta b{
+    display:block; font-weight:600; font-size:.9rem;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .session .meta span{
+    display:block; font-size:.78rem; color:var(--muted);
+  }
+  .session .badge{
+    background:var(--ok-bg); color:var(--ok);
+    padding:.2rem .55rem; border-radius:99px; font-size:.72rem;
+    font-weight:600; flex:none;
+  }
+
+  /* ───── Log ───── */
+  .log{
+    max-height:280px; overflow-y:auto;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:.8rem; line-height:1.7;
+    background:var(--navy-900); color:#cdd8e6;
+    padding:.9rem 1rem; border-radius:10px;
+  }
+  .log .t{color:#7a8aa0; margin-right:.4rem}
+  .log .ok{color:#86efac}
+  .log .info{color:#93c5fd}
+  .log .warn{color:#fcd34d}
+  .log .err{color:#fca5a5}
+
+  /* ───── Composer ───── */
+  .composer{
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:11px; padding:1rem; margin-bottom:1rem;
+  }
+  .composer .head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:.75rem;
+  }
+  .composer .head b{
+    font-family:var(--serif); font-size:1.15rem; color:var(--navy-700);
+  }
+  .composer .head span{
+    font-size:.75rem; color:var(--muted);
+  }
+  .composer .row2{display:grid; grid-template-columns:1fr 1fr; gap:.6rem}
+  @media (max-width:700px){ .composer .row2{grid-template-columns:1fr} }
+  .composer .msg{
+    font-size:.85rem; margin-top:.5rem; min-height:1.1em;
+  }
+  .composer .msg.ok{color:var(--ok)}
+  .composer .msg.err{color:var(--bad)}
+  .composer .msg.busy{color:var(--muted)}
+
+  /* ───── Toasts ───── */
+  .toast-wrap{
+    position:fixed; top:1rem; right:1rem; z-index:99;
+    display:flex; flex-direction:column; gap:.5rem;
+  }
+  .toast{
+    background:var(--navy-800); color:#e9eef6;
+    padding:.75rem 1rem; border-radius:10px; font-size:.88rem;
+    border-left:4px solid var(--gold);
+    box-shadow:0 8px 24px rgba(0,0,0,.3);
+    animation:slidein .25s ease-out;
+    max-width:320px;
+  }
+  .toast.ok{border-left-color:#4ade80}
+  .toast.err{border-left-color:#f87171}
+  @keyframes slidein{from{transform:translateX(30px); opacity:0} to{transform:none; opacity:1}}
+
+  /* ───── Captcha overlay ───── */
+  .captcha-overlay{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(7,22,43,.92); backdrop-filter:blur(6px);
+    display:grid; place-items:center; padding:1rem;
+  }
+  .captcha-card{
+    background:var(--white); border-radius:16px;
+    padding:2rem 1.75rem; max-width:380px; width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+    text-align:center;
+    animation:pop .22s ease-out;
+  }
+  @keyframes pop{from{transform:scale(.94); opacity:0} to{transform:none; opacity:1}}
+  .captcha-card h2{
+    font-family:var(--serif); font-weight:700; font-size:1.6rem;
+    margin:0 0 .35rem;
+  }
+  .captcha-card p{
+    color:var(--muted); font-size:.9rem; margin:0 0 1.25rem;
+  }
+  .captcha-code{
+    background:var(--navy-800); color:var(--gold);
+    padding:.9rem 1rem; border-radius:10px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:2rem; font-weight:700; letter-spacing:.4em;
+    margin-bottom:1rem; user-select:none;
+    border:2px dashed rgba(217,166,46,.4);
+    position:relative;
+  }
+  .captcha-code::after{
+    content:""; position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(45deg, rgba(217,166,46,.08) 0 6px, transparent 6px 12px),
+      repeating-linear-gradient(-45deg, rgba(217,166,46,.06) 0 4px, transparent 4px 10px);
+    border-radius:8px; pointer-events:none;
+  }
+  .captcha-input{
+    width:100%; padding:.8rem; font:inherit; font-size:1.4rem;
+    text-align:center; letter-spacing:.5em;
+    border:2px solid var(--line); border-radius:10px;
+    font-weight:700; background:var(--paper); color:var(--ink);
+  }
+  .captcha-input:focus{outline:none; border-color:var(--navy-700); box-shadow:0 0 0 4px rgba(217,166,46,.25)}
+  .captcha-input.err{border-color:#c0392b; animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}}
+  .captcha-actions{display:flex; gap:.5rem; margin-top:1rem}
+  .captcha-actions button{flex:1}
+  .captcha-err{
+    color:var(--bad); font-size:.85rem; min-height:1.2em;
+    margin-top:.6rem;
+  }
+  .captcha-refresh{
+    background:transparent; border:0; color:var(--muted);
+    font:inherit; font-size:.82rem; cursor:pointer;
+    text-decoration:underline; margin-top:.5rem;
+  }
+  .captcha-refresh:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ CAPTCHA GATE ═══════════ -->
+<div class="captcha-overlay" id="captchaGate">
+  <div class="captcha-card">
+    <h2>Quick check</h2>
+    <p>Enter the 4-digit code to open your dashboard.</p>
+    <div class="captcha-code" id="captchaCode">0000</div>
+    <input id="captchaInput" class="captcha-input" type="text"
+           inputmode="numeric" maxlength="4" autocomplete="off"
+           placeholder="••••" aria-label="Captcha code"/>
+    <div class="captcha-err" id="captchaErr"></div>
+    <div class="captcha-actions">
+      <button class="btn ghost" type="button" onclick="newCaptcha()">New code</button>
+      <button class="btn" type="button" onclick="verifyCaptcha()">Verify</button>
+    </div>
+    <button class="captcha-refresh" type="button" onclick="location.href='/'">← Back to sign in</button>
+  </div>
+</div>
+
+<!-- ═══════════ TOP BAR ═══════════ -->
+<header class="topbar">
+  <div class="brandmark">BetterGrowth Mail</div>
+  <div class="topbar-spacer"></div>
+  <div class="chip-bar">
+    <span class="tchip green"><span class="dot"></span><span id="liveClock">--:--:--</span></span>
+    <span class="tchip">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+      <span id="sessionCount">1</span> active session<span id="sessionPlural"></span>
+    </span>
+    <button class="tbtn ghost sm" onclick="toggleDevices()" style="padding:.35rem .7rem;font-size:.78rem">Devices</button>
+    <button class="tbtn" onclick="logout()">Sign out</button>
+  </div>
+</header>
+
+<!-- ═══════════ LAYOUT ═══════════ -->
+<div class="layout">
+
+  <!-- LEFT column -->
+  <aside style="display:flex;flex-direction:column;gap:1.25rem">
+
+    <!-- Profile card -->
+    <section class="card">
+      <h3>Your profile</h3>
+
+      <div class="profile">
+        <div class="avatar-wrap">
+          <div class="avatar-lg" id="avatarLg" onclick="document.getElementById('photoInput').click()">
+            <span id="avatarInitial">B</span>
+            <img id="avatarImg" alt="" hidden/>
+          </div>
+          <label class="avatar-edit" for="photoInput" title="Change photo">
+            ✎
+            <input id="photoInput" type="file" accept="image/*"/>
+          </label>
+        </div>
+        <div class="profile-info">
+          <h4 class="name" id="profileName">Unnamed user</h4>
+          <div class="email" id="profileEmail">—</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pName">Full name</label>
+        <input id="pName" type="text" placeholder="e.g. Rajvardhan Singh"/>
+      </div>
+      <div class="field">
+        <label for="pEmail">Email</label>
+        <input id="pEmail" type="email" placeholder="hr@bettergrowthsolutions.com"/>
+      </div>
+      <div class="field">
+        <label for="pPhone">Phone</label>
+        <input id="pPhone" type="tel" placeholder="+91 92443 30496"/>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="saveProfile()">Save profile</button>
+        <button class="btn ghost" onclick="clearProfile()">Clear</button>
+        <span class="saved-msg" id="savedMsg">✓ Saved</span>
+      </div>
+    </section>
+
+    <!-- Active sessions -->
+    <section class="card" id="devicesCard" hidden>
+      <h3>Active sessions <small id="sessionSummary">1 device</small></h3>
+      <div id="sessionList"></div>
+      <div class="btn-row">
+        <button class="btn ghost sm" onclick="signOutOthers()">Sign out other devices</button>
+      </div>
+    </section>
+
+    <!-- Live log -->
+    <section class="card">
+      <h3>Live log <small>Last events on this device</small></h3>
+      <div class="log" id="logBox" aria-live="polite"></div>
+      <div class="btn-row">
+        <button class="btn ghost sm" onclick="clearLog()">Clear log</button>
+      </div>
+    </section>
+
+  </aside>
+
+  <!-- RIGHT column -->
+  <main style="display:flex;flex-direction:column;gap:1.25rem">
+
+    <!-- Quick composer -->
+    <section class="card">
+      <h3>Send an email <small>You can send up to 3 emails quickly</small></h3>
+
+      <div id="composers">
+        <!-- 3 composers injected by JS -->
+      </div>
+    </section>
+
+    <!-- Inbox-style summary -->
+    <section class="card">
+      <h3>Recent activity <small>Latest sent emails</small></h3>
+      <div id="recentList">
+        <p style="color:var(--muted);margin:0">Loading…</p>
+      </div>
+      <div class="btn-row" style="margin-top:1rem">
+        <a class="btn ghost sm" href="sent" style="text-decoration:none;display:inline-block">View all sent</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   CONFIG
+   ══════════════════════════════════════════════════════════ */
+const FN      = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
+const SB_URL  = "https://cztelemfiqovsoizrohr.supabase.co";
+const SB_KEY  = "sb_publishable_7V6_ob3cVDRr0uyYCdlSKA_8kNiKKCl";
+const BUCKET  = "attachments";
+
+const $ = id => document.getElementById(id);
+
+/* Safe storage */
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} },
+  clear(){ try { localStorage.clear(); } catch {} },
+  json(k, fallback){ try { return JSON.parse(localStorage.getItem(k) || "null") || fallback; } catch { return fallback; } }
+};
+
+function esc(s = "") {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOASTS
+   ══════════════════════════════════════════════════════════ */
+function toast(msg, kind = "") {
+  const el = document.createElement("div");
+  el.className = "toast" + (kind ? " " + kind : "");
+  el.textContent = msg;
+  $("toastWrap").appendChild(el);
+  setTimeout(() => { el.style.opacity = "0"; el.style.transition = "opacity .3s"; }, 2600);
+  setTimeout(() => el.remove(), 3000);
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOG (in-page event log)
+   ══════════════════════════════════════════════════════════ */
+const LOG_KEY = "bg_log_v1";
+function pushLog(kind, msg) {
+  const entries = store.json(LOG_KEY, []);
+  entries.unshift({ t: Date.now(), kind, msg });
+  store.set(LOG_KEY, JSON.stringify(entries.slice(0, 100)));
+  renderLog();
+}
+function renderLog() {
+  const entries = store.json(LOG_KEY, []);
+  const box = $("logBox");
+  if (!entries.length) {
+    box.innerHTML = `<div style="color:#7a8aa0">No events yet.</div>`;
+    return;
+  }
+  box.innerHTML = entries.map(e => {
+    const time = new Date(e.t).toLocaleTimeString();
+    const cls  = ["ok","info","warn","err"].includes(e.kind) ? e.kind : "info";
+    return `<div><span class="t">[${time}]</span><span class="${cls}">${esc(e.msg)}</span></div>`;
+  }).join("");
+}
+function clearLog() { store.del(LOG_KEY); renderLog(); pushLog("info", "Log cleared"); }
+
+/* ══════════════════════════════════════════════════════════
+   LIVE CLOCK
+   ══════════════════════════════════════════════════════════ */
+function tickClock() {
+  const d = new Date();
+  $("liveClock").textContent = d.toLocaleTimeString(undefined, { hour12: false });
+}
+setInterval(tickClock, 1000);
+tickClock();
+
+/* ══════════════════════════════════════════════════════════
+   SESSIONS / DEVICES
+   ══════════════════════════════════════════════════════════ */
+const SESS_KEY = "bg_sessions_v1";
+function getSessions() {
+  return store.json(SESS_KEY, []).filter(s => Date.now() - s.last < 1000 * 60 * 60 * 24); // 24h
+}
+function setSessions(list) { store.set(SESS_KEY, JSON.stringify(list)); }
+
+function deviceLabel() {
+  const ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod/i.test(ua)) return "iOS device";
+  if (/Android/i.test(ua)) return "Android device";
+  if (/Macintosh/i.test(ua)) return "Mac";
+  if (/Windows/i.test(ua)) return "Windows PC";
+  if (/Linux/i.test(ua)) return "Linux";
+  return "Browser";
+}
+
+function thisSessionId() {
+  let id = store.get("bg_sid");
+  if (!id) {
+    id = "sid_" + Math.random().toString(36).slice(2, 10);
+    store.set("bg_sid", id);
+  }
+  return id;
+}
+
+function registerSession() {
+  const id = thisSessionId();
+  const list = getSessions();
+  const existing = list.find(s => s.id === id);
+  if (existing) {
+    existing.last = Date.now();
+  } else {
+    list.unshift({
+      id,
+      label: deviceLabel(),
+      ua: navigator.userAgent,
+      first: Date.now(),
+      last: Date.now(),
+      ip: "—"
+    });
+  }
+  setSessions(list.slice(0, 10));
+  renderSessions();
+}
+
+function renderSessions() {
+  const list = getSessions();
+  $("sessionCount").textContent = list.length;
+  $("sessionPlural").textContent = list.length === 1 ? "" : "s";
+  $("sessionSummary").textContent =
+    list.length === 1 ? "1 device" : `${list.length} devices`;
+
+  if (list.length === 0) {
+    $("sessionList").innerHTML = "";
+    return;
+  }
+  $("sessionList").innerHTML = list.map(s => {
+    const isThis = s.id === thisSessionId();
+    return `
+      <div class="session">
+        <div class="icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <div class="meta">
+          <b>${esc(s.label)} ${isThis ? "· This device" : ""}</b>
+          <span>Last active: ${new Date(s.last).toLocaleString()}</span>
+        </div>
+        ${isThis ? `<span class="badge">Live</span>` : ""}
+      </div>
+    `;
+  }).join("");
+}
+
+function toggleDevices() { $("devicesCard").hidden = !$("devicesCard").hidden; }
+
+function signOutOthers() {
+  const myId = thisSessionId();
+  const list = getSessions().filter(s => s.id === myId);
+  setSessions(list);
+  renderSessions();
+  toast("Signed out other devices", "ok");
+  pushLog("ok", "Signed out all other sessions");
+}
+
+/* ══════════════════════════════════════════════════════════
+   PROFILE (name / email / phone / photo)
+   ══════════════════════════════════════════════════════════ */
+const PROFILE_KEY = "bg_profile_v1";
+
+function loadProfile() {
+  const p = store.json(PROFILE_KEY, {});
+  const fallbackEmail = store.get("user") || "";
+
+  $("pName").value  = p.name  || "";
+  $("pEmail").value = p.email || fallbackEmail;
+  $("pPhone").value = p.phone || "";
+  if (p.photo) showPhoto(p.photo);
+
+  updateHeader(p, fallbackEmail);
+}
+
+function updateHeader(p, fallbackEmail) {
+  const name = p.name || (fallbackEmail ? fallbackEmail.split("@")[0] : "User");
+  $("profileName").textContent = name;
+  $("profileEmail").textContent = p.email || fallbackEmail || "—";
+  if (!p.photo) {
+    $("avatarInitial").textContent = (name[0] || "B").toUpperCase();
+    $("avatarInitial").hidden = false;
+    $("avatarImg").hidden = true;
+  }
+}
+
+function saveProfile() {
+  const p = {
+    name: $("pName").value.trim(),
+    email: $("pEmail").value.trim(),
+    phone: $("pPhone").value.trim(),
+    photo: store.get("bg_photo") || null
+  };
+  store.set(PROFILE_KEY, JSON.stringify(p));
+  updateHeader(p);
+  flashSaved();
+  toast("Profile saved", "ok");
+  pushLog("ok", `Profile updated (name: ${p.name || "—"})`);
+}
+
+function clearProfile() {
+  ["pName","pEmail","pPhone"].forEach(id => $(id).value = "");
+  $("savedMsg").classList.remove("show");
+  toast("Cleared — click Save to keep empty", "warn");
+}
+
+function flashSaved() {
+  const m = $("savedMsg");
+  m.classList.add("show");
+  setTimeout(() => m.classList.remove("show"), 1800);
+}
+
+/* Photo */
+$("photoInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  try {
+    const blob = await compressImage(file, 400, 0.85);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      store.set("bg_photo", dataUrl);
+      showPhoto(dataUrl);
+      const p = store.json(PROFILE_KEY, {});
+      p.photo = dataUrl;
+      store.set(PROFILE_KEY, JSON.stringify(p));
+      toast("Photo updated", "ok");
+      pushLog("ok", "Profile photo updated");
+    };
+    reader.readAsDataURL(blob);
+  } catch (err) {
+    toast("Could not load photo: " + err.message, "err");
+  }
+});
+
+function showPhoto(dataUrl) {
+  const img = $("avatarImg");
+  img.src = dataUrl;
+  img.hidden = false;
+  $("avatarInitial").hidden = true;
+}
+
+async function compressImage(file, maxSide = 400, quality = 0.85) {
+  const bitmap = await loadBitmap(file);
+  let { width, height } = bitmap;
+  if (width > maxSide || height > maxSide) {
+    const r = Math.min(maxSide / width, maxSide / height);
+    width = Math.round(width * r);
+    height = Math.round(height * r);
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  canvas.getContext("2d").drawImage(bitmap, 0, 0, width, height);
+  if (bitmap.close) bitmap.close();
+  return await new Promise((res, rej) =>
+    canvas.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/jpeg", quality));
+}
+
+async function loadBitmap(file) {
+  if (typeof createImageBitmap === "function") {
+    try { return await createImageBitmap(file); } catch {}
+  }
+  return await new Promise((res, rej) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => { URL.revokeObjectURL(url); res(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("load fail")); };
+    img.src = url;
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   3-EMAIL COMPOSER
+   ══════════════════════════════════════════════════════════ */
+const COMPOSERS_KEY = "bg_composers_v1";
+
+function loadComposerDrafts() {
+  return store.json(COMPOSERS_KEY, [{}, {}, {}]);
+}
+function saveComposerDraft(i, data) {
+  const all = loadComposerDrafts();
+  all[i] = { ...all[i], ...data };
+  store.set(COMPOSERS_KEY, JSON.stringify(all));
+}
+
+function buildComposers() {
+  const drafts = loadComposerDrafts();
+  $("composers").innerHTML = drafts.map((d, i) => `
+    <div class="composer" data-i="${i}">
+      <div class="head">
+        <b>Email #${i + 1}</b>
+        <span class="cstatus">Draft ${i + 1}</span>
+      </div>
+      <div class="row2">
+        <div class="field" style="margin:0">
+          <label>To</label>
+          <input class="c-to" type="email" placeholder="candidate@example.com"
+                 value="${esc(d.to || "")}"/>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Subject</label>
+          <input class="c-subject" type="text" placeholder="Interview Invitation"
+                 value="${esc(d.subject || "")}"/>
+        </div>
+      </div>
+      <div class="field" style="margin-top:.6rem">
+        <label>Body</label>
+        <textarea class="c-body" placeholder="<p>Hello…</p>">${esc(d.body || "")}</textarea>
+      </div>
+      <div class="btn-row" style="align-items:center">
+        <button class="btn c-send" data-i="${i}">Send #${i + 1}</button>
+        <button class="btn ghost c-clear" data-i="${i}">Clear</button>
+        <span class="cmsg msg" style="margin-left:auto"></span>
+      </div>
+    </div>
+  `).join("");
+
+  // Wire up
+  $("composers").querySelectorAll(".composer").forEach(el => {
+    const i = Number(el.dataset.i);
+    ["to","subject","body"].forEach(field => {
+      el.querySelector(`.c-${field}`).addEventListener("input", e => {
+        saveComposerDraft(i, { [field]: e.target.value });
+      });
+    });
+  });
+  $("composers").querySelectorAll(".c-send").forEach(b => {
+    b.addEventListener("click", () => sendComposer(Number(b.dataset.i)));
+  });
+  $("composers").querySelectorAll(".c-clear").forEach(b => {
+    b.addEventListener("click", () => clearComposer(Number(b.dataset.i)));
+  });
+}
+
+async function sendComposer(i) {
+  const wrap = $("composers").querySelector(`.composer[data-i="${i}"]`);
+  const to      = wrap.querySelector(".c-to").value.trim();
+  const subject = wrap.querySelector(".c-subject").value.trim();
+  const body    = wrap.querySelector(".c-body").value;
+  const msgEl   = wrap.querySelector(".cmsg");
+  const btn     = wrap.querySelector(".c-send");
+
+  msgEl.className = "cmsg msg";
+
+  if (!to || !subject || !body) {
+    msgEl.classList.add("err");
+    msgEl.textContent = "To, Subject, Body are required.";
+    return;
+  }
+
+  btn.disabled = true;
+  msgEl.classList.add("busy");
+  msgEl.textContent = "Sending…";
+
+  try {
+    const r = await fetch(FN + "?action=send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + store.get("token")
+      },
+      body: JSON.stringify({ to, subject, html: body })
+    });
+    if (r.status === 401) return logout();
+    const data = await r.json();
+
+    if (r.ok && data.ok) {
+      msgEl.classList.add("ok");
+      msgEl.textContent = "✓ Sent to " + to;
+      saveComposerDraft(i, { to: "", subject: "", body: "" });
+      wrap.querySelector(".c-to").value = "";
+      wrap.querySelector(".c-subject").value = "";
+      wrap.querySelector(".c-body").value = "";
+      toast(`Email #${i + 1} sent`, "ok");
+      pushLog("ok", `Sent email #${i + 1} to ${to}`);
+      refreshRecent();
+    } else {
+      msgEl.classList.add("err");
+      msgEl.textContent = "Failed: " + (data.error || JSON.stringify(data));
+      pushLog("err", `Email #${i + 1} failed: ${data.error || "unknown"}`);
+    }
+  } catch (err) {
+    msgEl.classList.add("err");
+    msgEl.textContent = "Network error: " + err.message;
+    pushLog("err", `Email #${i + 1} network error`);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function clearComposer(i) {
+  const wrap = $("composers").querySelector(`.composer[data-i="${i}"]`);
+  wrap.querySelector(".c-to").value = "";
+  wrap.querySelector(".c-subject").value = "";
+  wrap.querySelector(".c-body").value = "";
+  saveComposerDraft(i, { to: "", subject: "", body: "" });
+  wrap.querySelector(".cmsg").textContent = "";
+  wrap.querySelector(".cmsg").className = "cmsg msg";
+}
+
+/* ══════════════════════════════════════════════════════════
+   RECENT LIST
+   ══════════════════════════════════════════════════════════ */
+async function refreshRecent() {
+  const box = $("recentList");
+  box.innerHTML = `<p style="color:var(--muted);margin:0">Loading…</p>`;
+  try {
+    const r = await fetch(FN + "?action=sent", {
+      headers: { Authorization: "Bearer " + store.get("token") }
+    });
+    if (r.status === 401) return logout();
+    const list = await r.json();
+    if (!Array.isArray(list) || !list.length) {
+      box.innerHTML = `<p style="color:var(--muted);margin:0">No emails sent yet.</p>`;
+      return;
+    }
+    box.innerHTML = list.slice(0, 5).map(e => `
+      <a href="view?id=${encodeURIComponent(e.id)}"
+         style="display:block;padding:.7rem .9rem;border-radius:9px;
+                background:var(--paper);margin-bottom:.5rem;text-decoration:none;
+                color:var(--ink);border:1.5px solid transparent;transition:.15s">
+        <div style="display:flex;justify-content:space-between;gap:.6rem">
+          <div style="min-width:0;flex:1">
+            <div style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+              ${esc(e.subject || "(no subject)")}
+            </div>
+            <div style="color:var(--muted);font-size:.82rem;margin-top:.15rem">
+              To: ${esc(e.to_email || "—")}
+            </div>
+          </div>
+          <div style="text-align:right;font-size:.75rem;color:var(--muted);flex:none">
+            ${new Date(e.created_at).toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}
+          </div>
+        </div>
+      </a>
+    `).join("");
+  } catch {
+    box.innerHTML = `<p style="color:var(--muted);margin:0">Could not load.</p>`;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOGOUT
+   ══════════════════════════════════════════════════════════ */
+function logout() {
+  pushLog("info", "Signed out");
+  // keep profile/photo/log, clear token + this session
+  const myId = thisSessionId();
+  setSessions(getSessions().filter(s => s.id !== myId));
+  store.del("token");
+  store.del("user");
+  store.del("bg_sid");
+  location.href = "/";
+}
+
+/* ══════════════════════════════════════════════════════════
+   CAPTCHA
+   ══════════════════════════════════════════════════════════ */
+let CAPTCHA_CODE = "";
+
+function newCaptcha() {
+  CAPTCHA_CODE = String(Math.floor(1000 + Math.random() * 9000));
+  $("captchaCode").textContent = CAPTCHA_CODE;
+  $("captchaInput").value = "";
+  $("captchaInput").classList.remove("err");
+  $("captchaErr").textContent = "";
+  setTimeout(() => $("captchaInput").focus(), 50);
+}
+
+function verifyCaptcha() {
+  const typed = $("captchaInput").value.trim();
+  if (typed.length !== 4) {
+    $("captchaInput").classList.add("err");
+    $("captchaErr").textContent = "Enter all 4 digits.";
+    return;
+  }
+  if (typed !== CAPTCHA_CODE) {
+    $("captchaInput").classList.add("err");
+    $("captchaErr").textContent = "Incorrect code. Try again.";
+    setTimeout(() => $("captchaInput").classList.remove("err"), 400);
+    newCaptcha();
+    return;
+  }
+  // Success
+  $("captchaGate").style.transition = "opacity .3s";
+  $("captchaGate").style.opacity = "0";
+  setTimeout(() => {
+    $("captchaGate").hidden = true;
+    store.set("bg_captcha_ok", "1");
+    startDashboard();
+  }, 300);
+}
+
+$("captchaInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") verifyCaptcha();
+});
+$("captchaInput").addEventListener("input", e => {
+  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
+});
+
+/* ══════════════════════════════════════════════════════════
+   BOOT
+   ══════════════════════════════════════════════════════════ */
+function startDashboard() {
+  pushLog("info", "Dashboard opened");
+  registerSession();
+  loadProfile();
+  buildComposers();
+  refreshRecent();
+  renderLog();
+
+  // Session keep-alive ping
+  setInterval(registerSession, 1000 * 60 * 2);
+}
+
+/* Check auth + captcha before showing anything */
+(function boot() {
+  if (!store.get("token")) {
+    location.href = "/";
+    return;
+  }
+  // Captcha already passed this session?
+  if (store.get("bg_captcha_ok") === "1") {
+    $("captchaGate").hidden = true;
+    startDashboard();
+  } else {
+    newCaptcha();
+  }
+})();
+</script>
+</body>
+</html>
