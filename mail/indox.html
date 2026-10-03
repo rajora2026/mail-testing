@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#07162b"/>
+<title>Inbox · BetterGrowth Mail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+    --gold:#d9a62e; --gold-deep:#b8841a; --gold-soft:#f1d899;
+    --paper:#f5f6f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f;
+    --line:#dde2ea; --ok:#17653a; --ok-bg:#e3f4ea;
+    --warn:#7a5410; --warn-bg:#fdf1d6; --bad:#9b1c1c; --bad-bg:#fde4e4;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100svh;-webkit-font-smoothing:antialiased}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  [hidden]{display:none!important}
+
+  /* Topbar */
+  .topbar{
+    background:var(--navy-800); color:#e9eef6; padding:.65rem 1.25rem;
+    display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    position:sticky; top:0; z-index:40;
+    border-bottom:1px solid rgba(217,166,46,.25);
+    box-shadow:0 4px 20px rgba(0,0,0,.18);
+  }
+  .brandmark{
+    font-family:var(--serif); font-weight:700; font-size:1.2rem;
+    color:var(--gold);
+  }
+  .nav-links{
+    display:flex; gap:.35rem; align-items:center;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:10px; padding:.25rem;
+  }
+  .nav-links a{
+    color:#cbd5e1; text-decoration:none;
+    padding:.4rem .85rem; border-radius:7px;
+    font-size:.85rem; font-weight:500;
+    display:inline-flex; align-items:center; gap:.4rem;
+    transition:background .15s, color .15s;
+  }
+  .nav-links a:hover{background:rgba(255,255,255,.1); color:#fff}
+  .nav-links a.active{background:var(--gold); color:var(--navy-900); font-weight:600}
+  .topbar-spacer{flex:1}
+  .tbtn{
+    background:var(--gold); color:var(--navy-900); border:0;
+    padding:.45rem .9rem; border-radius:8px; font:inherit;
+    font-weight:600; cursor:pointer; font-size:.85rem;
+  }
+  .tbtn:hover{background:#e4b343}
+  .tbtn.ghost{background:transparent; color:#e9eef6; border:1px solid rgba(255,255,255,.2)}
+  .tbtn.ghost:hover{background:rgba(255,255,255,.08)}
+
+  /* Layout */
+  .wrap{max-width:1100px; margin:auto; padding:1.25rem}
+  .head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:1rem; flex-wrap:wrap; gap:.75rem;
+  }
+  .head h1{
+    font-family:var(--serif); font-weight:700; font-size:1.6rem;
+    margin:0;
+  }
+  .head h1 small{
+    display:block; font-family:var(--sans); font-size:.85rem;
+    color:var(--muted); font-weight:400; margin-top:.2rem;
+  }
+  .head-actions{display:flex; gap:.5rem; align-items:center}
+  .filter-chips{display:flex; gap:.4rem; flex-wrap:wrap}
+  .chip{
+    background:var(--white); border:1.5px solid var(--line);
+    border-radius:999px; padding:.35rem .8rem;
+    font:inherit; font-size:.82rem; font-weight:500;
+    cursor:pointer; transition:all .15s;
+  }
+  .chip:hover{background:#eceef2}
+  .chip.active{background:var(--navy-800); color:#fff; border-color:var(--navy-800)}
+
+  /* Email list */
+  .list{display:flex; flex-direction:column; gap:.5rem}
+  .email-card{
+    display:flex; align-items:flex-start; gap:.9rem;
+    background:var(--white); border:1.5px solid var(--line);
+    border-radius:11px; padding:.9rem 1rem;
+    text-decoration:none; color:var(--ink);
+    transition:all .15s;
+    position:relative;
+  }
+  .email-card:hover{
+    background:#fbfcfd; border-color:#c3cbd7;
+    transform:translateX(3px);
+  }
+  .email-card.unread{
+    border-left:4px solid var(--gold);
+    background:#fffdf7;
+  }
+  .email-card .dot{
+    width:9px; height:9px; border-radius:50%;
+    background:var(--gold); flex:none; margin-top:.55rem;
+  }
+  .email-card.read .dot{background:#d5dce6}
+  .email-card .body{flex:1; min-width:0}
+  .email-card .row1{
+    display:flex; justify-content:space-between; gap:.6rem;
+    margin-bottom:.3rem; align-items:baseline;
+  }
+  .email-card .from{
+    font-weight:600; font-size:.95rem;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    flex:1;
+  }
+  .email-card .time{font-size:.75rem; color:var(--muted); flex:none}
+  .email-card .subject{
+    font-size:.9rem; font-weight:500; margin-bottom:.15rem;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .email-card .preview{
+    font-size:.82rem; color:var(--muted);
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .email-card .recipient-tag{
+    display:inline-block;
+    background:rgba(217,166,46,.15); color:var(--gold-deep);
+    padding:.15rem .55rem; border-radius:5px;
+    font-size:.7rem; font-weight:600; margin-top:.35rem;
+  }
+
+  /* Empty / loading */
+  .empty{
+    text-align:center; padding:3rem 1rem;
+    color:var(--muted); background:var(--white);
+    border-radius:12px; border:1.5px dashed var(--line);
+  }
+  .empty svg{opacity:.4; margin-bottom:.75rem}
+  .empty b{display:block; color:var(--ink); font-size:1rem; margin-bottom:.3rem}
+  .loading{text-align:center; padding:2rem; color:var(--muted)}
+
+  /* Toasts */
+  .toast-wrap{
+    position:fixed; top:1rem; right:1rem; z-index:99;
+    display:flex; flex-direction:column; gap:.5rem;
+  }
+  .toast{
+    background:var(--navy-800); color:#e9eef6;
+    padding:.75rem 1rem; border-radius:10px; font-size:.88rem;
+    border-left:4px solid var(--gold);
+    box-shadow:0 8px 24px rgba(0,0,0,.3);
+    animation:slidein .25s ease-out; max-width:320px;
+  }
+  @keyframes slidein{from{transform:translateX(30px); opacity:0} to{transform:none; opacity:1}}
+
+  @media (max-width:700px){
+    .topbar{padding:.55rem .8rem; gap:.5rem}
+    .brandmark{font-size:1rem}
+    .nav-links a{padding:.35rem .6rem; font-size:.75rem}
+    .nav-links a span{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brandmark">BetterGrowth Mail</div>
+
+  <nav class="nav-links">
+    <a href="dashboard" id="navDash">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span>Dashboard</span>
+    </a>
+    <a href="send">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+      <span>Send</span>
+    </a>
+    <a href="sent">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>
+      <span>Sent</span>
+    </a>
+    <a href="inbox" class="active">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/><circle cx="12" cy="9" r="2" fill="currentColor" stroke="none"/></svg>
+      <span>Inbox</span>
+    </a>
+  </nav>
+
+  <div class="topbar-spacer"></div>
+  <button class="tbtn ghost" onclick="load()">↻ Refresh</button>
+  <button class="tbtn" onclick="logout()">Sign out</button>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <h1>
+      Inbox
+      <small id="subtitle">Loading…</small>
+    </h1>
+    <div class="head-actions">
+      <div class="filter-chips" id="filterChips">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="unread">Unread</button>
+        <button class="chip" data-filter="read">Read</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="list" id="list">
+    <div class="loading">Loading inbox…</div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
+const $ = id => document.getElementById(id);
+
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+
+function esc(s = "") {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function toast(msg, kind="") {
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = msg;
+  $("toastWrap").appendChild(el);
+  setTimeout(() => el.style.opacity = "0", 2600);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function fmtTime(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60_000) return "just now";
+  if (diff < 3600_000) return Math.floor(diff/60000) + "m ago";
+  if (diff < 86400_000) return Math.floor(diff/3600000) + "h ago";
+  if (diff < 604800_000) return Math.floor(diff/86400000) + "d ago";
+  return d.toLocaleDateString(undefined, { dateStyle: "medium" });
+}
+
+let ALL_EMAILS = [];
+let FILTER = "all";
+
+async function load() {
+  const box = $("list");
+  box.innerHTML = `<div class="loading">Loading inbox…</div>`;
+
+  const user = (store.get("user") || "").toLowerCase();
+  const isAdmin = user === "admin@bettergrowthsolutions.com";
+
+  try {
+    const url = isAdmin
+      ? FN + "?action=admin_inbound_list"
+      : FN + "?action=inbound_list";
+
+    const r = await fetch(url, {
+      headers: { Authorization: "Bearer " + store.get("token") }
+    });
+
+    if (r.status === 401) return logout();
+    if (!r.ok) throw new Error("HTTP " + r.status);
+
+    ALL_EMAILS = await r.json();
+
+    $("subtitle").textContent = isAdmin
+      ? `All received emails · ${ALL_EMAILS.length} total`
+      : `Emails to ${user} · ${ALL_EMAILS.length} total`;
+
+    render();
+  } catch (err) {
+    box.innerHTML = `<div class="empty">
+      <b>Could not load inbox</b>
+      ${esc(err.message)}
+    </div>`;
+  }
+}
+
+function render() {
+  const box = $("list");
+  const q = FILTER;
+
+  let filtered = ALL_EMAILS;
+  if (q === "unread") filtered = ALL_EMAILS.filter(e => e.status === "unread");
+  if (q === "read")   filtered = ALL_EMAILS.filter(e => e.status === "read");
+
+  if (!filtered.length) {
+    box.innerHTML = `<div class="empty">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 12h-6l-2 3h-4l-2-3H2"/>
+        <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>
+      </svg>
+      <b>No emails ${q === "all" ? "yet" : q}</b>
+      ${q === "all"
+        ? "Emails sent to your address will appear here."
+        : "Try a different filter."}
+    </div>`;
+    return;
+  }
+
+  box.innerHTML = filtered.map(e => {
+    const isUnread = e.status === "unread";
+    const fromName = (e.from_email || "?").split("@")[0];
+    const recipient = (e.recipient_email || "").split("@")[0];
+
+    return `
+      <a class="email-card ${isUnread ? 'unread' : 'read'}"
+         href="inbox-view?id=${encodeURIComponent(e.id)}">
+        <span class="dot"></span>
+        <div class="body">
+          <div class="row1">
+            <span class="from">${esc(fromName)}</span>
+            <span class="time">${esc(fmtTime(e.created_at))}</span>
+          </div>
+          <div class="subject">${esc(e.subject || "(no subject)")}</div>
+          <div class="preview">${esc((e.body || "").slice(0, 200))}</div>
+          <span class="recipient-tag">→ ${esc(recipient)}@</span>
+        </div>
+      </a>
+    `;
+  }).join("");
+}
+
+$("filterChips").addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  FILTER = chip.dataset.filter;
+  render();
+});
+
+function logout() {
+  store.del("token");
+  store.del("user");
+  location.href = "/";
+}
+
+// Boot
+if (!store.get("token")) { location.href = "/"; }
+else {
+  const user = (store.get("user") || "").toLowerCase();
+  const isAdmin = user === "admin@bettergrowthsolutions.com";
+  $("navDash").href = isAdmin ? "admin" : "dashboard";
+  load();
+}
+</script>
+</body>
+</html>
