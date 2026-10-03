@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#07162b"/>
+<title>Admin · BetterGrowth Mail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+    --gold:#d9a62e; --gold-deep:#b8841a; --gold-soft:#f1d899;
+    --paper:#f5f6f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f;
+    --line:#dde2ea; --ok:#17653a; --ok-bg:#e3f4ea;
+    --warn:#7a5410; --warn-bg:#fdf1d6; --bad:#9b1c1c; --bad-bg:#fde4e4;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100svh;-webkit-font-smoothing:antialiased}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  [hidden]{display:none!important}
+
+  /* ───── Top bar ───── */
+  .topbar{
+    background:linear-gradient(90deg,var(--navy-900) 0%,var(--navy-700) 100%);
+    color:#e9eef6; padding:.65rem 1.25rem;
+    display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    position:sticky; top:0; z-index:40;
+    border-bottom:2px solid var(--gold);
+    box-shadow:0 4px 20px rgba(0,0,0,.25);
+  }
+  .topbar .brandmark{
+    font-family:var(--serif); font-weight:700; font-size:1.25rem;
+    color:var(--gold); letter-spacing:.01em;
+    display:flex; align-items:center; gap:.6rem;
+  }
+  .admin-badge{
+    background:var(--gold); color:var(--navy-900);
+    padding:.15rem .5rem; border-radius:5px;
+    font-family:var(--sans); font-size:.65rem; font-weight:700;
+    letter-spacing:.08em;
+  }
+  .topbar-spacer{flex:1}
+  .tbtn{
+    background:var(--gold); color:var(--navy-900); border:0;
+    padding:.45rem .9rem; border-radius:8px; font:inherit;
+    font-weight:600; cursor:pointer; font-size:.85rem;
+  }
+  .tbtn:hover{background:#e4b343}
+  .tbtn.ghost{background:transparent; color:#e9eef6; border:1px solid rgba(255,255,255,.2)}
+  .tbtn.ghost:hover{background:rgba(255,255,255,.08)}
+  .tchip{
+    background:rgba(217,166,46,.12); border:1px solid rgba(217,166,46,.35);
+    color:var(--gold-soft); border-radius:999px; padding:.3rem .75rem;
+    font-size:.82rem; display:inline-flex; align-items:center; gap:.4rem;
+  }
+
+  /* ───── Layout ───── */
+  .layout{
+    display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr);
+    gap:1.25rem; padding:1.25rem; max-width:1600px; margin:auto;
+  }
+  @media (max-width:1100px){ .layout{grid-template-columns:1fr} }
+
+  .card{
+    background:var(--white); border:1.5px solid var(--line);
+    border-radius:14px; padding:1.25rem; box-shadow:0 4px 16px rgba(11,27,48,.04);
+  }
+  .card h3{
+    font-family:var(--serif); font-weight:700; font-size:1.35rem;
+    margin:0 0 1rem;
+  }
+  .card h3 small{
+    display:block; font-family:var(--sans); font-weight:400;
+    font-size:.82rem; color:var(--muted); margin-top:.15rem;
+  }
+
+  /* ───── Stats grid ───── */
+  .stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem;
+    margin-bottom:1.25rem;
+  }
+  @media (max-width:700px){ .stats{grid-template-columns:repeat(2,1fr)} }
+  .stat{
+    background:var(--navy-800); color:#fff; border-radius:11px;
+    padding:1rem; position:relative; overflow:hidden;
+  }
+  .stat.gold{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-deep) 100%); color:var(--navy-900)}
+  .stat.green{background:linear-gradient(135deg,#17653a 0%,#0d4526 100%)}
+  .stat.red{background:linear-gradient(135deg,#9b1c1c 0%,#6b1010 100%)}
+  .stat b{
+    font-family:var(--serif); font-weight:700; font-size:1.9rem;
+    display:block; line-height:1; margin-bottom:.35rem;
+  }
+  .stat span{
+    font-size:.75rem; text-transform:uppercase;
+    letter-spacing:.06em; opacity:.85;
+  }
+
+  /* ───── User filter chips ───── */
+  .user-chips{
+    display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1rem;
+  }
+  .uchip{
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:999px; padding:.45rem .85rem;
+    font:inherit; font-size:.85rem; font-weight:500;
+    cursor:pointer; transition:all .15s;
+    display:inline-flex; align-items:center; gap:.45rem;
+  }
+  .uchip:hover{background:#eceef2; border-color:#c3cbd7}
+  .uchip.active{
+    background:var(--navy-800); color:#fff; border-color:var(--navy-800);
+  }
+  .uchip .count{
+    background:rgba(217,166,46,.3); padding:.05rem .45rem;
+    border-radius:99px; font-size:.72rem;
+  }
+  .uchip.active .count{background:var(--gold); color:var(--navy-900)}
+
+  /* ───── Search ───── */
+  .search-row{
+    display:flex; gap:.6rem; margin-bottom:1rem;
+  }
+  .search-row input{
+    flex:1; padding:.6rem .8rem; font:inherit; font-size:.95rem;
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:9px; color:var(--ink);
+  }
+  .search-row input:focus{
+    outline:none; border-color:var(--navy-700);
+    box-shadow:0 0 0 4px rgba(217,166,46,.22);
+  }
+
+  /* ───── Email table ───── */
+  .email-row{
+    display:flex; align-items:center; gap:.9rem;
+    padding:.9rem; border-radius:10px;
+    background:var(--paper); margin-bottom:.5rem;
+    text-decoration:none; color:var(--ink);
+    border:1.5px solid transparent;
+    transition:all .15s;
+  }
+  .email-row:hover{background:#eef1f6; border-color:var(--line)}
+  .email-row .avatar{
+    width:38px; height:38px; border-radius:50%;
+    background:var(--navy-800); color:var(--gold);
+    display:grid; place-items:center; flex:none;
+    font-family:var(--serif); font-weight:700; font-size:1rem;
+  }
+  .email-row .body{flex:1; min-width:0}
+  .email-row .body b{
+    display:block; font-weight:600; font-size:.95rem;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .email-row .body .meta{
+    color:var(--muted); font-size:.8rem; margin-top:.15rem;
+    display:flex; gap:.6rem; flex-wrap:wrap;
+  }
+  .email-row .status{
+    padding:.25rem .6rem; border-radius:99px;
+    font-size:.72rem; font-weight:600; flex:none;
+  }
+  .email-row .status.sent{background:var(--ok-bg); color:var(--ok)}
+  .email-row .status.failed{background:var(--bad-bg); color:var(--bad)}
+  .email-row .time{
+    font-size:.75rem; color:var(--muted); flex:none;
+    text-align:right; min-width:80px;
+  }
+
+  /* ───── Composer ───── */
+  .composer{
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:11px; padding:1rem; margin-bottom:1rem;
+  }
+  .composer .head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:.75rem; flex-wrap:wrap; gap:.5rem;
+  }
+  .composer .head b{
+    font-family:var(--serif); font-size:1.15rem; color:var(--navy-700);
+  }
+  .composer .send-as{
+    display:flex; align-items:center; gap:.4rem; font-size:.82rem;
+  }
+  .composer .send-as select{
+    padding:.35rem .6rem; font:inherit; font-size:.82rem;
+    background:#fff; border:1.5px solid var(--line);
+    border-radius:7px; color:var(--ink);
+  }
+  .composer .row2{display:grid; grid-template-columns:1fr 1fr; gap:.6rem}
+  @media (max-width:700px){ .composer .row2{grid-template-columns:1fr} }
+  .composer .msg{font-size:.85rem; margin-top:.5rem; min-height:1.1em}
+  .composer .msg.ok{color:var(--ok)}
+  .composer .msg.err{color:var(--bad)}
+  .composer .msg.busy{color:var(--muted)}
+
+  .field{margin-bottom:.8rem}
+  .field label{
+    display:block; font-size:.78rem; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.05em;
+    font-weight:600; margin-bottom:.3rem;
+  }
+  .field input, .field textarea{
+    width:100%; padding:.6rem .8rem; font:inherit; font-size:.95rem;
+    background:#fff; border:1.5px solid var(--line);
+    border-radius:9px; color:var(--ink);
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none; border-color:var(--navy-700);
+    box-shadow:0 0 0 4px rgba(217,166,46,.22);
+  }
+  .field textarea{min-height:80px; resize:vertical; font-family:var(--sans)}
+
+  .btn{
+    background:var(--gold); color:var(--navy-900); border:0;
+    padding:.65rem 1.1rem; border-radius:9px; font:inherit;
+    font-weight:600; cursor:pointer; font-size:.92rem;
+  }
+  .btn:hover{background:#e4b343}
+  .btn:disabled{background:#e6dcc3; color:#7d7358; cursor:not-allowed}
+  .btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line)}
+  .btn.ghost:hover{background:var(--paper)}
+  .btn.sm{padding:.4rem .8rem; font-size:.82rem}
+  .btn-row{display:flex; gap:.5rem; margin-top:.5rem; flex-wrap:wrap}
+
+  /* ───── Captcha overlay ───── */
+  .captcha-overlay{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(7,22,43,.94); backdrop-filter:blur(6px);
+    display:grid; place-items:center; padding:1rem;
+  }
+  .captcha-card{
+    background:#fff; border-radius:16px;
+    padding:2rem 1.75rem; max-width:380px; width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+    text-align:center; border-top:4px solid var(--gold);
+    animation:pop .22s ease-out;
+  }
+  @keyframes pop{from{transform:scale(.94); opacity:0} to{transform:none; opacity:1}}
+  .captcha-card h2{
+    font-family:var(--serif); font-weight:700; font-size:1.6rem;
+    margin:0 0 .35rem;
+  }
+  .captcha-card .role-tag{
+    display:inline-block; background:var(--gold); color:var(--navy-900);
+    padding:.15rem .55rem; border-radius:5px;
+    font-size:.68rem; font-weight:700; letter-spacing:.08em;
+    margin-bottom:.8rem;
+  }
+  .captcha-card p{
+    color:var(--muted); font-size:.9rem; margin:0 0 1.25rem;
+  }
+  .captcha-code{
+    background:var(--navy-800); color:var(--gold);
+    padding:.9rem 1rem; border-radius:10px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:2rem; font-weight:700; letter-spacing:.4em;
+    margin-bottom:1rem; user-select:none;
+    border:2px dashed rgba(217,166,46,.4);
+    position:relative;
+  }
+  .captcha-code::after{
+    content:""; position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(45deg, rgba(217,166,46,.08) 0 6px, transparent 6px 12px),
+      repeating-linear-gradient(-45deg, rgba(217,166,46,.06) 0 4px, transparent 4px 10px);
+    border-radius:8px; pointer-events:none;
+  }
+  .captcha-input{
+    width:100%; padding:.8rem; font:inherit; font-size:1.4rem;
+    text-align:center; letter-spacing:.5em;
+    border:2px solid var(--line); border-radius:10px;
+    font-weight:700; background:var(--paper); color:var(--ink);
+  }
+  .captcha-input:focus{outline:none; border-color:var(--navy-700); box-shadow:0 0 0 4px rgba(217,166,46,.25)}
+  .captcha-input.err{border-color:#c0392b; animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}}
+  .captcha-actions{display:flex; gap:.5rem; margin-top:1rem}
+  .captcha-actions button{flex:1}
+  .captcha-err{
+    color:var(--bad); font-size:.85rem; min-height:1.2em;
+    margin-top:.6rem;
+  }
+
+  /* ───── Toasts ───── */
+  .toast-wrap{
+    position:fixed; top:1rem; right:1rem; z-index:99;
+    display:flex; flex-direction:column; gap:.5rem;
+  }
+  .toast{
+    background:var(--navy-800); color:#e9eef6;
+    padding:.75rem 1rem; border-radius:10px; font-size:.88rem;
+    border-left:4px solid var(--gold);
+    box-shadow:0 8px 24px rgba(0,0,0,.3);
+    animation:slidein .25s ease-out; max-width:320px;
+  }
+  .toast.ok{border-left-color:#4ade80}
+  .toast.err{border-left-color:#f87171}
+  @keyframes slidein{from{transform:translateX(30px); opacity:0} to{transform:none; opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ CAPTCHA GATE ═══════════ -->
+<div class="captcha-overlay" id="captchaGate">
+  <div class="captcha-card">
+    <span class="role-tag">ADMIN ACCESS</span>
+    <h2>Quick check</h2>
+    <p>Enter the 4-digit code to open the admin panel.</p>
+    <div class="captcha-code" id="captchaCode">0000</div>
+    <input id="captchaInput" class="captcha-input" type="text"
+           inputmode="numeric" maxlength="4" autocomplete="off"
+           placeholder="••••" aria-label="Captcha code"/>
+    <div class="captcha-err" id="captchaErr"></div>
+    <div class="captcha-actions">
+      <button class="btn ghost" type="button" onclick="newCaptcha()">New code</button>
+      <button class="btn" type="button" onclick="verifyCaptcha()">Verify</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TOP BAR ═══════════ -->
+<header class="topbar">
+  <div class="brandmark">BetterGrowth Mail <span class="admin-badge">ADMIN</span></div>
+  <div class="topbar-spacer"></div>
+  <div class="chip-bar" style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+    <span class="tchip" id="liveClockChip">--:--:--</span>
+    <button class="tbtn ghost" onclick="refreshAll()">↻ Refresh</button>
+    <button class="tbtn" onclick="logout()">Sign out</button>
+  </div>
+</header>
+
+<!-- ═══════════ LAYOUT ═══════════ -->
+<div class="layout">
+
+  <!-- LEFT: send + stats -->
+  <aside style="display:flex;flex-direction:column;gap:1.25rem">
+
+    <!-- Stats -->
+    <section class="card">
+      <h3>Overview</h3>
+      <div class="stats" style="grid-template-columns:repeat(2,1fr)">
+        <div class="stat gold">
+          <b id="statTotal">0</b>
+          <span>Total sends</span>
+        </div>
+        <div class="stat green">
+          <b id="statSent">0</b>
+          <span>Delivered</span>
+        </div>
+        <div class="stat red">
+          <b id="statFailed">0</b>
+          <span>Failed</span>
+        </div>
+        <div class="stat">
+          <b id="statAttach">0</b>
+          <span>With file</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Composer (admin can send as any identity) -->
+    <section class="card">
+      <h3>Send an email <small>Choose sender below</small></h3>
+      <div id="composers"></div>
+    </section>
+
+  </aside>
+
+  <!-- RIGHT: all emails -->
+  <main style="display:flex;flex-direction:column;gap:1.25rem">
+
+    <!-- Filter -->
+    <section class="card">
+      <h3>All emails <small>Every user, every send</small></h3>
+
+      <div class="user-chips" id="userChips">
+        <button class="uchip active" data-user="all">
+          All <span class="count" id="cntAll">0</span>
+        </button>
+      </div>
+
+      <div class="search-row">
+        <input id="searchInput" type="search" placeholder="Search by recipient, subject, or sender…"/>
+        <button class="btn ghost" onclick="clearSearch()">Clear</button>
+      </div>
+
+      <div id="emailList">
+        <p style="color:var(--muted);margin:0">Loading…</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
+const $  = id => document.getElementById(id);
+
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+
+function esc(s = "") {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function toast(msg, kind = "") {
+  const el = document.createElement("div");
+  el.className = "toast" + (kind ? " " + kind : "");
+  el.textContent = msg;
+  $("toastWrap").appendChild(el);
+  setTimeout(() => el.style.opacity = "0", 2600);
+  setTimeout(() => el.remove(), 3000);
+}
+
+/* ───── Clock ───── */
+setInterval(() => {
+  $("liveClockChip").textContent = new Date().toLocaleTimeString(undefined, { hour12: false });
+}, 1000);
+$("liveClockChip").textContent = new Date().toLocaleTimeString(undefined, { hour12: false });
+
+/* ───── Captcha ───── */
+let CAPTCHA_CODE = "";
+function newCaptcha() {
+  CAPTCHA_CODE = String(Math.floor(1000 + Math.random() * 9000));
+  $("captchaCode").textContent = CAPTCHA_CODE;
+  $("captchaInput").value = "";
+  $("captchaInput").classList.remove("err");
+  $("captchaErr").textContent = "";
+  setTimeout(() => $("captchaInput").focus(), 50);
+}
+function verifyCaptcha() {
+  const typed = $("captchaInput").value.trim();
+  if (typed.length !== 4) {
+    $("captchaInput").classList.add("err");
+    $("captchaErr").textContent = "Enter all 4 digits.";
+    return;
+  }
+  if (typed !== CAPTCHA_CODE) {
+    $("captchaInput").classList.add("err");
+    $("captchaErr").textContent = "Incorrect code. Try again.";
+    setTimeout(() => $("captchaInput").classList.remove("err"), 400);
+    newCaptcha();
+    return;
+  }
+  $("captchaGate").style.transition = "opacity .3s";
+  $("captchaGate").style.opacity = "0";
+  setTimeout(() => {
+    $("captchaGate").hidden = true;
+    store.set("bg_admin_captcha_ok", "1");
+    startAdmin();
+  }, 300);
+}
+$("captchaInput").addEventListener("keydown", e => { if (e.key === "Enter") verifyCaptcha(); });
+$("captchaInput").addEventListener("input", e => {
+  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
+});
+
+/* ───── Admin data ───── */
+let ALL_EMAILS = [];
+let ACTIVE_USER = "all";
+let SEARCH = "";
+
+async function loadStats() {
+  try {
+    const r = await fetch(FN + "?action=admin_stats", {
+      headers: { Authorization: "Bearer " + store.get("token") }
+    });
+    if (!r.ok) return;
+    const s = await r.json();
+    $("statTotal").textContent = s.total ?? 0;
+    $("statSent").textContent = s.sent ?? 0;
+    $("statFailed").textContent = s.failed ?? 0;
+    $("statAttach").textContent = s.withAttachment ?? 0;
+  } catch {}
+}
+
+async function loadEmails() {
+  const box = $("emailList");
+  box.innerHTML = `<p style="color:var(--muted);margin:0">Loading…</p>`;
+  try {
+    const r = await fetch(FN + "?action=admin_list", {
+      headers: { Authorization: "Bearer " + store.get("token") }
+    });
+    if (r.status === 401) return logout();
+    if (r.status === 403) {
+      box.innerHTML = `<p style="color:var(--bad);margin:0">Access denied.</p>`;
+      return;
+    }
+    ALL_EMAILS = await r.json();
+    buildUserChips();
+    renderEmails();
+  } catch {
+    box.innerHTML = `<p style="color:var(--muted);margin:0">Could not load.</p>`;
+  }
+}
+
+function buildUserChips() {
+  const counts = { all: ALL_EMAILS.length };
+  for (const e of ALL_EMAILS) {
+    const k = e.sender_email || "unknown";
+    counts[k] = (counts[k] || 0) + 1;
+  }
+
+  const order = ["all", "hr@bettergrowthsolutions.com", "accounting@bettergrowthsolutions.com",
+                 "rajvardhan@bettergrowthsolutions.com", "admin@bettergrowthsolutions.com"];
+  const users = [...new Set([...order.filter(u => counts[u] !== undefined), ...Object.keys(counts)])];
+
+  $("userChips").innerHTML = users.map(u => {
+    const label = u === "all" ? "All" : u.split("@")[0];
+    const active = ACTIVE_USER === u ? " active" : "";
+    return `<button class="uchip${active}" data-user="${esc(u)}">
+      ${esc(label)} <span class="count">${counts[u] || 0}</span>
+    </button>`;
+  }).join("");
+
+  $("userChips").querySelectorAll(".uchip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      ACTIVE_USER = chip.dataset.user;
+      buildUserChips();
+      renderEmails();
+    });
+  });
+}
+
+function renderEmails() {
+  const box = $("emailList");
+  const q = SEARCH.toLowerCase();
+
+  const filtered = ALL_EMAILS.filter(e => {
+    if (ACTIVE_USER !== "all" && e.sender_email !== ACTIVE_USER) return false;
+    if (!q) return true;
+    return (
+      (e.to_email || "").toLowerCase().includes(q) ||
+      (e.subject || "").toLowerCase().includes(q) ||
+      (e.sender_email || "").toLowerCase().includes(q)
+    );
+  });
+
+  if (!filtered.length) {
+    box.innerHTML = `<p style="color:var(--muted);margin:0">No matching emails.</p>`;
+    return;
+  }
+
+  box.innerHTML = filtered.slice(0, 200).map(e => {
+    const senderName = (e.sender_email || "?").split("@")[0];
+    const statusCls = e.status === "sent" ? "sent" : "failed";
+    return `
+      <a class="email-row" href="view?id=${encodeURIComponent(e.id)}">
+        <div class="avatar">${esc(senderName[0].toUpperCase())}</div>
+        <div class="body">
+          <b>${esc(e.subject || "(no subject)")}</b>
+          <div class="meta">
+            <span>To: ${esc(e.to_email || "—")}</span>
+            <span>· From: <b style="color:var(--navy-700)">${esc(senderName)}</b></span>
+            ${e.attachment_name ? `<span>· 📎 ${esc(e.attachment_name)}</span>` : ""}
+          </div>
+        </div>
+        <span class="status ${statusCls}">${esc(e.status || "")}</span>
+        <span class="time">${new Date(e.created_at).toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</span>
+      </a>
+    `;
+  }).join("");
+}
+
+$("searchInput").addEventListener("input", e => {
+  SEARCH = e.target.value.trim();
+  renderEmails();
+});
+function clearSearch() {
+  SEARCH = "";
+  $("searchInput").value = "";
+  renderEmails();
+}
+
+/* ───── Composers (3, with send-as) ───── */
+const COMPOSERS_KEY = "bg_admin_composers_v1";
+const SENDERS = [
+  "hr@bettergrowthsolutions.com",
+  "accounting@bettergrowthsolutions.com",
+  "rajvardhan@bettergrowthsolutions.com"
+];
+
+function loadDrafts() {
+  return store.json(COMPOSERS_KEY, [{}, {}, {}]);
+}
+function saveDraft(i, data) {
+  const all = loadDrafts();
+  all[i] = { ...all[i], ...data };
+  store.set(COMPOSERS_KEY, JSON.stringify(all));
+}
+
+function buildComposers() {
+  const drafts = loadDrafts();
+  $("composers").innerHTML = drafts.map((d, i) => `
+    <div class="composer" data-i="${i}">
+      <div class="head">
+        <b>Email #${i + 1}</b>
+        <div class="send-as">
+          <span>Send as</span>
+          <select class="c-from">
+            ${SENDERS.map(s =>
+              `<option value="${s}" ${d.from === s ? "selected" : ""}>${s.split("@")[0]}</option>`
+            ).join("")}
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field" style="margin:0">
+          <label>To</label>
+          <input class="c-to" type="email" placeholder="candidate@example.com" value="${esc(d.to || "")}"/>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Subject</label>
+          <input class="c-subject" type="text" placeholder="Interview Invitation" value="${esc(d.subject || "")}"/>
+        </div>
+      </div>
+      <div class="field" style="margin-top:.6rem">
+        <label>Body</label>
+        <textarea class="c-body" placeholder="<p>Hello…</p>">${esc(d.body || "")}</textarea>
+      </div>
+      <div class="btn-row" style="align-items:center">
+        <button class="btn c-send">Send #${i + 1}</button>
+        <button class="btn ghost c-clear">Clear</button>
+        <span class="cmsg msg" style="margin-left:auto"></span>
+      </div>
+    </div>
+  `).join("");
+
+  $("composers").querySelectorAll(".composer").forEach(el => {
+    const i = Number(el.dataset.i);
+    ["to","subject","body","from"].forEach(field => {
+      const input = el.querySelector(`.c-${field}`);
+      input.addEventListener("input",  e => saveDraft(i, { [field]: e.target.value }));
+      input.addEventListener("change", e => saveDraft(i, { [field]: e.target.value }));
+    });
+    el.querySelector(".c-send").addEventListener("click", () => sendComposer(i));
+    el.querySelector(".c-clear").addEventListener("click", () => clearComposer(i));
+  });
+}
+
+async function sendComposer(i) {
+  const wrap = $("composers").querySelector(`.composer[data-i="${i}"]`);
+  const from    = wrap.querySelector(".c-from").value;
+  const to      = wrap.querySelector(".c-to").value.trim();
+  const subject = wrap.querySelector(".c-subject").value.trim();
+  const body    = wrap.querySelector(".c-body").value;
+  const msgEl   = wrap.querySelector(".cmsg");
+  const btn     = wrap.querySelector(".c-send");
+
+  msgEl.className = "cmsg msg";
+
+  if (!to || !subject || !body) {
+    msgEl.classList.add("err");
+    msgEl.textContent = "To, Subject, Body are required.";
+    return;
+  }
+
+  btn.disabled = true;
+  msgEl.classList.add("busy");
+  msgEl.textContent = "Sending…";
+
+  try {
+    const r = await fetch(FN + "?action=send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + store.get("token")
+      },
+      body: JSON.stringify({ from, to, subject, html: body })
+    });
+    const data = await r.json();
+
+    if (r.ok && data.ok) {
+      msgEl.classList.add("ok");
+      msgEl.textContent = `✓ Sent as ${from.split("@")[0]}`;
+      saveDraft(i, { to: "", subject: "", body: "" });
+      wrap.querySelector(".c-to").value = "";
+      wrap.querySelector(".c-subject").value = "";
+      wrap.querySelector(".c-body").value = "";
+      toast(`Email #${i + 1} sent`, "ok");
+      loadEmails();
+      loadStats();
+    } else {
+      msgEl.classList.add("err");
+      msgEl.textContent = "Failed: " + (data.error || JSON.stringify(data));
+    }
+  } catch (err) {
+    msgEl.classList.add("err");
+    msgEl.textContent = "Error: " + err.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function clearComposer(i) {
+  const wrap = $("composers").querySelector(`.composer[data-i="${i}"]`);
+  wrap.querySelector(".c-to").value = "";
+  wrap.querySelector(".c-subject").value = "";
+  wrap.querySelector(".c-body").value = "";
+  saveDraft(i, { to: "", subject: "", body: "" });
+  wrap.querySelector(".cmsg").textContent = "";
+  wrap.querySelector(".cmsg").className = "cmsg msg";
+}
+
+/* ───── Refresh + logout ───── */
+function refreshAll() { loadStats(); loadEmails(); toast("Refreshed"); }
+
+function logout() {
+  store.del("token");
+  store.del("user");
+  store.del("bg_admin_captcha_ok");
+  location.href = "/";
+}
+
+/* ───── Boot ───── */
+function startAdmin() {
+  buildComposers();
+  loadStats();
+  loadEmails();
+}
+
+(function boot() {
+  if (!store.get("token")) { location.href = "/"; return; }
+
+  // only admin
+  const user = (store.get("user") || "").toLowerCase();
+  if (user !== "admin@bettergrowthsolutions.com") {
+    location.href = "dashboard";
+    return;
+  }
+
+  if (store.get("bg_admin_captcha_ok") === "1") {
+    $("captchaGate").hidden = true;
+    startAdmin();
+  } else {
+    newCaptcha();
+  }
+})();
+</script>
+</body>
+</html>
