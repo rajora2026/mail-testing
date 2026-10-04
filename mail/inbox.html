@@ -1,1317 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#07162b" />
-  <title>BetterGrowth Mail · 5 Accounts</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    /* ===== RESET & VARIABLES ===== */
-    :root {
-      --navy-950: #050f1f;
-      --navy-900: #07162b;
-      --navy-800: #0b2038;
-      --navy-700: #143252;
-      --gold: #d9a62e;
-      --gold-deep: #b8841a;
-      --gold-soft: #f1d899;
-      --paper: #f4f5f8;
-      --white: #fff;
-      --ink: #0b1b30;
-      --muted: #5a6a7f;
-      --line: #dde2ea;
-      --ok: #17653a;
-      --ok-bg: #e3f4ea;
-      --bad: #9b1c1c;
-      --bad-bg: #fde4e4;
-      --warn: #7a5410;
-      --warn-bg: #fdf1d6;
-      --serif: "Cormorant Garamond", Georgia, serif;
-      --sans: "Jost", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      --shadow-sm: 0 2px 8px rgba(11, 27, 48, 0.06);
-      --shadow-md: 0 8px 24px -8px rgba(11, 27, 48, 0.12);
-      --shadow-lg: 0 20px 40px -12px rgba(11, 27, 48, 0.2);
-      --radius-card: 18px;
-      --radius-btn: 11px;
-    }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-    html, body { height: 100%; }
-    html { -webkit-text-size-adjust: 100%; }
-    body {
-      font-family: var(--sans);
-      color: var(--ink);
-      background: var(--paper);
-      min-height: 100svh;
-      -webkit-font-smoothing: antialiased;
-      line-height: 1.5;
-      display: flex;
-      flex-direction: column;
-    }
-    :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-    [hidden] { display: none !important; }
-    button { font-family: inherit; cursor: pointer; }
-    svg { flex: none; display: block; }
-    a { color: inherit; text-decoration: none; }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#07162b"/>
+<title>Inbox · BetterGrowth Mail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --navy-950:#050f1f; --navy-900:#07162b; --navy-800:#0b2038; --navy-700:#143252;
+    --gold:#d9a62e; --gold-deep:#b8841a; --gold-soft:#f1d899;
+    --paper:#f4f5f8; --white:#fff; --ink:#0b1b30; --muted:#5a6a7f;
+    --line:#dde2ea; --ok:#17653a; --ok-bg:#e3f4ea; --bad:#9b1c1c; --bad-bg:#fde4e4;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --nav-h:64px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100svh;
+       -webkit-font-smoothing:antialiased;line-height:1.45}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  [hidden]{display:none!important}
+  button{font-family:inherit}
+  svg{flex:none}
 
-    /* ===== APP LAYOUT ===== */
-    .app {
-      display: flex;
-      flex-direction: column;
-      min-height: 100svh;
-    }
+  /* Top bar */
+  .topbar{background:linear-gradient(90deg,var(--navy-950) 0%,var(--navy-700) 100%);color:#e9eef6;
+    padding:.6rem 1.25rem;padding-top:max(.6rem,env(safe-area-inset-top));
+    display:flex;align-items:center;gap:.9rem;position:sticky;top:0;z-index:40;
+    border-bottom:2px solid var(--gold);box-shadow:0 6px 24px rgba(0,0,0,.25)}
+  .brandmark{font-family:var(--serif);font-weight:700;font-size:1.3rem;color:var(--gold);display:flex;align-items:center;gap:.55rem;white-space:nowrap}
+  .brandmark .mark{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+    background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-size:.95rem;color:#fff}
+  .admin-badge{background:var(--gold);color:var(--navy-900);padding:.15rem .5rem;border-radius:5px;font-family:var(--sans);font-size:.62rem;font-weight:700;letter-spacing:.08em}
+  .nav-links{display:flex;gap:.25rem;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:.25rem}
+  .nav-links a{color:#cbd5e1;text-decoration:none;padding:.42rem .85rem;border-radius:8px;font-size:.84rem;font-weight:500;
+    display:inline-flex;align-items:center;gap:.4rem;transition:background .15s,color .15s}
+  .nav-links a:hover{background:rgba(255,255,255,.1);color:#fff}
+  .nav-links a.active{background:var(--gold);color:var(--navy-900);font-weight:600}
+  .nbadge{background:var(--gold);color:var(--navy-900);font-size:.65rem;font-weight:700;min-width:18px;padding:.02rem .38rem;border-radius:99px;text-align:center;line-height:1.5}
+  .nav-links a.active .nbadge{background:var(--navy-900);color:var(--gold)}
+  .spacer{flex:1}
+  .tools{display:flex;gap:.5rem}
+  .tbtn{background:var(--gold);color:var(--navy-900);border:0;min-height:38px;padding:0 .95rem;border-radius:9px;font-weight:600;cursor:pointer;
+    font-size:.85rem;display:inline-flex;align-items:center;gap:.4rem;transition:background .15s}
+  .tbtn:hover{background:#e4b343}
+  .tbtn.ghost{background:transparent;color:#e9eef6;border:1px solid rgba(255,255,255,.22)}
+  .tbtn.ghost:hover{background:rgba(255,255,255,.09)}
+  .tbtn.spin svg{animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .bottom-nav{display:none}
 
-    /* ===== TOPBAR ===== */
-    .topbar {
-      background: linear-gradient(90deg, var(--navy-950) 0%, var(--navy-700) 100%);
-      color: #e9eef6;
-      padding: 0.6rem 1.25rem;
-      padding-top: max(0.6rem, env(safe-area-inset-top));
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      border-bottom: 2px solid var(--gold);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
-      flex-wrap: wrap;
-    }
-    .brandmark {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 1.35rem;
-      color: var(--gold);
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      white-space: nowrap;
-    }
-    .brandmark .mark {
-      width: 34px; height: 34px;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-      font-size: 1rem;
-      color: #fff;
-    }
-    .nav-links {
-      display: flex;
-      gap: 0.35rem;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 0.25rem;
-      flex-wrap: wrap;
-    }
-    .nav-links a {
-      color: #cbd5e1;
-      text-decoration: none;
-      padding: 0.4rem 0.9rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: background 0.15s, color 0.15s;
-      white-space: nowrap;
-    }
-    .nav-links a:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-    .nav-links a.active { background: var(--gold); color: var(--navy-900); font-weight: 600; }
-    .topbar-spacer { flex: 1; }
-    .tbtn {
-      background: var(--gold); color: var(--navy-900);
-      border: 0; padding: 0.5rem 1rem; border-radius: 10px;
-      font-weight: 600; font-size: 0.85rem;
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      transition: background 0.15s, transform 0.08s;
-      min-height: 40px;
-    }
-    .tbtn:hover:not(:disabled) { background: #e4b343; }
-    .tbtn:active:not(:disabled) { transform: translateY(1px); }
-    .tbtn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .tbtn.ghost {
-      background: transparent; color: #e9eef6;
-      border: 1.5px solid rgba(255, 255, 255, 0.22);
-    }
-    .tbtn.ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.09); }
+  .wrap{max-width:900px;margin:auto;padding:1.25rem}
+  .page-head{margin:.2rem 0 1rem}
+  .page-head h1{font-family:var(--serif);font-weight:700;font-size:2rem;margin:0;line-height:1.05}
+  .page-head p{color:var(--muted);margin:.3rem 0 0;font-size:.92rem}
 
-    /* ===== MAIN WRAP ===== */
-    .wrap {
-      max-width: 1100px;
-      margin: auto;
-      padding: 1.25rem;
-      width: 100%;
-      flex: 1;
-    }
+  /* Controls */
+  .controls{display:grid;grid-template-columns:1fr auto;gap:.6rem;margin-bottom:.7rem}
+  .search{position:relative}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#8896a8;pointer-events:none}
+  .search input{width:100%;height:46px;padding:0 .9rem 0 2.6rem;font:inherit;font-size:16px;background:var(--white);
+    border:1.5px solid var(--line);border-radius:12px;color:var(--ink)}
+  select{height:46px;padding:0 2.2rem 0 .85rem;font:inherit;font-size:16px;color:var(--ink);background-color:var(--white);
+    border:1.5px solid var(--line);border-radius:12px;appearance:none;-webkit-appearance:none;max-width:210px;text-overflow:ellipsis;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235a6a7f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+    background-repeat:no-repeat;background-position:right .75rem center}
+  .search input:focus,select:focus{outline:none;border-color:var(--navy-700);box-shadow:0 0 0 4px rgba(217,166,46,.22)}
+  .chips{display:flex;gap:.4rem;overflow-x:auto;margin:0 -.25rem 1rem;padding:.1rem .25rem;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;background:var(--white);border:1.5px solid var(--line);border-radius:999px;min-height:40px;padding:0 1rem;
+    font-size:.85rem;font-weight:500;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:.45rem;transition:all .15s}
+  .chip:hover{background:#eceef2}
+  .chip.active{background:var(--navy-800);color:#fff;border-color:var(--navy-800)}
+  .chip .n{background:var(--paper);color:var(--muted);font-size:.7rem;font-weight:700;padding:.02rem .45rem;border-radius:99px}
+  .chip.active .n{background:rgba(255,255,255,.18);color:#fff}
 
-    /* ===== HEADER SECTION ===== */
-    .page-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .page-head h1 {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 2rem;
-      line-height: 1.1;
-      color: var(--ink);
-    }
-    .page-head h1 small {
-      display: block;
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      color: var(--muted);
-      font-weight: 400;
-      margin-top: 0.3rem;
-      letter-spacing: 0.01em;
-    }
-    .head-actions {
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+  /* List */
+  .list{display:flex;flex-direction:column;gap:.55rem}
+  .mail{display:flex;align-items:flex-start;gap:.85rem;background:var(--white);border:1.5px solid var(--line);border-radius:14px;
+    padding:.9rem 1rem;text-decoration:none;color:var(--ink);position:relative;transition:border-color .15s,box-shadow .15s,transform .08s}
+  .mail:hover{border-color:#c3cbd7;box-shadow:0 8px 20px -12px rgba(11,27,48,.25)}
+  .mail:active{transform:scale(.995)}
+  .mail.unread{background:#fffdf6;border-left:4px solid var(--gold)}
+  .avatar{width:44px;height:44px;border-radius:50%;background:var(--navy-800);color:var(--gold);display:grid;place-items:center;flex:none;
+    font-family:var(--serif);font-weight:700;font-size:1.2rem}
+  .mail.unread .avatar{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--navy-900)}
+  .mail .body{flex:1;min-width:0}
+  .mail .row1{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline;margin-bottom:.1rem}
+  .mail .from{font-weight:500;font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+  .mail.unread .from{font-weight:700}
+  .mail .time{font-size:.74rem;color:var(--muted);flex:none;white-space:nowrap}
+  .mail.unread .time{color:var(--gold-deep);font-weight:600}
+  .mail .subject{font-size:.92rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mail.unread .subject{font-weight:600}
+  .mail .preview{font-size:.82rem;color:var(--muted);margin-top:.15rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  .rtag{display:inline-block;background:rgba(217,166,46,.16);color:var(--gold-deep);padding:.12rem .55rem;border-radius:6px;font-size:.7rem;font-weight:600;margin-top:.4rem}
+  .udot{width:9px;height:9px;border-radius:50%;background:var(--gold);position:absolute;top:.95rem;right:.95rem}
+  .mail.unread .time{padding-right:1rem}
 
-    /* ===== FILTER CHIPS ===== */
-    .filter-chips {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-    .chip {
-      background: var(--white);
-      border: 1.5px solid var(--line);
-      border-radius: 999px;
-      padding: 0.4rem 1rem;
-      font: inherit;
-      font-size: 0.82rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s;
-      color: var(--ink);
-      min-height: 38px;
-      display: inline-flex;
-      align-items: center;
-    }
-    .chip:hover { background: #eceef2; border-color: #c3cbd7; }
-    .chip.active {
-      background: var(--navy-800);
-      color: #fff;
-      border-color: var(--navy-800);
-      box-shadow: 0 4px 12px rgba(11, 32, 56, 0.25);
-    }
+  .skel{height:92px;border-radius:14px;background:linear-gradient(90deg,#eceff4 25%,#f6f7fa 50%,#eceff4 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+  @keyframes sh{to{background-position:-200% 0}}
+  .empty{text-align:center;padding:3rem 1rem;color:var(--muted);background:var(--white);border-radius:16px;border:1.5px dashed var(--line)}
+  .empty svg{color:#b4bfcd;margin-bottom:.7rem}
+  .empty b{display:block;color:var(--ink);font-size:1.05rem;margin-bottom:.3rem}
+  .empty .btn{margin-top:1rem}
+  .btn{background:var(--gold);color:var(--navy-900);border:0;min-height:44px;padding:0 1.15rem;border-radius:11px;font-weight:600;cursor:pointer;
+    font-size:.92rem;display:inline-flex;align-items:center;justify-content:center;gap:.45rem;text-decoration:none}
+  .btn:hover{background:#e4b343}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn.ghost:hover{background:var(--paper)}
+  .more{display:flex;justify-content:center;margin-top:.9rem}
 
-    /* ===== ACCOUNT QUICK FILTERS (5 accounts) ===== */
-    .account-filters {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-      padding: 0.75rem 1rem;
-      background: var(--white);
-      border-radius: 16px;
-      border: 1.5px solid var(--line);
-      box-shadow: var(--shadow-sm);
-      align-items: center;
-    }
-    .account-filters .label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      font-weight: 600;
-      margin-right: 0.5rem;
-      white-space: nowrap;
-    }
-    .acc-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      border: 1.5px solid var(--line);
-      background: var(--white);
-      color: var(--ink);
-      transition: all 0.15s;
-      white-space: nowrap;
-      cursor: pointer;
-      min-height: 36px;
-    }
-    .acc-chip:hover { background: #f0f2f6; border-color: #b8c2d0; }
-    .acc-chip.active {
-      background: var(--navy-800);
-      color: #fff;
-      border-color: var(--navy-800);
-    }
-    .acc-chip .badge {
-      background: var(--gold);
-      color: var(--navy-900);
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 0.1rem 0.45rem;
-      border-radius: 99px;
-      min-width: 20px;
-      text-align: center;
-    }
-    .acc-chip.active .badge {
-      background: rgba(255, 255, 255, 0.25);
-      color: #fff;
-    }
+  .toast-wrap{position:fixed;top:1rem;right:1rem;z-index:300;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+  .toast{background:var(--navy-800);color:#e9eef6;padding:.75rem 1rem;border-radius:11px;font-size:.88rem;border-left:4px solid var(--gold);
+    box-shadow:0 10px 28px rgba(0,0,0,.3);animation:slidein .25s ease-out;max-width:320px;transition:opacity .3s}
+  .toast.ok{border-left-color:#4ade80}
+  @keyframes slidein{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
 
-    /* ===== EMAIL LIST ===== */
-    .list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-    .email-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.9rem;
-      background: var(--white);
-      border: 1.5px solid var(--line);
-      border-radius: 14px;
-      padding: 1rem 1.1rem;
-      text-decoration: none;
-      color: var(--ink);
-      transition: all 0.18s ease;
-      position: relative;
-      box-shadow: var(--shadow-sm);
-    }
-    .email-card:hover {
-      background: #fbfcfd;
-      border-color: #c3cbd7;
-      transform: translateX(4px);
-      box-shadow: var(--shadow-md);
-    }
-    .email-card.unread {
-      border-left: 5px solid var(--gold);
-      background: #fffdf7;
-    }
-    .email-card.read {
-      border-left: 5px solid #d5dce6;
-    }
-    .email-card .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex: none;
-      margin-top: 0.55rem;
-      box-shadow: 0 0 0 3px rgba(217, 166, 46, 0.15);
-    }
-    .email-card.read .dot {
-      background: #d5dce6;
-      box-shadow: none;
-    }
-    .email-card .body { flex: 1; min-width: 0; }
-    .email-card .row1 {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.6rem;
-      margin-bottom: 0.25rem;
-      align-items: baseline;
-    }
-    .email-card .from {
-      font-weight: 600;
-      font-size: 0.95rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .email-card .from .acct-badge {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 0.1rem 0.5rem;
-      border-radius: 6px;
-      background: rgba(217, 166, 46, 0.18);
-      color: var(--gold-deep);
-      white-space: nowrap;
-    }
-    .email-card .time {
-      font-size: 0.75rem;
-      color: var(--muted);
-      flex: none;
-      white-space: nowrap;
-    }
-    .email-card .subject {
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 0.15rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--ink);
-    }
-    .email-card .preview {
-      font-size: 0.82rem;
-      color: var(--muted);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.45;
-    }
-    .email-card .recipient-tag {
-      display: inline-block;
-      background: rgba(217, 166, 46, 0.12);
-      color: var(--gold-deep);
-      padding: 0.15rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      margin-top: 0.4rem;
-    }
+  .credit{text-align:center;color:var(--muted);font-size:.85rem;padding:.5rem 1rem 1.5rem}
+  .credit a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:2px solid var(--gold);padding-bottom:1px}
+  .credit a:hover{color:var(--gold-deep)}
 
-    /* ===== EMPTY / LOADING ===== */
-    .empty {
-      text-align: center;
-      padding: 3.5rem 1.5rem;
-      color: var(--muted);
-      background: var(--white);
-      border-radius: var(--radius-card);
-      border: 1.5px dashed var(--line);
-      box-shadow: var(--shadow-sm);
-    }
-    .empty svg { opacity: 0.35; margin: 0 auto 0.75rem; }
-    .empty b {
-      display: block;
-      color: var(--ink);
-      font-size: 1.05rem;
-      margin-bottom: 0.3rem;
-      font-weight: 600;
-    }
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      color: var(--muted);
-    }
-    .skel {
-      border-radius: 12px;
-      background: linear-gradient(90deg, #eceff4 25%, #f6f7fa 50%, #eceff4 75%);
-      background-size: 200% 100%;
-      animation: sh 1.2s infinite;
-    }
-    @keyframes sh { to { background-position: -200% 0; } }
-
-    /* ===== TOASTS ===== */
-    .toast-wrap {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 99;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      pointer-events: none;
-    }
-    .toast {
-      background: var(--navy-800);
-      color: #e9eef6;
-      padding: 0.8rem 1.1rem;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      border-left: 5px solid var(--gold);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-      animation: slidein 0.3s ease-out;
-      max-width: 340px;
-      pointer-events: auto;
-    }
-    .toast.ok { border-left-color: #4ade80; }
-    .toast.err { border-left-color: #f87171; }
-    @keyframes slidein {
-      from { transform: translateX(40px); opacity: 0; }
-      to { transform: none; opacity: 1; }
-    }
-
-    /* ===== DETAIL VIEW (email-view) ===== */
-    .detail-card {
-      background: var(--white);
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius-card);
-      padding: 1.6rem;
-      box-shadow: var(--shadow-md);
-    }
-    .detail-card .subject-row {
-      display: flex;
-      gap: 0.8rem;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 1.1rem;
-      flex-wrap: wrap;
-    }
-    .detail-card .subject-row h1 {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 1.9rem;
-      line-height: 1.12;
-      margin: 0;
-      overflow-wrap: anywhere;
-      flex: 1;
-    }
-    .pill {
-      padding: 0.28rem 0.8rem;
-      border-radius: 99px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-      margin-top: 0.35rem;
-      flex: none;
-    }
-    .pill.unread { background: rgba(217, 166, 46, 0.2); color: var(--gold-deep); }
-    .pill.read { background: #e9edf3; color: var(--muted); }
-    .sender {
-      display: flex;
-      gap: 0.85rem;
-      align-items: center;
-      padding: 0.9rem 0;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      flex-wrap: wrap;
-    }
-    .avatar {
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
-      color: var(--navy-900);
-      display: grid;
-      place-items: center;
-      flex: none;
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 1.5rem;
-    }
-    .sender .who { min-width: 0; flex: 1; }
-    .sender .who b { display: block; font-size: 1rem; overflow-wrap: anywhere; }
-    .sender .who span { display: block; color: var(--muted); font-size: 0.82rem; overflow-wrap: anywhere; }
-    .sender .when {
-      text-align: right;
-      font-size: 0.8rem;
-      color: var(--muted);
-      flex: none;
-    }
-    .sender .when b { display: block; color: var(--ink); font-weight: 600; font-size: 0.84rem; }
-    .meta {
-      display: grid;
-      grid-template-columns: 90px 1fr;
-      gap: 0.5rem 1rem;
-      padding: 1rem 0;
-      font-size: 0.9rem;
-    }
-    .meta .label {
-      color: var(--muted);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 600;
-      padding-top: 0.15rem;
-    }
-    .meta .value { overflow-wrap: anywhere; }
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.6rem;
-      margin: 0.6rem 0 0.6rem;
-      flex-wrap: wrap;
-    }
-    .section-head h2 {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin: 0;
-    }
-    .copy {
-      background: transparent;
-      border: 1.5px solid var(--line);
-      color: var(--muted);
-      min-height: 40px;
-      padding: 0 1rem;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.15s;
-    }
-    .copy:hover { background: var(--paper); color: var(--ink); border-color: #c3cbd7; }
-    .body-content {
-      background: var(--paper);
-      padding: 1.3rem 1.4rem;
-      border-radius: 14px;
-      font-size: 1rem;
-      line-height: 1.7;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      border: 1px solid #e8ebf1;
-      min-height: 80px;
-    }
-    .body-content.empty { color: var(--muted); font-style: italic; }
-    .actions-bar {
-      display: flex;
-      gap: 0.6rem;
-      margin-top: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .actions-bar .btn { flex: 1; min-width: 120px; }
-    .btn {
-      background: var(--gold);
-      color: var(--navy-900);
-      border: 0;
-      min-height: 46px;
-      padding: 0 1.2rem;
-      border-radius: var(--radius-btn);
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.92rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: background 0.15s, transform 0.08s, box-shadow 0.15s;
-      text-decoration: none;
-      box-shadow: 0 2px 8px rgba(217, 166, 46, 0.25);
-    }
-    .btn:hover:not(:disabled) { background: #e4b343; box-shadow: 0 6px 16px rgba(217, 166, 46, 0.35); }
-    .btn:active:not(:disabled) { transform: translateY(2px); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn.ghost {
-      background: transparent;
-      color: var(--ink);
-      border: 1.5px solid var(--line);
-      box-shadow: none;
-    }
-    .btn.ghost:hover:not(:disabled) { background: var(--paper); border-color: #c3cbd7; }
-    .btn.red {
-      background: var(--bad);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(155, 28, 28, 0.25);
-    }
-    .btn.red:hover:not(:disabled) { background: #7c1515; box-shadow: 0 6px 16px rgba(155, 28, 28, 0.35); }
-
-    /* ===== CONFIRM DIALOG ===== */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(7, 22, 43, 0.75);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      z-index: 100;
-    }
-    .overlay.show { display: flex; }
-    .dialog {
-      background: #fff;
-      border-radius: 20px;
-      padding: 1.8rem;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-      animation: pop 0.2s ease-out;
-    }
-    @keyframes pop {
-      from { transform: scale(0.96); opacity: 0; }
-      to { transform: none; opacity: 1; }
-    }
-    .dialog .ico {
-      width: 50px; height: 50px;
-      border-radius: 50%;
-      background: var(--bad-bg);
-      color: var(--bad);
-      display: grid;
-      place-items: center;
-      margin-bottom: 0.9rem;
-    }
-    .dialog h3 {
-      font-family: var(--serif);
-      font-size: 1.6rem;
-      margin: 0 0 0.4rem;
-      font-weight: 700;
-    }
-    .dialog p {
-      margin: 0 0 1.4rem;
-      color: var(--muted);
-      font-size: 0.93rem;
-      overflow-wrap: anywhere;
-      line-height: 1.5;
-    }
-    .dialog .row {
-      display: flex;
-      gap: 0.7rem;
-    }
-    .dialog .row .btn { flex: 1; }
-
-    /* ===== CREDIT ===== */
-    .credit {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.85rem;
-      padding: 1rem 1rem 1.5rem;
-      border-top: 1px solid var(--line);
-      margin-top: 1rem;
-    }
-    .credit a {
-      color: var(--ink);
-      font-weight: 600;
-      text-decoration: none;
-      border-bottom: 2px solid var(--gold);
-      padding-bottom: 1px;
-      transition: color 0.15s;
-    }
-    .credit a:hover { color: var(--gold-deep); }
-
-    /* ===== MOBILE ===== */
-    @media (max-width: 700px) {
-      .topbar {
-        padding: 0.55rem 0.9rem;
-        padding-top: max(0.55rem, env(safe-area-inset-top));
-        gap: 0.6rem;
-      }
-      .brandmark { font-size: 1.1rem; }
-      .brandmark .mark { width: 30px; height: 30px; font-size: 0.9rem; border-radius: 8px; }
-      .nav-links a { padding: 0.35rem 0.6rem; font-size: 0.75rem; }
-      .nav-links a span { display: none; }
-      .wrap { padding: 0.85rem; }
-      .page-head h1 { font-size: 1.6rem; }
-      .page-head { flex-direction: column; align-items: stretch; }
-      .head-actions { width: 100%; }
-      .filter-chips { flex: 1; }
-      .chip { flex: 1; justify-content: center; }
-      .account-filters { padding: 0.6rem 0.75rem; gap: 0.4rem; }
-      .acc-chip { font-size: 0.72rem; padding: 0.3rem 0.7rem; }
-      .email-card { padding: 0.9rem 1rem; border-radius: 12px; gap: 0.7rem; }
-      .email-card .from { font-size: 0.9rem; }
-      .email-card .subject { font-size: 0.85rem; }
-      .email-card .preview { font-size: 0.78rem; -webkit-line-clamp: 2; }
-      .detail-card { padding: 1.1rem; border-radius: 16px; }
-      .detail-card .subject-row { flex-direction: column-reverse; gap: 0.4rem; }
-      .detail-card .subject-row h1 { font-size: 1.6rem; }
-      .pill { margin-top: 0; }
-      .sender .when { display: none; }
-      .meta { grid-template-columns: 1fr; gap: 0; }
-      .meta .label { padding-top: 0.55rem; }
-      .body-content { padding: 1rem; font-size: 0.95rem; }
-      .actions-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-        padding: 0.6rem 0.85rem;
-        padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
-        background: rgba(255, 255, 255, 0.97);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid var(--line);
-        margin: 0;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-      }
-      .actions-bar .btn { min-height: 50px; font-size: 0.95rem; }
-      body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-      .overlay { align-items: flex-end; padding: 0; }
-      .dialog {
-        border-radius: 22px 22px 0 0;
-        padding: 1.5rem 1.2rem calc(1.4rem + env(safe-area-inset-bottom));
-        animation: sheet 0.3s ease-out;
-        max-width: none;
-      }
-      @keyframes sheet {
-        from { transform: translateY(50px); opacity: 0; }
-        to { transform: none; opacity: 1; }
-      }
-      .toast-wrap {
-        top: auto;
-        bottom: calc(92px + env(safe-area-inset-bottom));
-        left: 1rem;
-        right: 1rem;
-        align-items: center;
-      }
-      .toast { max-width: none; width: 100%; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition: none !important;
-      }
-    }
-  </style>
+  /* Mobile */
+  @media (max-width:860px){
+    .topbar{padding:.55rem .9rem;padding-top:max(.55rem,env(safe-area-inset-top));gap:.5rem}
+    .brandmark{font-size:1.15rem}
+    .nav-links{display:none}
+    .tools{margin-left:auto}
+    .tbtn{width:40px;padding:0;justify-content:center}
+    .tbtn .lbl{display:none}
+    .wrap{padding:.85rem}
+    .page-head h1{font-size:1.7rem}
+    .controls{grid-template-columns:1fr}
+    select{max-width:none;width:100%}
+    .mail{padding:.8rem .85rem;gap:.7rem;border-radius:13px}
+    .avatar{width:40px;height:40px}
+    .bottom-nav{display:grid;position:fixed;left:0;right:0;bottom:0;z-index:50;
+      background:rgba(7,22,43,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(217,166,46,.35);
+      padding:.3rem .4rem;padding-bottom:max(.3rem,env(safe-area-inset-bottom))}
+    .bottom-nav a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;min-height:52px;color:#9fb0c6;
+      text-decoration:none;font-size:.68rem;font-weight:500;border-radius:11px;letter-spacing:.02em}
+    .bottom-nav a.active{color:var(--gold);background:rgba(217,166,46,.12)}
+    .bottom-nav .nbadge{position:absolute;top:3px;left:calc(50% + 6px)}
+    body{padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom))}
+    .toast-wrap{top:auto;bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom));left:1rem;right:1rem;align-items:center}
+    .toast{max-width:none;width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}
+  }
+</style>
 </head>
 <body>
 
-<div class="app">
-
-  <!-- ===== TOPBAR ===== -->
-  <header class="topbar">
-    <div class="brandmark">
-      <span class="mark">bg</span>
-      <span class="name">BetterGrowth</span>
-    </div>
-
-    <nav class="nav-links" id="mainNav">
-      <a href="#" id="navDash">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        <span>Dashboard</span>
-      </a>
-      <a href="#" id="navSend">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
-        <span>Send</span>
-      </a>
-      <a href="#" id="navSent">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>
-        <span>Sent</span>
-      </a>
-      <a href="#" id="navInbox" class="active">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/><circle cx="12" cy="9" r="2" fill="currentColor" stroke="none"/></svg>
-        <span>Inbox</span>
-      </a>
-    </nav>
-
-    <div class="topbar-spacer"></div>
-    <button class="tbtn ghost" onclick="loadInbox()" title="Refresh">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
-      <span style="display:none">Refresh</span>
+<header class="topbar">
+  <div class="brandmark"><span class="mark">bg</span>BetterGrowth <span class="admin-badge" id="adminBadge" hidden>ADMIN</span></div>
+  <nav class="nav-links" id="topNav" aria-label="Main"></nav>
+  <div class="spacer"></div>
+  <div class="tools">
+    <button class="tbtn ghost" id="refreshBtn" onclick="load()" aria-label="Refresh">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4"/></svg>
+      <span class="lbl">Refresh</span>
     </button>
-    <button class="tbtn" onclick="logout()">Sign out</button>
-  </header>
+    <button class="tbtn" onclick="logout()" aria-label="Sign out">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>
+      <span class="lbl">Sign out</span>
+    </button>
+  </div>
+</header>
 
-  <!-- ===== MAIN CONTENT ===== -->
-  <div class="wrap" id="mainWrap">
-    <!-- ===== INBOX VIEW ===== -->
-    <div id="inboxView">
-      <div class="page-head">
-        <h1>
-          Inbox
-          <small id="inboxSubtitle">Loading…</small>
-        </h1>
-        <div class="head-actions">
-          <div class="filter-chips" id="filterChips">
-            <button class="chip active" data-filter="all">All</button>
-            <button class="chip" data-filter="unread">Unread</button>
-            <button class="chip" data-filter="read">Read</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 ACCOUNT QUICK FILTERS -->
-      <div class="account-filters" id="accountFilters">
-        <span class="label">Accounts</span>
-        <!-- filled by JS -->
-      </div>
-
-      <div class="list" id="emailList">
-        <div class="loading">Loading inbox…</div>
-      </div>
-    </div>
-
-    <!-- ===== DETAIL VIEW ===== -->
-    <div id="detailView" hidden>
-      <div id="detailContent">
-        <!-- filled by JS -->
-      </div>
-    </div>
+<div class="wrap">
+  <div class="page-head">
+    <h1>Inbox</h1>
+    <p id="subtitle">Loading…</p>
   </div>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="credit">
-    Made by <a href="https://rajvardhansingh.in/" target="_blank" rel="noopener noreferrer">Rajvardhan Singh</a>
-  </footer>
-</div>
-
-<!-- ===== CONFIRM DIALOG ===== -->
-<div class="overlay" id="confirmOverlay" onclick="closeConfirm(event)">
-  <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitle" onclick="event.stopPropagation()">
-    <div class="ico">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
-    </div>
-    <h3 id="dlgTitle">Delete this email?</h3>
-    <p id="dlgText">This can't be undone.</p>
-    <div class="row">
-      <button class="btn ghost" id="dlgCancel" onclick="closeConfirm()">Cancel</button>
-      <button class="btn red" id="dlgDelete" onclick="doDelete()">Delete</button>
-    </div>
+  <div class="controls">
+    <label class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Search sender, subject or message…" aria-label="Search inbox"/>
+    </label>
+    <select id="recipientFilter" aria-label="Filter by recipient" hidden><option value="">All recipients</option></select>
   </div>
+
+  <div class="chips" id="filterChips" role="tablist" aria-label="Filter by status">
+    <button class="chip active" data-filter="all">All <span class="n" id="nAll">0</span></button>
+    <button class="chip" data-filter="unread">Unread <span class="n" id="nUnread">0</span></button>
+    <button class="chip" data-filter="read">Read <span class="n" id="nRead">0</span></button>
+  </div>
+
+  <div class="list" id="list" aria-live="polite"></div>
 </div>
 
-<!-- ===== TOASTS ===== -->
+<footer class="credit">
+  Made by <a href="https://rajvardhansingh.in/" target="_blank" rel="noopener noreferrer">Rajvardhan Singh</a>
+</footer>
+
+<nav class="bottom-nav" id="bottomNav" aria-label="Main"></nav>
 <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
 
 <script>
-  /* ============================================================
-     CONFIG & HELPERS
-     ============================================================ */
-  const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
-  const $ = id => document.getElementById(id);
+const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
+const ADMIN_EMAIL = "admin@bettergrowthsolutions.com";
+const $ = id => document.getElementById(id);
 
-  const store = {
-    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
-    del(k) { try { localStorage.removeItem(k); } catch {} }
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+const authHeaders = () => ({ Authorization: "Bearer " + store.get("token") });
+const USER = (store.get("user") || "").toLowerCase();
+const IS_ADMIN = USER === ADMIN_EMAIL;
+
+function esc(s = "") {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function toast(msg, kind = "") {
+  const el = document.createElement("div");
+  el.className = "toast" + (kind ? " " + kind : "");
+  el.textContent = msg;
+  $("toastWrap").appendChild(el);
+  setTimeout(() => el.style.opacity = "0", 2200);
+  setTimeout(() => el.remove(), 2600);
+}
+function fmtTime(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso), diff = Date.now() - d;
+  if (diff < 60_000) return "just now";
+  if (diff < 3600_000) return Math.floor(diff / 60000) + "m ago";
+  if (diff < 86400_000) return Math.floor(diff / 3600000) + "h ago";
+  if (diff < 604800_000) return Math.floor(diff / 86400000) + "d ago";
+  return d.toLocaleDateString(undefined, { dateStyle: "medium" });
+}
+
+/* Navigation (differs for admin vs normal users) */
+const IC = {
+  home:  '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  send:  '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/>',
+  sent:  '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>',
+  inbox: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/>',
+  logs:  '<path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>'
+};
+const NAV = IS_ADMIN
+  ? [["admin","Admin","home"],["send","Send","send"],["sent","Sent","sent"],["inbox","Inbox","inbox"],["admin_logs","Logs","logs"]]
+  : [["dashboard","Dashboard","home"],["send","Send","send"],["sent","Sent","sent"],["inbox","Inbox","inbox"]];
+
+function buildNav(unread = 0) {
+  const link = (size, sw) => ([href, label, icon]) => {
+    const active = href === "inbox";
+    const badge = href === "inbox" && unread ? `<span class="nbadge">${unread > 99 ? "99+" : unread}</span>` : "";
+    return `<a href="${href}" ${active ? 'class="active" aria-current="page"' : ""}>
+      <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[icon]}</svg>${label}${badge}</a>`;
   };
+  $("topNav").innerHTML = NAV.map(link(15, 2)).join("");
+  $("bottomNav").innerHTML = NAV.map(link(22, 1.9)).join("");
+  $("bottomNav").style.gridTemplateColumns = `repeat(${NAV.length},1fr)`;
+}
 
-  const authHeaders = () => ({ Authorization: "Bearer " + store.get("token") });
+/* Data */
+let ALL_EMAILS = [];
+let FILTER = "all", QUERY = "", RECIPIENT = "", SHOWN = 100;
+const PAGE = 100;
 
-  function esc(s = "") {
-    return String(s).replace(/[&<>"']/g, c =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const skeleton = () => Array.from({ length: 4 }, () => '<div class="skel"></div>').join("");
+
+async function load() {
+  const box = $("list");
+  const btn = $("refreshBtn");
+  btn.classList.add("spin");
+  box.innerHTML = skeleton();
+  try {
+    const url = IS_ADMIN ? FN + "?action=admin_inbound_list" : FN + "?action=inbound_list";
+    const r = await fetch(url, { headers: authHeaders() });
+    if (r.status === 401) return logout();
+    if (!r.ok) throw new Error("HTTP " + r.status);
+
+    const data = await r.json();
+    ALL_EMAILS = Array.isArray(data) ? data : [];
+    SHOWN = PAGE;
+
+    $("subtitle").textContent = IS_ADMIN
+      ? `All received emails · ${ALL_EMAILS.length} total`
+      : `Emails to ${USER} · ${ALL_EMAILS.length} total`;
+    buildRecipients();
+    render();
+  } catch (err) {
+    $("subtitle").textContent = "Could not load";
+    box.innerHTML = `<div class="empty">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <b>Could not load your inbox</b>
+      ${esc(err.message === "Failed to fetch" ? "Can't reach the server. Check your connection." : err.message)}
+      <div><button class="btn" onclick="load()">Try again</button></div>
+    </div>`;
+  } finally {
+    btn.classList.remove("spin");
+  }
+}
+
+function buildRecipients() {
+  const sel = $("recipientFilter");
+  if (!IS_ADMIN) { sel.hidden = true; return; }
+  const counts = {};
+  ALL_EMAILS.forEach(e => { const r = e.recipient_email || "unknown"; counts[r] = (counts[r] || 0) + 1; });
+  sel.innerHTML = `<option value="">All recipients</option>` +
+    Object.keys(counts).sort().map(r => `<option value="${esc(r)}">${esc(r.split("@")[0])} (${counts[r]})</option>`).join("");
+  if (RECIPIENT && !counts[RECIPIENT]) RECIPIENT = "";
+  sel.value = RECIPIENT;
+  sel.hidden = false;
+}
+
+function matches(e) {
+  if (RECIPIENT && e.recipient_email !== RECIPIENT) return false;
+  const q = QUERY.toLowerCase();
+  if (!q) return true;
+  return (e.from_email || "").toLowerCase().includes(q) ||
+         (e.subject || "").toLowerCase().includes(q) ||
+         (e.body || "").toLowerCase().includes(q) ||
+         (e.recipient_email || "").toLowerCase().includes(q);
+}
+
+function render() {
+  const box = $("list");
+  const base = ALL_EMAILS.filter(matches);           // search + recipient applied; counts reflect this
+  const unreadN = base.filter(e => e.status === "unread").length;
+  const readN   = base.filter(e => e.status === "read").length;
+  $("nAll").textContent = base.length;
+  $("nUnread").textContent = unreadN;
+  $("nRead").textContent = readN;
+  buildNav(ALL_EMAILS.filter(e => e.status === "unread").length);
+
+  let filtered = base;
+  if (FILTER === "unread") filtered = base.filter(e => e.status === "unread");
+  if (FILTER === "read")   filtered = base.filter(e => e.status === "read");
+
+  if (!filtered.length) {
+    const searching = QUERY || RECIPIENT;
+    box.innerHTML = `<div class="empty">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>
+      <b>${searching ? "No emails match" : FILTER === "all" ? "Your inbox is empty" : "No " + FILTER + " emails"}</b>
+      ${searching ? "Try a different search or clear the filters."
+        : FILTER === "all" ? "Emails sent to your address will appear here."
+        : "Try a different filter."}
+    </div>`;
+    return;
   }
 
-  function fmtFull(iso) {
-    if (!iso) return "—";
-    return new Date(iso).toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" });
-  }
-  function fmtShort(iso) {
-    if (!iso) return "—";
-    return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
-  }
-  function fmtRel(iso) {
-    if (!iso) return "";
-    const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return mins + "m ago";
-    const h = Math.floor(mins / 60);
-    if (h < 24) return h + "h ago";
-    const d = Math.floor(h / 24);
-    return d < 30 ? d + "d ago" : "";
-  }
-
-  function toast(msg, kind = "") {
-    const el = document.createElement("div");
-    el.className = "toast" + (kind ? " " + kind : "");
-    el.textContent = msg;
-    $("toastWrap").appendChild(el);
-    setTimeout(() => el.style.opacity = "0", 2400);
-    setTimeout(() => el.remove(), 2800);
-  }
-
-  /* ============================================================
-     STATE
-     ============================================================ */
-  let ALL_EMAILS = [];
-  let FILTER = "all";
-  let ACCOUNT_FILTER = "all";
-  let CURRENT_EMAIL = null;
-
-  // Predefined 5 accounts (these will be used for the quick filters)
-  const FIVE_ACCOUNTS = [
-    "admin@bettergrowthsolutions.com",
-    "support@bettergrowthsolutions.com",
-    "sales@bettergrowthsolutions.com",
-    "info@bettergrowthsolutions.com",
-    "billing@bettergrowthsolutions.com"
-  ];
-
-  // Current user
-  function currentUser() {
-    return (store.get("user") || "").toLowerCase();
-  }
-  function isAdmin() {
-    return currentUser() === "admin@bettergrowthsolutions.com";
-  }
-
-  /* ============================================================
-     ROUTING (hash-based)
-     ============================================================ */
-  function getRoute() {
-    const hash = location.hash.replace(/^#/, "") || "inbox";
-    const parts = hash.split("/");
-    return { page: parts[0], id: parts[1] || null };
-  }
-
-  function navigate(page, id) {
-    location.hash = id ? `${page}/${id}` : page;
-  }
-
-  window.addEventListener("hashchange", route);
-  window.addEventListener("load", route);
-
-  function route() {
-    const { page, id } = getRoute();
-
-    // Auth guard
-    if (!store.get("token")) {
-      location.href = "/";
-      return;
-    }
-
-    // Update nav active state
-    document.querySelectorAll(".nav-links a").forEach(a => a.classList.remove("active"));
-    const navMap = {
-      dashboard: "navDash",
-      send: "navSend",
-      sent: "navSent",
-      inbox: "navInbox"
-    };
-    if (navMap[page]) {
-      const el = $(navMap[page]);
-      if (el) el.classList.add("active");
-    }
-
-    if (page === "inbox-view" && id) {
-      $("inboxView").hidden = true;
-      $("detailView").hidden = false;
-      loadEmailDetail(id);
-    } else {
-      $("inboxView").hidden = false;
-      $("detailView").hidden = true;
-      CURRENT_EMAIL = null;
-      loadInbox();
-    }
-  }
-
-  /* ============================================================
-     INBOX
-     ============================================================ */
-  async function loadInbox() {
-    const box = $("emailList");
-    box.innerHTML = `<div class="loading">Loading inbox…</div>`;
-
-    const user = currentUser();
-    const admin = isAdmin();
-
-    try {
-      const url = admin
-        ? FN + "?action=admin_inbound_list"
-        : FN + "?action=inbound_list";
-
-      const r = await fetch(url, { headers: authHeaders() });
-      if (r.status === 401) return logout();
-      if (!r.ok) throw new Error("HTTP " + r.status);
-
-      ALL_EMAILS = await r.json();
-      $("inboxSubtitle").textContent = admin
-        ? `All received emails · ${ALL_EMAILS.length} total`
-        : `Emails to ${user} · ${ALL_EMAILS.length} total`;
-
-      renderAccountFilters();
-      renderInbox();
-    } catch (err) {
-      box.innerHTML = `<div class="empty">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
-        <b>Could not load inbox</b>
-        ${esc(err.message)}
-      </div>`;
-    }
-  }
-
-  function renderAccountFilters() {
-    const container = $("accountFilters");
-    // Count unread per account from ALL_EMAILS
-    const counts = {};
-    FIVE_ACCOUNTS.forEach(a => counts[a] = 0);
-    ALL_EMAILS.forEach(e => {
-      const recipient = (e.recipient_email || "").toLowerCase();
-      if (counts[recipient] !== undefined && e.status === "unread") {
-        counts[recipient]++;
-      }
-    });
-
-    let html = `<span class="label">Accounts</span>`;
-    html += `<button class="acc-chip ${ACCOUNT_FILTER === "all" ? "active" : ""}" data-account="all">All</button>`;
-    FIVE_ACCOUNTS.forEach(acc => {
-      const short = acc.split("@")[0];
-      const unread = counts[acc] || 0;
-      html += `<button class="acc-chip ${ACCOUNT_FILTER === acc ? "active" : ""}" data-account="${esc(acc)}">
-        ${esc(short)}
-        ${unread ? `<span class="badge">${unread}</span>` : ""}
-      </button>`;
-    });
-    container.innerHTML = html;
-
-    // Add click handlers
-    container.querySelectorAll(".acc-chip").forEach(btn => {
-      btn.addEventListener("click", () => {
-        ACCOUNT_FILTER = btn.dataset.account;
-        renderAccountFilters();
-        renderInbox();
-      });
-    });
-  }
-
-  function renderInbox() {
-    const box = $("emailList");
-    let filtered = ALL_EMAILS;
-
-    // Status filter
-    if (FILTER === "unread") filtered = filtered.filter(e => e.status === "unread");
-    if (FILTER === "read") filtered = filtered.filter(e => e.status === "read");
-
-    // Account filter
-    if (ACCOUNT_FILTER !== "all") {
-      filtered = filtered.filter(e =>
-        (e.recipient_email || "").toLowerCase() === ACCOUNT_FILTER.toLowerCase()
-      );
-    }
-
-    if (!filtered.length) {
-      box.innerHTML = `<div class="empty">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>
-        <b>No emails ${FILTER === "all" ? "yet" : FILTER}</b>
-        ${FILTER === "all" ? "Emails sent to your address will appear here." : "Try a different filter."}
-      </div>`;
-      return;
-    }
-
-    box.innerHTML = filtered.map(e => {
-      const isUnread = e.status === "unread";
-      const fromName = (e.from_email || "?").split("@")[0];
-      const recipientShort = (e.recipient_email || "").split("@")[0];
-      const acctLabel = recipientShort || "—";
-
-      return `
-        <a class="email-card ${isUnread ? 'unread' : 'read'}"
-           href="#inbox-view/${encodeURIComponent(e.id)}">
-          <span class="dot"></span>
-          <div class="body">
-            <div class="row1">
-              <span class="from">
-                ${esc(fromName)}
-                <span class="acct-badge">→ ${esc(acctLabel)}</span>
-              </span>
-              <span class="time">${esc(fmtRel(e.created_at)) || fmtShort(e.created_at)}</span>
-            </div>
-            <div class="subject">${esc(e.subject || "(no subject)")}</div>
-            <div class="preview">${esc((e.body || "").slice(0, 200))}</div>
-            <span class="recipient-tag">${esc(e.recipient_email || "—")}</span>
-          </div>
-        </a>
-      `;
-    }).join("");
-  }
-
-  /* ============================================================
-     EMAIL DETAIL VIEW
-     ============================================================ */
-  async function loadEmailDetail(id) {
-    const box = $("detailContent");
-    box.innerHTML = `
-      <div class="detail-card">
-        <div class="skel" style="height:34px;width:70%;margin-bottom:1.2rem"></div>
-        <div class="skel" style="height:56px;margin-bottom:1rem"></div>
-        <div class="skel" style="height:140px"></div>
-      </div>`;
-
-    try {
-      const r = await fetch(FN + "?action=inbound_get&id=" + encodeURIComponent(id), { headers: authHeaders() });
-      if (r.status === 401) return logout();
-      if (!r.ok) {
-        const e = await r.json().catch(() => ({}));
-        throw new Error(e.error || "Could not load this email (HTTP " + r.status + ").");
-      }
-      CURRENT_EMAIL = await r.json();
-      renderDetail(CURRENT_EMAIL);
-    } catch (err) {
-      box.innerHTML = `
-        <div class="detail-card" style="text-align:center;padding:2.5rem">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--bad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto .8rem"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
-          <p style="color:var(--bad);font-weight:500;margin-bottom:1.2rem">${esc(err.message === "Failed to fetch" ? "Can't reach the server. Check your connection." : err.message)}</p>
-          <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
-            <button class="btn" onclick="route()">← Back to Inbox</button>
-          </div>
-        </div>`;
-    }
-  }
-
-  function renderDetail(e) {
-    const box = $("detailContent");
+  let html = filtered.slice(0, SHOWN).map(e => {
     const unread = e.status === "unread";
     const fromName = (e.from_email || "?").split("@")[0];
-    const initialLetter = esc(((fromName || "?")[0] || "?").toUpperCase());
-    const hasBody = !!(e.body && String(e.body).trim());
-    document.title = (e.subject || "(no subject)") + " · BetterGrowth Mail";
-
-    box.innerHTML = `
-      <div class="detail-card">
-        <div class="subject-row">
-          <h1>${esc(e.subject || "(no subject)")}</h1>
-          <span class="pill ${unread ? "unread" : "read"}">${unread ? "Unread" : "Read"}</span>
-        </div>
-
-        <div class="sender">
-          <div class="avatar" aria-hidden="true">${initialLetter}</div>
-          <div class="who">
-            <b>${esc(fromName)}</b>
-            <span>${esc(e.from_email || "—")}</span>
+    const recipient = (e.recipient_email || "").split("@")[0];
+    const preview = (e.body || "").replace(/\s+/g, " ").trim().slice(0, 200);
+    return `
+      <a class="mail ${unread ? "unread" : "read"}" href="inbox-view?id=${encodeURIComponent(e.id)}">
+        <div class="avatar" aria-hidden="true">${esc((fromName[0] || "?").toUpperCase())}</div>
+        <div class="body">
+          <div class="row1">
+            <span class="from">${esc(fromName)}</span>
+            <span class="time">${esc(fmtTime(e.created_at))}</span>
           </div>
-          <div class="when">
-            <b>${esc(fmtShort(e.created_at))}</b>
-            ${esc(fmtRel(e.created_at))}
-          </div>
+          <div class="subject">${esc(e.subject || "(no subject)")}</div>
+          ${preview ? `<div class="preview">${esc(preview)}</div>` : ""}
+          ${IS_ADMIN ? `<span class="rtag">→ ${esc(recipient)}@</span>` : ""}
         </div>
+        ${unread ? '<span class="udot" title="Unread"></span>' : ""}
+      </a>`;
+  }).join("");
 
-        <div class="meta">
-          <div class="label">To</div><div class="value">${esc(e.recipient_email || "—")}</div>
-          <div class="label">Received</div><div class="value">${esc(fmtFull(e.created_at))}</div>
-        </div>
-
-        <div class="section-head">
-          <h2>Message</h2>
-          ${hasBody ? `<button class="copy" onclick="copyBody()" aria-label="Copy message">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>Copy</button>` : ""}
-        </div>
-        <div class="body-content ${hasBody ? "" : "empty"}">${hasBody ? esc(e.body) : "This email has no message."}</div>
-
-        <details class="tech" style="margin-top:1rem">
-          <summary style="cursor:pointer;color:var(--muted);font-size:.8rem;font-weight:600;list-style:none;display:inline-flex;align-items:center;gap:.4rem;min-height:36px">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
-            Technical details
-          </summary>
-          <div style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;color:#475569;overflow-wrap:anywhere;padding:.2rem 0">ID: ${esc(e.id)}</div>
-        </details>
-
-        <div class="actions-bar">
-          <button class="btn ghost" onclick="history.back()">← Back</button>
-          ${unread ? `<button class="btn" onclick="markRead()">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
-            Mark as read
-          </button>` : ""}
-          <button class="btn red" onclick="askDelete()">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
-            Delete
-          </button>
-        </div>
-      </div>`;
+  if (filtered.length > SHOWN) {
+    html += `<div class="more"><button class="btn ghost" id="moreBtn">Show more (${filtered.length - SHOWN} left)</button></div>`;
   }
+  box.innerHTML = html;
+  const mb = $("moreBtn");
+  if (mb) mb.addEventListener("click", () => { SHOWN += PAGE; render(); });
+}
 
-  /* ============================================================
-     ACTIONS (mark read, delete, copy)
-     ============================================================ */
-  async function copyBody() {
-    if (!CURRENT_EMAIL) return;
-    try {
-      await navigator.clipboard.writeText(CURRENT_EMAIL.body || "");
-      toast("Message copied", "ok");
-    } catch {
-      toast("Couldn't copy. Select the text manually.", "err");
-    }
-  }
+$("filterChips").addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  FILTER = chip.dataset.filter;
+  SHOWN = PAGE;
+  render();
+});
+$("search").addEventListener("input", e => { QUERY = e.target.value.trim(); SHOWN = PAGE; render(); });
+$("recipientFilter").addEventListener("change", e => { RECIPIENT = e.target.value; SHOWN = PAGE; render(); });
 
-  async function markRead() {
-    if (!CURRENT_EMAIL) return;
-    try {
-      const r = await fetch(FN + "?action=inbound_mark_read", {
+/* Sign out: also tells the server so the session shows up in the admin logs */
+async function logout() {
+  const token = store.get("token");
+  const sessionId = store.get("bg_session_id");
+  const loginAt = Number(store.get("bg_login_at") || 0);
+  const duration = loginAt ? Math.round((Date.now() - loginAt) / 1000) : null;
+  try {
+    if (token && sessionId) {
+      await fetch(FN + "?action=log_logout", {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...authHeaders() },
-        body: JSON.stringify({ id: CURRENT_EMAIL.id })
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ session_id: sessionId, duration_sec: duration })
       });
-      if (r.status === 401) return logout();
-      if (r.ok) {
-        CURRENT_EMAIL.status = "read";
-        renderDetail(CURRENT_EMAIL);
-        toast("Marked as read", "ok");
-        // Update inbox list if it's cached
-        const idx = ALL_EMAILS.findIndex(e => e.id === CURRENT_EMAIL.id);
-        if (idx !== -1) ALL_EMAILS[idx].status = "read";
-      } else {
-        toast("Couldn't mark as read. Try again.", "err");
-      }
-    } catch {
-      toast("Network error. Try again.", "err");
     }
-  }
+  } catch {}
+  ["token","user","isAdmin","bg_session_id","bg_login_at","bg_sid","bg_captcha_ok","bg_admin_captcha_ok"].forEach(store.del);
+  location.href = "/";
+}
 
-  /* ============================================================
-     DELETE
-     ============================================================ */
-  function askDelete() {
-    if (!CURRENT_EMAIL) return;
-    $("dlgText").textContent = `"${CURRENT_EMAIL.subject || "(no subject)"}" will be removed permanently. This can't be undone.`;
-    $("confirmOverlay").classList.add("show");
-    $("dlgCancel").focus();
-  }
-  function closeConfirm(e) {
-    if (e && e.target !== $("confirmOverlay")) return;
-    $("confirmOverlay").classList.remove("show");
-  }
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") $("confirmOverlay").classList.remove("show");
-  });
-
-  async function doDelete() {
-    if (!CURRENT_EMAIL) return;
-    const btn = $("dlgDelete");
-    btn.disabled = true;
-    btn.textContent = "Deleting…";
-    try {
-      const r = await fetch(FN + "?action=inbound_delete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...authHeaders() },
-        body: JSON.stringify({ id: CURRENT_EMAIL.id })
-      });
-      if (r.status === 401) return logout();
-      if (r.ok) {
-        location.hash = "inbox";
-        toast("Email deleted", "ok");
-        return;
-      }
-      toast("Delete failed. Try again.", "err");
-    } catch {
-      toast("Delete failed. Check your connection.", "err");
-    }
-    btn.disabled = false;
-    btn.textContent = "Delete";
-    $("confirmOverlay").classList.remove("show");
-  }
-
-  /* ============================================================
-     NAV & UTILS
-     ============================================================ */
-  function logout() {
-    store.del("token");
-    store.del("user");
-    location.href = "/";
-  }
-
-  // Filter chips
-  $("filterChips").addEventListener("click", e => {
-    const chip = e.target.closest(".chip");
-    if (!chip) return;
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    chip.classList.add("active");
-    FILTER = chip.dataset.filter;
-    renderInbox();
-  });
-
-  // Nav links (they use hash now)
-  document.querySelectorAll(".nav-links a").forEach(a => {
-    a.addEventListener("click", e => {
-      const href = a.getAttribute("href");
-      if (href && href.startsWith("#")) {
-        e.preventDefault();
-        const page = href.replace("#", "");
-        navigate(page);
-      }
-    });
-  });
-
-  // Set dashboard link based on admin
-  const navDash = $("navDash");
-  if (navDash) {
-    navDash.href = "#" + (isAdmin() ? "admin" : "dashboard");
-  }
-
-  // Boot: check auth
-  if (!store.get("token")) {
-    location.href = "/";
-  } else {
-    route();
-  }
+/* Boot */
+if (!store.get("token")) { location.href = "/"; }
+else {
+  $("adminBadge").hidden = !IS_ADMIN;
+  buildNav(0);
+  load();
+}
 </script>
 </body>
 </html>
