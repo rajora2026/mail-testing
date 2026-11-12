@@ -19,192 +19,125 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%}
-  body{font-family:var(--sans);color:var(--ink);background:var(--navy-900);
-       min-height:100svh;line-height:1.5;-webkit-font-smoothing:antialiased}
+  body{font-family:var(--sans);color:var(--ink);background:var(--navy-900);min-height:100svh;line-height:1.5;-webkit-font-smoothing:antialiased}
   :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
   [hidden]{display:none!important}
 
   .shell{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:100svh}
-
-  /* ───────── Brand side ───────── */
   .brand{position:relative;overflow:hidden;color:#fff;isolation:isolate;
-    background:
-      radial-gradient(90% 70% at 0% 0%,#123763 0%,rgba(18,55,99,0) 60%),
-      radial-gradient(70% 60% at 100% 100%,rgba(217,166,46,.16) 0%,rgba(217,166,46,0) 60%),
-      var(--navy-800);
+    background:radial-gradient(90% 70% at 0% 0%,#123763 0%,rgba(18,55,99,0) 60%),
+               radial-gradient(70% 60% at 100% 100%,rgba(217,166,46,.16) 0%,rgba(217,166,46,0) 60%),
+               var(--navy-800);
     padding:clamp(24px,5vw,64px);display:flex;flex-direction:column}
-  .brand::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
-    background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);
-    background-size:26px 26px;
-    -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 75%);
-            mask-image:linear-gradient(180deg,#000 0%,transparent 75%)}
   .orb{position:absolute;border-radius:50%;filter:blur(60px);z-index:-1;pointer-events:none}
   .orb.a{width:340px;height:340px;background:rgba(217,166,46,.18);top:-90px;right:-80px;animation:float 14s ease-in-out infinite}
   .orb.b{width:300px;height:300px;background:rgba(40,100,180,.28);bottom:10%;left:-100px;animation:float 18s ease-in-out infinite reverse}
   @keyframes float{50%{transform:translate(24px,-28px) scale(1.08)}}
-
   .logo{display:block;width:min(290px,64%);height:auto}
-
   .brand-copy{position:relative;z-index:2;max-width:31rem;margin:clamp(28px,9vh,96px) 0 0}
-  .eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:500;
-    letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);
-    padding:.4rem .8rem;border:1px solid rgba(241,216,153,.3);border-radius:999px;
-    background:rgba(255,255,255,.04);backdrop-filter:blur(6px);margin-bottom:1.2rem}
-  .eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(217,166,46,.7);animation:pulse 2s infinite}
-  @keyframes pulse{70%{box-shadow:0 0 0 8px rgba(217,166,46,0)}100%{box-shadow:0 0 0 0 rgba(217,166,46,0)}}
-  .brand-copy h1{font-family:var(--serif);font-weight:600;
-    font-size:clamp(2.1rem,4.4vw,3.8rem);line-height:1.04;letter-spacing:-.01em;margin:0 0 1rem}
+  .brand-copy h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.1rem,4.4vw,3.8rem);line-height:1.04;letter-spacing:-.01em;margin:0 0 1rem}
   .brand-copy h1 em{font-style:normal;color:var(--gold)}
   .brand-copy p{margin:0 0 1.6rem;color:#b8c4d6;font-size:1.02rem;max-width:26rem}
-  .perks{list-style:none;margin:0;padding:0;display:grid;gap:.7rem}
-  .perks li{display:flex;align-items:center;gap:.7rem;color:#dbe3ee;font-size:.95rem}
-  .perks svg{flex:none;width:22px;height:22px;padding:4px;border-radius:50%;
-    background:rgba(217,166,46,.16);color:var(--gold)}
 
-  .growth{position:absolute;left:0;right:0;bottom:0;width:100%;height:50%;z-index:-1;pointer-events:none}
-  .growth .line{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
-    stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.4s .3s cubic-bezier(.65,0,.25,1) forwards;
-    filter:drop-shadow(0 0 8px rgba(217,166,46,.55))}
-  .growth .ghost{fill:none;stroke:rgba(255,255,255,.09);stroke-width:1.5}
-  .growth .area{fill:url(#ag);opacity:0;animation:pop 1s 1.6s ease forwards}
-  .growth .tip{fill:var(--gold);opacity:0;animation:pop .5s 2.5s ease forwards}
-  @keyframes draw{to{stroke-dashoffset:0}}
-  @keyframes pop{to{opacity:1}}
-
-  /* ───────── Form side ───────── */
-  .panel{background:
-      radial-gradient(60% 40% at 100% 0%,rgba(217,166,46,.10),transparent 70%),
-      var(--paper);
-    display:flex;flex-direction:column;
+  .panel{background:var(--paper);display:flex;flex-direction:column;
     padding:clamp(22px,5vw,60px);
     padding-top:max(clamp(22px,5vw,60px),env(safe-area-inset-top));
     padding-bottom:max(18px,env(safe-area-inset-bottom))}
   .panel-main{flex:1;display:flex;align-items:center;justify-content:center}
   .box{width:100%;max-width:420px;animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-
-  .badge{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:14px;
-    background:linear-gradient(145deg,var(--navy-700),var(--navy-900));
-    color:var(--gold);margin-bottom:1.1rem;
-    box-shadow:0 10px 24px -10px rgba(7,22,43,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
-  .box h2{font-family:var(--serif);font-weight:700;
-    font-size:clamp(1.9rem,4vw,2.5rem);margin:0 0 .3rem;letter-spacing:-.01em;line-height:1.1}
+  .box h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,4vw,2.5rem);margin:0 0 .3rem;letter-spacing:-.01em;line-height:1.1}
   .lead{margin:0 0 1.6rem;color:var(--muted);font-size:.97rem}
 
   .field{margin-bottom:1rem}
   label{display:block;font-size:.84rem;font-weight:500;margin-bottom:.38rem;color:#24344a}
-  .control{position:relative}
-  .control .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);
-    width:20px;height:20px;color:#8896a8;pointer-events:none;transition:color .15s}
-  .control:focus-within .ico{color:var(--gold-deep)}
   input{width:100%;height:52px;padding:0 1rem;font:inherit;font-size:16px;
     color:var(--ink);background:var(--white);border:1.5px solid var(--line);
-    border-radius:12px;transition:border-color .15s,box-shadow .15s;
-    box-shadow:0 1px 2px rgba(11,27,48,.04)}
-  .control input{padding-left:2.9rem}
-  input::placeholder{color:#9aa6b5}
-  input:hover{border-color:#c3cbd7}
+    border-radius:12px;transition:border-color .15s,box-shadow .15s}
   input:focus{outline:none;border-color:var(--navy-700);box-shadow:0 0 0 4px rgba(217,166,46,.26)}
-  input[aria-invalid="true"]{border-color:#c0392b;box-shadow:0 0 0 4px rgba(192,57,43,.12)}
-  .control input.has-toggle{padding-right:3.4rem}
-  .toggle{position:absolute;top:50%;right:6px;transform:translateY(-50%);
-    width:42px;height:42px;border:0;border-radius:9px;background:transparent;
-    color:var(--muted);cursor:pointer;display:grid;place-items:center}
-  .toggle:hover{background:#eef1f5;color:var(--ink)}
+  input[aria-invalid="true"]{border-color:#c0392b}
   .hint{display:block;margin-top:.35rem;font-size:.78rem;color:var(--muted)}
   .hint b{color:var(--navy-700);font-weight:600}
 
-  /* captcha */
   .captcha-row{display:grid;grid-template-columns:1fr auto;gap:.6rem;align-items:stretch}
   .captcha-code{
     background:linear-gradient(135deg,var(--navy-800),var(--navy-950));color:var(--gold);
-    padding:.7rem 1rem;border-radius:12px;
-    font-family:ui-monospace,Menlo,Consolas,monospace;
+    padding:.7rem 1rem;border-radius:12px;font-family:ui-monospace,monospace;
     font-size:1.7rem;font-weight:700;letter-spacing:.4em;padding-left:1.4em;
     display:flex;align-items:center;justify-content:center;
-    user-select:none;-webkit-user-select:none;border:1.5px dashed rgba(217,166,46,.45);
-    position:relative;overflow:hidden;text-shadow:0 0 14px rgba(217,166,46,.45)}
-  .captcha-code::before{content:"";position:absolute;inset:0;pointer-events:none;
-    background:
-      repeating-linear-gradient(45deg,rgba(217,166,46,.10) 0 5px,transparent 5px 10px),
-      repeating-linear-gradient(-45deg,rgba(255,255,255,.05) 0 4px,transparent 4px 9px)}
+    user-select:none;border:1.5px dashed rgba(217,166,46,.45);
+    text-shadow:0 0 14px rgba(217,166,46,.45);position:relative;overflow:hidden}
   .captcha-refresh{background:var(--white);border:1.5px solid var(--line);
     border-radius:12px;color:var(--muted);cursor:pointer;
-    width:54px;display:grid;place-items:center;transition:background .15s,color .15s}
-  .captcha-refresh:hover{background:var(--paper);color:var(--ink)}
-  .captcha-refresh svg{transition:transform .4s}
-  .captcha-refresh:active svg{transform:rotate(180deg)}
+    width:54px;display:grid;place-items:center;transition:background .15s}
+  .captcha-refresh:hover{background:var(--paper)}
   .captcha-input{width:100%;text-align:center;letter-spacing:.45em;
     font-size:1.2rem;font-weight:700;margin-top:.55rem}
   .captcha-input.shake{animation:shake .35s}
-  @keyframes shake{
-    20%{transform:translateX(-6px)}40%{transform:translateX(6px)}
-    60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-
-  /* access code field — same look as captcha input */
-  .access-input{width:100%;text-align:center;letter-spacing:.45em;
-    font-size:1.2rem;font-weight:700}
-  .access-input.shake{animation:shake .35s}
+  @keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
   .btn{width:100%;height:54px;border:0;border-radius:12px;font:inherit;
-    font-weight:600;font-size:1.02rem;cursor:pointer;display:inline-flex;
-    align-items:center;justify-content:center;gap:.6rem;
-    transition:background .15s,transform .08s,box-shadow .2s}
+    font-weight:600;font-size:1.02rem;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+    transition:background .15s,transform .08s}
   .btn:active:not(:disabled){transform:translateY(1px)}
   .btn-primary{background:linear-gradient(180deg,#e6b53f,var(--gold));color:var(--navy-900);margin-top:.7rem;
-    box-shadow:0 12px 24px -12px rgba(184,132,26,.8),inset 0 1px 0 rgba(255,255,255,.4)}
-  .btn-primary:hover:not(:disabled){background:linear-gradient(180deg,#efc14f,#e0ae36);
-    box-shadow:0 16px 28px -12px rgba(184,132,26,.9),inset 0 1px 0 rgba(255,255,255,.4)}
-  .btn-primary:disabled{background:#e6dcc3;color:#7d7358;cursor:not-allowed;box-shadow:none}
-  .btn svg{transition:transform .2s}
-  .btn-primary:hover:not(:disabled) svg{transform:translateX(3px)}
+    box-shadow:0 12px 24px -12px rgba(184,132,26,.8)}
+  .btn-primary:hover:not(:disabled){background:linear-gradient(180deg,#efc14f,#e0ae36)}
+  .btn-primary:disabled{background:#e6dcc3;color:#7d7358;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);margin-top:.6rem}
 
   .spinner{width:18px;height:18px;border-radius:50%;
     border:2.5px solid rgba(7,22,43,.25);border-top-color:var(--navy-900);
-    animation:spin .7s linear infinite}
+    animation:spin .7s linear infinite;display:inline-block}
   @keyframes spin{to{transform:rotate(360deg)}}
 
   .error{display:flex;gap:.6rem;align-items:flex-start;margin-top:.9rem;
     padding:.75rem .9rem;background:var(--bad-bg);color:var(--bad);
-    border-radius:12px;font-size:.9rem;animation:rise .25s both}
-  .error svg{flex:none;margin-top:2px}
+    border-radius:12px;font-size:.9rem}
 
-  .secure{display:flex;align-items:center;justify-content:center;gap:.4rem;
-    margin-top:1.1rem;font-size:.8rem;color:var(--muted)}
+  /* OTP boxes */
+  .otp-boxes{display:flex;gap:.6rem;justify-content:center;margin:1.25rem 0 1.25rem}
+  .otp-boxes input{
+    width:64px;height:74px;text-align:center;padding:0;
+    font-family:ui-monospace,monospace;font-size:2.2rem;font-weight:700;
+    background:var(--white);border:2px solid var(--line);border-radius:14px;
+    color:var(--navy-900);caret-color:var(--gold-deep);
+  }
+  .otp-boxes input:focus{outline:none;border-color:var(--gold);
+    box-shadow:0 0 0 4px rgba(217,166,46,.28);transform:translateY(-1px)}
+  .otp-boxes input.filled{border-color:var(--gold-deep);background:#fffdf5}
+  .otp-boxes input.err{border-color:#c0392b;animation:shake .35s}
+  @media (max-width:420px){
+    .otp-boxes{gap:.4rem}
+    .otp-boxes input{width:52px;height:62px;font-size:1.7rem}
+  }
+
+  .otp-actions{display:flex;flex-direction:column;gap:.5rem;margin-top:.75rem;text-align:center;font-size:.9rem}
+  .otp-actions a{color:var(--navy-700);font-weight:500;text-decoration:none;cursor:pointer}
+  .otp-actions a:hover{color:var(--gold-deep);text-decoration:underline}
+  .otp-actions a.disabled{color:#9aa6b5;cursor:not-allowed;pointer-events:none}
+
+  .sent-to{color:var(--navy-700);font-weight:600;word-break:break-word}
 
   .credit{text-align:center;color:var(--muted);font-size:.88rem;padding-top:1.4rem}
   .credit a{color:var(--ink);font-weight:600;text-decoration:none;
     border-bottom:2px solid var(--gold);padding-bottom:1px;transition:color .15s}
   .credit a:hover{color:var(--gold-deep)}
-  .credit .heart{color:var(--gold-deep)}
 
-  /* ───────── Mobile ───────── */
   @media (max-width:860px){
     .shell{grid-template-columns:1fr;grid-template-rows:auto 1fr}
-    .brand{padding:max(20px,env(safe-area-inset-top)) 20px 44px;
-      background:
-        radial-gradient(150% 120% at 100% 0%,#123763 0%,rgba(18,55,99,0) 60%),var(--navy-800)}
+    .brand{padding:max(20px,env(safe-area-inset-top)) 20px 44px}
     .logo{width:min(220px,62%);margin:0 auto}
     .brand-copy{display:none}
-    .growth{height:100%;opacity:.55}
-    .orb.a{width:220px;height:220px}
     .panel{border-radius:26px 26px 0 0;margin-top:-26px;position:relative;z-index:3;
-      padding:28px 20px;padding-bottom:max(20px,env(safe-area-inset-bottom));
-      box-shadow:0 -18px 40px -18px rgba(0,0,0,.5)}
+      padding:28px 20px;padding-bottom:max(20px,env(safe-area-inset-bottom))}
     .panel-main{align-items:flex-start}
     .box{max-width:100%}
-    .badge{display:none}
     .box h2{font-size:2rem}
-    .lead{margin-bottom:1.3rem}
-  }
-  @media (max-width:380px){
-    .captcha-code{font-size:1.4rem;letter-spacing:.3em}
   }
   @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}
-    .growth .line{stroke-dashoffset:0}
-    .growth .tip,.growth .area{opacity:1}
+    *,*::before,*::after{animation-duration:.001ms!important;transition:none!important}
   }
 </style>
 </head>
@@ -213,131 +146,85 @@
 
   <aside class="brand">
     <span class="orb a"></span><span class="orb b"></span>
-
     <svg class="logo" viewBox="0 0 520 130" role="img" aria-label="BetterGrowth Solutions">
-      <defs>
-        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#f1d899"/><stop offset="1" stop-color="#b8841a"/>
-        </linearGradient>
-      </defs>
-      <g>
-        <path d="M18 14v78" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
-        <path d="M18 62c0-18 12-26 28-26s26 10 26 26-10 28-26 28-28-8-28-28Z" fill="none" stroke="#fff" stroke-width="9"/>
-        <path d="M44 100c18-4 34-14 44-34l8-14" fill="none" stroke="url(#lg)" stroke-width="7" stroke-linecap="round"/>
-        <path d="M100 46 78 50l12 12Z" fill="url(#lg)"/>
-        <circle cx="62" cy="108" r="13" fill="none" stroke="url(#lg)" stroke-width="6"/>
-      </g>
-      <text x="124" y="74" font-family="Cormorant Garamond,Georgia,serif" font-size="58" font-weight="600" fill="#fff">better<tspan fill="#d9a62e">growth</tspan></text>
-      <line x1="126" y1="104" x2="196" y2="104" stroke="#d9a62e" stroke-width="1.6"/>
-      <text x="212" y="110" font-family="Jost,system-ui,sans-serif" font-size="16" fill="#fff" letter-spacing="7">SOLUTIONS</text>
-      <line x1="372" y1="104" x2="510" y2="104" stroke="#d9a62e" stroke-width="1.6"/>
+      <text x="20" y="74" font-family="Cormorant Garamond,Georgia,serif" font-size="58" font-weight="600" fill="#fff">better<tspan fill="#d9a62e">growth</tspan></text>
+      <text x="22" y="110" font-family="Jost,system-ui,sans-serif" font-size="16" fill="#fff" letter-spacing="7">SOLUTIONS</text>
     </svg>
-
     <div class="brand-copy">
-      <span class="eyebrow"><i></i> BetterGrowth Mail</span>
       <h1>Send it once.<br/><em>Track it every step.</em></h1>
       <p>Write company emails, check what was delivered, and review your sent history from one place.</p>
-      <ul class="perks">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Instant delivery status on every email</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Complete sent history, always searchable</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Private team accounts for your company</li>
-      </ul>
     </div>
-
-    <svg class="growth" viewBox="0 0 800 400" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#d9a62e" stop-opacity=".28"/>
-          <stop offset="1" stop-color="#d9a62e" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <path class="ghost" d="M0 330 C 160 320, 260 300, 380 250 S 600 150, 800 70"/>
-      <path class="ghost" d="M0 370 C 200 360, 300 340, 420 300 S 640 220, 800 150"/>
-      <path class="area" d="M0 350 C 150 340, 250 330, 360 280 S 580 140, 770 50 L800 400 L0 400 Z"/>
-      <path class="line" pathLength="1" d="M0 350 C 150 340, 250 330, 360 280 S 580 140, 770 50"/>
-      <path class="tip" d="M792 38 L762 40 L772 64 Z"/>
-    </svg>
   </aside>
 
   <main class="panel">
     <div class="panel-main">
       <div class="box">
-        <div class="badge" aria-hidden="true">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>
-        </div>
-        <h2>Welcome back</h2>
-        <p class="lead">Sign in with your company email, password, captcha, and access code.</p>
 
-        <form id="loginForm" novalidate>
+        <!-- ═══ STEP 1 ═══ -->
+        <div id="step1">
+          <h2>Welcome back</h2>
+          <p class="lead">Sign in with your company email, password, and the 4-digit code.</p>
 
-          <div class="field">
-            <label for="email">Company email</label>
-            <div class="control">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>
+          <form id="loginForm" novalidate>
+            <div class="field">
+              <label for="email">Company email</label>
               <input id="email" type="email" inputmode="email" autocomplete="username"
                      autocapitalize="none" spellcheck="false"
                      placeholder="yourname@bettergrowthsolutions.com" required/>
+              <span class="hint">Just type your name — we'll add <b>@bettergrowthsolutions.com</b> for you.</span>
             </div>
-            <span class="hint">Just type your name — we'll add <b>@bettergrowthsolutions.com</b> for you.</span>
-          </div>
 
-          <div class="field">
-            <label for="password">Password</label>
-            <div class="control">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-              <input id="password" class="has-toggle" type="password"
-                     autocomplete="current-password" placeholder="Enter your password" required/>
-              <button type="button" class="toggle" id="togglePw"
-                      aria-label="Show password" aria-pressed="false">
-                <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                     stroke-linejoin="round" aria-hidden="true">
-                  <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-              </button>
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" type="password" autocomplete="current-password"
+                     placeholder="Enter your password" required/>
             </div>
-          </div>
 
-          <div class="field">
-            <label for="captchaInput">Captcha code</label>
-            <div class="captcha-row">
-              <div class="captcha-code" id="captchaCode" aria-hidden="true">0000</div>
-              <button type="button" class="captcha-refresh" id="captchaRefresh"
-                      title="New code" aria-label="Generate new code">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-4M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4"/></svg>
-              </button>
+            <div class="field">
+              <label for="captchaInput">Captcha code</label>
+              <div class="captcha-row">
+                <div class="captcha-code" id="captchaCode">0000</div>
+                <button type="button" class="captcha-refresh" id="captchaRefresh">↻</button>
+              </div>
+              <input id="captchaInput" class="captcha-input" type="text"
+                     inputmode="numeric" maxlength="4" autocomplete="off"
+                     placeholder="Type the 4 digits" required/>
             </div>
-            <input id="captchaInput" class="captcha-input" type="text"
-                   inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off"
-                   placeholder="Type the 4 digits" required/>
+
+            <div id="loginError" class="error" role="alert" hidden>
+              <span id="loginErrorText"></span>
+            </div>
+
+            <button id="loginBtn" class="btn btn-primary" type="submit">Generate code</button>
+          </form>
+        </div>
+
+        <!-- ═══ STEP 2 ═══ -->
+        <div id="step2" hidden>
+          <h2>Check your email</h2>
+          <p class="lead">
+            We sent a 4-digit code to <span class="sent-to" id="sentTo">your inbox</span>.
+          </p>
+
+          <div class="otp-boxes" id="otpBoxes">
+            <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1"/>
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2"/>
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3"/>
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4"/>
           </div>
 
-          <!-- ═══════ NEW: Access code ═══════ -->
-          <div class="field">
-            <label for="accessCode">Access code</label>
-            <input id="accessCode" class="access-input" type="text"
-                   inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off"
-                   placeholder="Ask your admin for the 4-digit code" required/>
-            <span class="hint">Ask your admin for the current code.</span>
-          </div>
-          <!-- ═══════════════════════════════ -->
-
-          <div id="loginError" class="error" role="alert" aria-live="assertive" hidden>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/>
-            </svg>
-            <span id="loginErrorText"></span>
+          <div id="otpError" class="error" role="alert" hidden>
+            <span id="otpErrorText"></span>
           </div>
 
-          <button id="loginBtn" class="btn btn-primary" type="submit">Sign in</button>
+          <button id="verifyBtn" class="btn btn-primary" type="button" style="margin-top:1rem">Verify & sign in</button>
 
-          <div class="secure">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-            Secure, private company access
+          <div class="otp-actions">
+            <a id="resendLink" onclick="resendOtp()">Resend code</a>
+            <a onclick="startOver()">← Use a different account</a>
           </div>
-        </form>
+        </div>
+
       </div>
     </div>
 
@@ -351,7 +238,7 @@
 const FN = "https://cztelemfiqovsoizrohr.supabase.co/functions/v1/send-email";
 const DOMAIN = "@bettergrowthsolutions.com";
 const ADMIN_EMAIL = "admin" + DOMAIN;
-const $  = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
 const store = {
   get(k){ try { return localStorage.getItem(k); } catch { return null; } },
@@ -359,9 +246,13 @@ const store = {
   del(k){ try { localStorage.removeItem(k); } catch {} }
 };
 
+/* ─── In-memory OTP state ─── */
+let OTP_TOKEN = null;
+let RESEND_UNTIL = 0;
+let resendTimer = null;
+
 /* ─── Captcha ─── */
 let CAPTCHA_CODE = "";
-
 function newCaptcha() {
   CAPTCHA_CODE = String(Math.floor(1000 + Math.random() * 9000));
   $("captchaCode").textContent = CAPTCHA_CODE;
@@ -373,29 +264,33 @@ $("captchaInput").addEventListener("input", e => {
   e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
   hideError();
 });
-$("accessCode").addEventListener("input", e => {
-  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
-  hideError();
-});
 
-/* ─── UI ─── */
-function showError(msg) {
-  $("loginErrorText").textContent = msg;
-  $("loginError").hidden = false;
-}
+/* ─── UI helpers ─── */
+function showError(msg) { $("loginErrorText").textContent = msg; $("loginError").hidden = false; }
 function hideError() { $("loginError").hidden = true; }
+function showOtpError(msg) { $("otpErrorText").textContent = msg; $("otpError").hidden = false; }
+function hideOtpError() { $("otpError").hidden = true; }
 
 const ARROW = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
 function setBusy(busy) {
   const btn = $("loginBtn");
   btn.disabled = busy;
   btn.innerHTML = busy
-    ? '<span class="spinner" aria-hidden="true"></span> Signing in…'
-    : 'Sign in ' + ARROW;
+    ? '<span class="spinner"></span> Generating code…'
+    : 'Generate code ' + ARROW;
 }
 setBusy(false);
 
-/* Let people type just "name" and fill in the company domain */
+function setVerifyBusy(busy) {
+  const btn = $("verifyBtn");
+  btn.disabled = busy;
+  btn.innerHTML = busy
+    ? '<span class="spinner"></span> Verifying…'
+    : 'Verify & sign in';
+}
+setVerifyBusy(false);
+
 function normalizeEmail(v) {
   v = v.trim().toLowerCase();
   if (!v) return v;
@@ -407,45 +302,80 @@ $("email").addEventListener("input", () => { $("email").removeAttribute("aria-in
 $("password").addEventListener("input", () => { $("password").removeAttribute("aria-invalid"); hideError(); });
 $("email").addEventListener("blur", () => { $("email").value = normalizeEmail($("email").value); });
 
-/* ─── Login ─── */
-async function login(e) {
+/* ─── OTP boxes ─── */
+const otpInputs = [...$("otpBoxes").querySelectorAll("input")];
+
+otpInputs.forEach((inp, i) => {
+  inp.addEventListener("input", e => {
+    const v = e.target.value.replace(/\D/g, "").slice(-1);
+    e.target.value = v;
+    e.target.classList.toggle("filled", !!v);
+    hideOtpError();
+    if (v && i < otpInputs.length - 1) otpInputs[i + 1].focus();
+    if (otpInputs.every(b => b.value.length === 1)) verifyOtp();
+  });
+  inp.addEventListener("keydown", e => {
+    if (e.key === "Backspace" && !e.target.value && i > 0) otpInputs[i - 1].focus();
+    if (e.key === "ArrowLeft" && i > 0) otpInputs[i - 1].focus();
+    if (e.key === "ArrowRight" && i < otpInputs.length - 1) otpInputs[i + 1].focus();
+  });
+  inp.addEventListener("paste", e => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "").slice(0, 4);
+    [...text].forEach((ch, j) => {
+      if (otpInputs[j]) { otpInputs[j].value = ch; otpInputs[j].classList.add("filled"); }
+    });
+    if (text.length === 4) verifyOtp();
+    else otpInputs[text.length]?.focus();
+  });
+});
+
+$("verifyBtn").addEventListener("click", verifyOtp);
+
+/* ─── Step transitions ─── */
+function goToStep2(sentTo) {
+  $("sentTo").textContent = sentTo || "your inbox";
+  $("step1").hidden = true;
+  $("step2").hidden = false;
+  hideOtpError();
+  otpInputs.forEach(i => { i.value = ""; i.classList.remove("filled","err"); });
+  setTimeout(() => otpInputs[0]?.focus(), 120);
+  startResendCooldown(30);
+}
+
+function startOver() {
+  OTP_TOKEN = null;
+  $("password").value = "";
+  newCaptcha();
+  $("step1").hidden = false;
+  $("step2").hidden = true;
+  hideOtpError();
+  setVerifyBusy(false);
+  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+  setTimeout(() => $("email").focus(), 120);
+}
+
+/* ─── Step 1: request OTP ─── */
+async function requestOtp(e) {
   if (e) e.preventDefault();
   hideError();
 
   const email    = normalizeEmail($("email").value);
   const password = $("password").value;
   const captcha  = $("captchaInput").value.trim();
-  const code     = $("accessCode").value.trim();
   $("email").value = email;
 
   $("email").removeAttribute("aria-invalid");
   $("password").removeAttribute("aria-invalid");
 
-  if (!email) {
-    $("email").setAttribute("aria-invalid","true");
-    $("email").focus();
-    return showError("Enter your email address.");
-  }
-  if (!password) {
-    $("password").setAttribute("aria-invalid","true");
-    $("password").focus();
-    return showError("Enter your password.");
-  }
-  if (captcha.length !== 4) {
-    $("captchaInput").focus();
-    return showError("Enter the 4-digit captcha code.");
-  }
+  if (!email) { $("email").setAttribute("aria-invalid","true"); $("email").focus(); return showError("Enter your email address."); }
+  if (!password) { $("password").setAttribute("aria-invalid","true"); $("password").focus(); return showError("Enter your password."); }
+  if (captcha.length !== 4) { $("captchaInput").focus(); return showError("Enter the 4-digit captcha code."); }
   if (captcha !== CAPTCHA_CODE) {
     $("captchaInput").classList.add("shake");
     $("captchaInput").focus();
     newCaptcha();
     return showError("Captcha is incorrect. Try the new one.");
-  }
-  if (code.length !== 4) {
-    $("accessCode").classList.add("shake");
-    $("accessCode").focus();
-    setTimeout(() => $("accessCode").classList.remove("shake"), 400);
-    return showError("Enter the 4-digit access code from your admin.");
   }
 
   setBusy(true);
@@ -454,63 +384,124 @@ async function login(e) {
     const r = await fetch(FN + "?action=login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, code })
+      body: JSON.stringify({ email, password })
     });
 
     const data = await r.json().catch(() => ({}));
 
     if (!r.ok || !data.ok) {
       newCaptcha();
-      $("accessCode").value = "";
       throw new Error(data.error || "Email or password is incorrect.");
     }
 
-    /* ── Success ── */
-    store.set("token", data.access_token);
-    store.set("user",  data.user?.email || email);
-    store.set("isAdmin", data.isAdmin ? "1" : "0");
+    OTP_TOKEN = data.otp_token;
+    goToStep2(data.sent_to);
+  } catch (err) {
+    const msg = err.message === "Failed to fetch"
+      ? "Can't reach the server. Check your connection and try again."
+      : err.message;
+    showError(msg);
+  } finally {
+    setBusy(false);
+  }
+}
 
+/* ─── Step 2: verify OTP ─── */
+async function verifyOtp() {
+  hideOtpError();
+  const code = otpInputs.map(i => i.value).join("");
+  if (code.length !== 4) {
+    otpInputs.forEach(i => i.classList.add("err"));
+    return showOtpError("Enter all 4 digits.");
+  }
+
+  setVerifyBusy(true);
+
+  try {
+    const r = await fetch(FN + "?action=verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ otp_token: OTP_TOKEN, code })
+    });
+    const data = await r.json().catch(() => ({}));
+
+    if (!r.ok || !data.ok) {
+      otpInputs.forEach(i => i.classList.add("err"));
+      throw new Error(data.error || "Incorrect code.");
+    }
+
+    /* ✅ Success — same as before */
+    store.set("token", data.access_token);
+    store.set("user",  data.user?.email || "");
+    store.set("isAdmin", data.isAdmin ? "1" : "0");
     if (data.session_id) {
       store.set("bg_session_id", data.session_id);
       store.set("bg_login_at", String(Date.now()));
     }
-
     store.del("bg_captcha_ok");
     store.del("bg_admin_captcha_ok");
 
-    const userEmail = (data.user?.email || email).toLowerCase();
-    const isAdmin   = userEmail === ADMIN_EMAIL;
+    const userEmail = (data.user?.email || "").toLowerCase();
+    const isAdmin = userEmail === ADMIN_EMAIL;
 
     setTimeout(() => {
       location.href = isAdmin ? "admin" : "dashboard";
     }, 150);
 
   } catch (err) {
-    const msg = err.message === "Failed to fetch"
-      ? "Can't reach the server. Check your connection and try again."
-      : err.message;
-    showError(msg);
-    setBusy(false);
+    showOtpError(err.message);
+    setTimeout(() => otpInputs.forEach(i => i.classList.remove("err")), 600);
+    setVerifyBusy(false);
   }
 }
 
-/* ─── Password toggle ─── */
-$("togglePw").addEventListener("click", () => {
-  const pw = $("password");
-  const show = pw.type === "password";
-  pw.type = show ? "text" : "password";
-  $("togglePw").setAttribute("aria-pressed", String(show));
-  $("togglePw").setAttribute("aria-label", show ? "Hide password" : "Show password");
-  $("eyeIcon").innerHTML = show
-    ? '<path d="M3 3l18 18"/><path d="M10.6 6.1A10.7 10.7 0 0 1 12 6c6.4 0 10 6 10 6a17 17 0 0 1-3.2 3.9"/><path d="M6.6 6.7A17 17 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 4.4-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'
-    : '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>';
-});
+/* ─── Resend ─── */
+function startResendCooldown(seconds) {
+  RESEND_UNTIL = Date.now() + seconds * 1000;
+  if (resendTimer) clearInterval(resendTimer);
+  updateResendLabel();
+  resendTimer = setInterval(() => {
+    if (Date.now() >= RESEND_UNTIL) { clearInterval(resendTimer); resendTimer = null; }
+    updateResendLabel();
+  }, 500);
+}
+
+function updateResendLabel() {
+  const left = Math.max(0, Math.ceil((RESEND_UNTIL - Date.now()) / 1000));
+  const link = $("resendLink");
+  if (left > 0) {
+    link.classList.add("disabled");
+    link.textContent = `Resend code (${left}s)`;
+  } else {
+    link.classList.remove("disabled");
+    link.textContent = "Resend code";
+  }
+}
+
+async function resendOtp() {
+  if (Date.now() < RESEND_UNTIL) return;
+  hideOtpError();
+  otpInputs.forEach(i => { i.value = ""; i.classList.remove("filled","err"); });
+
+  try {
+    const r = await fetch(FN + "?action=resend-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ otp_token: OTP_TOKEN })
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.ok) throw new Error(data.error || "Could not resend.");
+    startResendCooldown(30);
+    otpInputs[0]?.focus();
+  } catch (err) {
+    showOtpError(err.message);
+  }
+}
 
 /* ─── Wire + boot ─── */
-$("loginForm").addEventListener("submit", login);
+$("loginForm").addEventListener("submit", requestOtp);
 newCaptcha();
 
-// If already logged in, bounce to correct page
 const existingToken = store.get("token");
 if (existingToken) {
   const userEmail = (store.get("user") || "").toLowerCase();
